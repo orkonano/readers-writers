@@ -117,15 +117,10 @@ log4j = {
 
 
 // Added by the Spring Security Core plugin:
-grails.plugin.springsecurity{
-    userLookup{
-        userDomainClassName = 'ar.com.orkodev.readerswriters.domain.User'
-        authorityJoinClassName = 'ar.com.orkodev.readerswriters.domain.UserRole'
-    }
-    authority{
-        className = 'ar.com.orkodev.readerswriters.domain.Role'
-    }
-    controllerAnnotations.staticRules = [
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'ar.com.orkodev.readerswriters.domain.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'ar.com.orkodev.readerswriters.domain.UserRole'
+grails.plugin.springsecurity.authority.className = 'ar.com.orkodev.readerswriters.domain.Role'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
             '/':                              ['permitAll'],
             '/index':                         ['permitAll'],
             '/index.gsp':                     ['permitAll'],
@@ -134,10 +129,10 @@ grails.plugin.springsecurity{
             '/**/images/**':                  ['permitAll'],
             '/**/favicon.ico':                ['permitAll']
     ]
-    rejectIfNoRule = true
-    fii.rejectPublicInvocations = false
-    roleHierarchy = '''
+grails.plugin.springsecurity.rejectIfNoRule = true
+grails.plugin.springsecurity.fii.rejectPublicInvocations = false
+grails.plugin.springsecurity.roleHierarchy = '''
         ROLE_ADM > ROLE_US
-    '''
-}
+'''
+grails.plugin.springsecurity.rememberMe.cookieName = 'reader-writers_remember_me'
 
