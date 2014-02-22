@@ -83,5 +83,7 @@ grails.project.dependency.resolution = {
 
         //security
         compile ':spring-security-core:2.0-RC2'
+        compile ":cookie-session:2.0.13"
+        compile ':webxml:1.4.1'
     }
 }

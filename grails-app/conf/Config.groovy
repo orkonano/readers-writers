@@ -135,4 +135,5 @@ grails.plugin.springsecurity.roleHierarchy = '''
         ROLE_ADM > ROLE_US
 '''
 grails.plugin.springsecurity.rememberMe.cookieName = 'reader-writers_remember_me'
+grails.plugin.springsecurity.useSessionFixationPrevention = true
 

@@ -23,6 +23,7 @@
         <div>
             <sec:ifNotLoggedIn>
                 <g:link controller='login' action='auth'>Entrar</g:link>
+                <g:link controller='user' action='create'>Registrate</g:link>
             </sec:ifNotLoggedIn>
             <sec:ifLoggedIn>
                 <sec:ifLoggedIn>Hola <sec:username/>!</sec:ifLoggedIn>
