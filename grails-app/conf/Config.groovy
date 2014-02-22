@@ -86,6 +86,7 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+        grails.resources.debug = true
     }
     production {
         grails.logging.jul.usebridge = false
@@ -113,3 +114,30 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity{
+    userLookup{
+        userDomainClassName = 'ar.com.orkodev.readerswriters.domain.User'
+        authorityJoinClassName = 'ar.com.orkodev.readerswriters.domain.UserRole'
+    }
+    authority{
+        className = 'ar.com.orkodev.readerswriters.domain.Role'
+    }
+    controllerAnnotations.staticRules = [
+            '/':                              ['permitAll'],
+            '/index':                         ['permitAll'],
+            '/index.gsp':                     ['permitAll'],
+            '/**/js/**':                      ['permitAll'],
+            '/**/css/**':                     ['permitAll'],
+            '/**/images/**':                  ['permitAll'],
+            '/**/favicon.ico':                ['permitAll']
+    ]
+    rejectIfNoRule = true
+    fii.rejectPublicInvocations = false
+    roleHierarchy = '''
+        ROLE_ADM > ROLE_US
+    '''
+}
+

@@ -20,6 +20,15 @@
 	</head>
 	<body>
 		<div id="grailsLogo" role="banner"><a href="http://grails.org"><img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/></a></div>
+        <div>
+            <sec:ifNotLoggedIn>
+                <g:link controller='login' action='auth'>Entrar</g:link>
+            </sec:ifNotLoggedIn>
+            <sec:ifLoggedIn>
+                <sec:ifLoggedIn>Hola <sec:username/>!</sec:ifLoggedIn>
+                <g:link data-action="logout" data-url-logout="${createLink(controller:'logout')}" data-url-redirect="${createLinkTo(dir: '/')}">Salir</g:link>
+            </sec:ifLoggedIn>
+        </div>
 		<g:layoutBody/>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
