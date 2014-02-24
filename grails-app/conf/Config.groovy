@@ -121,13 +121,14 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'ar.com.orkodev.re
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'ar.com.orkodev.readerswriters.domain.UserRole'
 grails.plugin.springsecurity.authority.className = 'ar.com.orkodev.readerswriters.domain.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-            '/':                              ['permitAll'],
-            '/index':                         ['permitAll'],
-            '/index.gsp':                     ['permitAll'],
-            '/**/js/**':                      ['permitAll'],
-            '/**/css/**':                     ['permitAll'],
-            '/**/images/**':                  ['permitAll'],
-            '/**/favicon.ico':                ['permitAll']
+            '/':                                        ['permitAll'],
+            '/j_spring_security_facebook_redirect':     ['permitAll'],
+            '/index':                                   ['permitAll'],
+            '/index.gsp':                               ['permitAll'],
+            '/**/js/**':                                ['permitAll'],
+            '/**/css/**':                               ['permitAll'],
+            '/**/images/**':                            ['permitAll'],
+            '/**/favicon.ico':                          ['permitAll']
     ]
 grails.plugin.springsecurity.rejectIfNoRule = true
 grails.plugin.springsecurity.fii.rejectPublicInvocations = false
@@ -136,4 +137,15 @@ grails.plugin.springsecurity.roleHierarchy = '''
 '''
 grails.plugin.springsecurity.rememberMe.cookieName = 'reader-writers_remember_me'
 grails.plugin.springsecurity.useSessionFixationPrevention = true
-
+//--FACEBOOK--
+grails.plugin.springsecurity.facebook.domain.classname='ar.com.orkodev.readerswriters.domain.FacebookUser'
+environments {
+    development {
+        grails.plugin.springsecurity.facebook.appId='368555996619672'
+        grails.plugin.springsecurity.facebook.secret='8bbb1090188393a6351481bfcda374f3'
+    }
+    production{
+        grails.plugin.springsecurity.facebook.appId='1411873405731514'
+        grails.plugin.springsecurity.facebook.secret='2504f4860cfd2ae4036f17526c1a154d'
+    }
+}
