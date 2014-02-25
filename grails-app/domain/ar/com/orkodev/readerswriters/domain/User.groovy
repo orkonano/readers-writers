@@ -3,6 +3,7 @@ package ar.com.orkodev.readerswriters.domain
 class User {
 
 	transient springSecurityService
+    transient String newPassword
 
 	String username
 	String password
@@ -20,6 +21,15 @@ class User {
 		password blank: false
         firstname nullable: true
         lastname nullable: true
+        newPassword bindable: true, nullable:true, validator: { val, obj ->
+            if (val){
+                def encondeVal = obj.springSecurityService.encodePassword(val)
+                return encondeVal != obj.password
+            }else{
+                return true
+            }
+
+        }
 	}
 
 	static mapping = {
@@ -35,6 +45,9 @@ class User {
 	}
 
 	def beforeUpdate() {
+        if (newPassword){
+            password = newPassword
+        }
 		if (isDirty('password')) {
 			encodePassword()
 		}
@@ -43,4 +56,5 @@ class User {
 	protected void encodePassword() {
 		password = springSecurityService.encodePassword(password)
 	}
+
 }

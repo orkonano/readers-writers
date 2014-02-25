@@ -30,4 +30,19 @@ class UserServiceSpec extends GroovyTestCase {
         userToSave = userService.saveUser(userToSave)
         assertNotNull(userToSave.id)
     }
+
+
+    void testEditUser() {
+        def userToSave = new User(username: "orko@orko.com",password: "3434")
+        userToSave = userService.saveUser(userToSave)
+        def userToEdit = User.get(userToSave)
+        userToEdit.newPassword = "asadasd"
+        userToEdit.firstname = "mariano"
+        userToEdit.lastname = "kfuri"
+        userToEdit.save()
+        def userCheck = User.get(userToSave)
+        assertEquals(userCheck.firstname,userToEdit.firstname)
+        assertEquals(userCheck.lastname,userToEdit.lastname)
+        assertEquals(userCheck.password,userCheck.springSecurityService.encodePassword(userToEdit.newPassword))
+    }
 }

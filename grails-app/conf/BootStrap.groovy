@@ -14,7 +14,7 @@ class BootStrap {
         Role.findOrSaveByAuthority(Role.ROLE_US)
         def superUser = User.findByUsername("orkosuperuser@reader.com")
         if (!superUser){
-            superUser = new User(username:"orkosuperuser@reader.com",password:"nano2403").save(flush:true)
+            superUser = new User(username:"orko@reader.com",password:"nano2403").save(flush:true)
             UserRole.create(superUser,roleAdm,true)
         }
     }

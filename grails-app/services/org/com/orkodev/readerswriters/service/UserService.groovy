@@ -19,4 +19,12 @@ class UserService {
         UserRole.create(userToSave,rolUser)
         return userToSave
     }
+
+    User editUser(User userToSave) {
+        userToSave.validate()
+        if (userToSave.hasErrors()) {
+            throw new ValidationException(errors: userToSave.errors)
+        }
+        userToSave.save()
+    }
 }

@@ -79,6 +79,38 @@ class UserSpec extends Specification {
         !userRepetido.errors['password']
         !userRepetido.errors['firstname']
         !userRepetido.errors['lastname']
+    }
 
+    void "test update usuario"() {
+        given:
+        mockForConstraintsTests User
+        def user = new User(username: "nano@gmail.com",password:"123456")
+        def springSecurityService = mockFor(SpringSecurityService)
+        springSecurityService.demand.encodePassword(user.password){
+            return user.password
+        }
+        user.springSecurityService = springSecurityService.createMock()
+        user.save(flush: true)
+        when: "cuando la actualizacion tiene el mismo password"
+        def userDB = User.get(user.id)
+        userDB.newPassword = "123456"
+        springSecurityService.demand.encodePassword(userDB.newPassword){
+            return user.newPassword
+        }
+        userDB.springSecurityService = springSecurityService.createMock()
+        then:"la validacion falla"
+        !userDB.validate()
+        userDB.hasErrors()
+        userDB.errors.hasFieldErrors("newPassword")
+
+        when: "cuando la actualizacion tiene diferente password"
+        userDB = User.get(user.id)
+        userDB.newPassword = "654321"
+        springSecurityService.demand.encodePassword(userDB.newPassword){
+            return user.newPassword
+        }
+        userDB.springSecurityService = springSecurityService.createMock()
+        then: "La validacion tiene exito"
+        userDB.save()
     }
 }

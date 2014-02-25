@@ -4,8 +4,6 @@ import ar.com.orkodev.readerswiters.exception.ValidationException
 import grails.plugin.springsecurity.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
-
 
 class UserController {
 
@@ -45,31 +43,40 @@ class UserController {
         redirect url:"/"
     }
 
-/*    def edit(User userInstance) {
-        respond userInstance
-    }*/
+    @Secured("ROLE_US")
+    def edit() {
+        def userLogin = springSecurityService.getCurrentUser()
+        userLogin.newPassword = ""
+        respond userLogin
+    }
 
-/*    def update(User userInstance) {
+    @Secured("ROLE_US")
+    def update(User userInstance) {
         if (userInstance == null) {
             notFound()
             return
         }
-
-        if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'edit'
+        def userLogin = springSecurityService.getCurrentUser()
+        if (userLogin.id != userInstance.id){
+            userInstance.errors
+            userInstance.newPassword = ''
+            render model:["userInstance":userInstance,"otherError":"No se está actualizando al mismo usuario loggeado"], view:'edit'
             return
         }
 
-        userInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-                redirect userInstance
-            }
-            '*'{ respond userInstance, [status: OK] }
+        def new_password = userInstance.newPassword
+        try {
+            userInstance = userService.editUser(userInstance)
+        }catch (ValidationException ex){
+            userInstance.errors = ex.errors
+            userInstance.newPassword = ''
+            render  model:["userInstance":userInstance], view:'edit'
+            return
         }
-    }*/
+
+        springSecurityService.reauthenticate(userInstance.username,new_password)
+        redirect action: "edit"
+    }
 
     /*@Transactional
     def delete(User userInstance) {
