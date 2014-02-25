@@ -11,6 +11,7 @@ import spock.lang.*
 class UserControllerSpec extends Specification {
 
     def id
+    def newPassword
 
     def populateValidParams(params) {
         assert params != null
