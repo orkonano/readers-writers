@@ -46,8 +46,7 @@ class UserController {
     @Secured("ROLE_US")
     def edit() {
         def userLogin = springSecurityService.getCurrentUser()
-        userLogin.newPassword = ""
-        respond userLogin
+        render model:["userInstance":userLogin],view:"edit"
     }
 
     @Secured("ROLE_US")
@@ -56,6 +55,7 @@ class UserController {
             notFound()
             return
         }
+        def newPassword = params['newPassword']
         def userLogin = springSecurityService.getCurrentUser()
         if (userLogin.id != userInstance.id){
             userInstance.errors
@@ -64,7 +64,7 @@ class UserController {
             return
         }
 
-        def new_password = userInstance.newPassword
+        userInstance.newPassword = newPassword
         try {
             userInstance = userService.editUser(userInstance)
         }catch (ValidationException ex){
@@ -74,7 +74,7 @@ class UserController {
             return
         }
 
-        springSecurityService.reauthenticate(userInstance.username,new_password)
+        springSecurityService.reauthenticate(userInstance.username,newPassword)
         redirect action: "edit"
     }
 

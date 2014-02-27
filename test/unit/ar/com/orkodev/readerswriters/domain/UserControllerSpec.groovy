@@ -3,7 +3,7 @@ package ar.com.orkodev.readerswriters.domain
 import ar.com.orkodev.readerswiters.exception.ValidationException
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.*
-import org.com.orkodev.readerswriters.service.UserService
+import ar.com.orkodev.readerswriters.service.UserService
 import spock.lang.*
 
 @TestFor(UserController)

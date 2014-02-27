@@ -13,6 +13,7 @@ class User {
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
+    static hasOne = [facebookUser:FacebookUser]
 
 	static transients = ['springSecurityService']
 
@@ -21,12 +22,14 @@ class User {
 		password blank: false
         firstname nullable: true
         lastname nullable: true
-        newPassword bindable: true, nullable:true, validator: { val, obj ->
-            if (val){
-                def encondeVal = obj.springSecurityService.encodePassword(val)
-                return encondeVal != obj.password
-            }else{
-                return true
+        facebookUser nullable: true
+        newPassword nullable:true, validator: { val, obj ->
+            if (!val){
+                if (obj.id && !obj.facebookUser){
+                    return false
+                }else{
+                    return true
+                }
             }
 
         }

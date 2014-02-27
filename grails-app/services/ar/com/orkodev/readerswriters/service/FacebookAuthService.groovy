@@ -1,4 +1,4 @@
-package org.com.orkodev.readerswriters.service
+package ar.com.orkodev.readerswriters.service
 
 import ar.com.orkodev.readerswriters.domain.FacebookUser
 import ar.com.orkodev.readerswriters.domain.User

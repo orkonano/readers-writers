@@ -24,6 +24,7 @@
 </div>
 </g:if>
 <g:if test="${userInstance?.id}">
+    <g:if test="${!userInstance.facebookUser}">
     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'newPassword', 'error')} required">
         <label for="new_password">
             <g:message code="user.new_password.label" default="Nueva Password" />
@@ -31,6 +32,7 @@
         </label>
         <g:passwordField name="newPassword" required="" value=""/>
     </div>
+    </g:if>
     <div class="fieldcontain">
         <label for="firstname">
             <g:message code="user.firstname" default="Nombre" />

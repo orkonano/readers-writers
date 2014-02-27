@@ -4,13 +4,14 @@ import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
+import groovy.mock.interceptor.MockFor
 import spock.lang.Specification
 
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
 @TestMixin(GrailsUnitTestMixin)
-@Mock(User)
+@Mock([User,FacebookUser])
 class UserSpec extends Specification {
 
     def setup() {
@@ -81,7 +82,33 @@ class UserSpec extends Specification {
         !userRepetido.errors['lastname']
     }
 
-    void "test update usuario"() {
+    void "test update usuario con usuario facebook"() {
+        given:
+        mockForConstraintsTests User
+        mockForConstraintsTests FacebookUser
+        def user = new User(username: "nano@gmail.com",password:"123456")
+        def userFacebook = new FacebookUser(accessToken: "ddd",uid: 232,user: user)
+        def springSecurityService = mockFor(SpringSecurityService)
+        springSecurityService.demand.encodePassword(user.password){
+            return user.password
+        }
+        user.springSecurityService = springSecurityService.createMock()
+        user.save(flush: true)
+        userFacebook.save(flush: true)
+        when: "cuando tiene usuario facebook no hace falta cargar el new password"
+        def userDB = User.get(user.id)
+        springSecurityService.demand.encodePassword(userDB.newPassword){
+            return user.newPassword
+        }
+        userDB.facebookUser = userFacebook
+        userDB.springSecurityService = springSecurityService.createMock()
+        then:"la validacion success"
+        userDB.validate()
+        !userDB.hasErrors()
+
+    }
+
+    void "test update usuario sin usuario facebook"() {
         given:
         mockForConstraintsTests User
         def user = new User(username: "nano@gmail.com",password:"123456")
@@ -103,7 +130,18 @@ class UserSpec extends Specification {
         userDB.hasErrors()
         userDB.errors.hasFieldErrors("newPassword")
 
-        when: "cuando la actualizacion tiene diferente password"
+        when: "cuando la actualizacion no tiene new password y no tiene asociado un usuario facebook"
+        userDB = User.get(user.id)
+        springSecurityService.demand.encodePassword(userDB.newPassword){
+            return user.newPassword
+        }
+        userDB.springSecurityService = springSecurityService.createMock()
+        then:"la validacion falla"
+        !userDB.validate()
+        userDB.hasErrors()
+        userDB.errors.hasFieldErrors("newPassword")
+
+        when: "cuando la actualizacion tiene diferente password y no tiene asociado un usuario facebook"
         userDB = User.get(user.id)
         userDB.newPassword = "654321"
         springSecurityService.demand.encodePassword(userDB.newPassword){
