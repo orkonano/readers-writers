@@ -3,7 +3,6 @@ package ar.com.orkodev.readerswriters.domain
 class User {
 
 	transient springSecurityService
-    transient String newPassword
 
 	String username
 	String password
@@ -23,16 +22,6 @@ class User {
         firstname nullable: true
         lastname nullable: true
         facebookUser nullable: true
-        newPassword nullable:true, validator: { val, obj ->
-            if (!val){
-                if (obj.id && !obj.facebookUser){
-                    return false
-                }else{
-                    return true
-                }
-            }
-
-        }
 	}
 
 	static mapping = {
@@ -48,9 +37,6 @@ class User {
 	}
 
 	def beforeUpdate() {
-        if (newPassword){
-            password = newPassword
-        }
 		if (isDirty('password')) {
 			encodePassword()
 		}

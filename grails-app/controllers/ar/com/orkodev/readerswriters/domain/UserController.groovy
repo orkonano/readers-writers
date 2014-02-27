@@ -55,26 +55,21 @@ class UserController {
             notFound()
             return
         }
-        def newPassword = params['newPassword']
         def userLogin = springSecurityService.getCurrentUser()
         if (userLogin.id != userInstance.id){
             userInstance.errors
-            userInstance.newPassword = ''
             render model:["userInstance":userInstance,"otherError":"No se está actualizando al mismo usuario loggeado"], view:'edit'
             return
         }
 
-        userInstance.newPassword = newPassword
         try {
             userInstance = userService.editUser(userInstance)
         }catch (ValidationException ex){
             userInstance.errors = ex.errors
-            userInstance.newPassword = ''
             render  model:["userInstance":userInstance], view:'edit'
             return
         }
 
-        springSecurityService.reauthenticate(userInstance.username,newPassword)
         redirect action: "edit"
     }
 

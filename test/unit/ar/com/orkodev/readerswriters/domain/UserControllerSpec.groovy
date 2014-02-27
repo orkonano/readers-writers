@@ -11,7 +11,6 @@ import spock.lang.*
 class UserControllerSpec extends Specification {
 
     def id
-    def newPassword
 
     def populateValidParams(params) {
         assert params != null
@@ -91,14 +90,12 @@ class UserControllerSpec extends Specification {
 
         when: "The update action is executed with a valid instance"
         response.reset()
-        params['newPassword'] = "fff"
         params['id'] = 1
         populateValidParams(params)
         user = new User(params)
         userServiceSuccess.demand.editUser(user) { user }
         controller.userService = userServiceSuccess.createMock()
         springSecurityService.demand.getCurrentUser(){return new User(id:1,username: "hh@gmail.com",password: "hola")}
-        springSecurityService.demand.reauthenticate(user.username,user.password){ user.username}
         controller.springSecurityService = springSecurityService.createMock()
         controller.update(user)
 

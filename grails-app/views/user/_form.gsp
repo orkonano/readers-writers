@@ -3,10 +3,17 @@
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'username', 'error')} required">
 	<label for="username">
 		<g:message code="user.username.label" default="Username" />
-		<span class="required-indicator">*</span>
+        <g:if test="${!userInstance?.id}">
+		    <span class="required-indicator">*</span>
+         </g:if>
 	</label>
     <g:if test="${userInstance?.id}">
-        ${userInstance.username}
+        <g:if test="${!userInstance.facebookUser}">
+            ${userInstance.username}
+         </g:if>
+         <g:else>
+             Cuenta asociada a facebook
+         </g:else>
     </g:if>
     <g:else>
         <g:field type="email" name="username" required="" value="${userInstance?.username}"/>
@@ -24,15 +31,6 @@
 </div>
 </g:if>
 <g:if test="${userInstance?.id}">
-    <g:if test="${!userInstance.facebookUser}">
-    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'newPassword', 'error')} required">
-        <label for="new_password">
-            <g:message code="user.new_password.label" default="Nueva Password" />
-            <span class="required-indicator">*</span>
-        </label>
-        <g:passwordField name="newPassword" required="" value=""/>
-    </div>
-    </g:if>
     <div class="fieldcontain">
         <label for="firstname">
             <g:message code="user.firstname" default="Nombre" />
