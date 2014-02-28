@@ -15,4 +15,8 @@ class NarrativeGenre {
     static mapping = {
         subNarrativeGenres joinTable: false, column: "parent_id"
     }
+
+    public String toString(){
+        return name
+    }
 }

@@ -7,4 +7,8 @@ class TellingType {
     static constraints = {
         name blank: false, unique: true
     }
+
+    public String toString(){
+        return name
+    }
 }

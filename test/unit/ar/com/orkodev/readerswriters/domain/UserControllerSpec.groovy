@@ -34,7 +34,7 @@ class UserControllerSpec extends Specification {
 
         when: "The save action is executed with an invalid instance"
         def user = new User()
-        userServiceError.demand.saveUser(user) {  throw new ValidationException() }
+        userServiceError.demand.save(user) {  throw new ValidationException() }
         controller.userService = userServiceError.createMock()
         request.contentType = FORM_CONTENT_TYPE
 
@@ -48,7 +48,7 @@ class UserControllerSpec extends Specification {
         response.reset()
         populateValidParams(params)
         user = new User(params)
-        userServiceSuccess.demand.saveUser(user) { user }
+        userServiceSuccess.demand.save(user) { user }
         controller.userService = userServiceSuccess.createMock()
         springSecurityService.demand.reauthenticate(user.username,user.password){ user.username}
         controller.springSecurityService = springSecurityService.createMock()
