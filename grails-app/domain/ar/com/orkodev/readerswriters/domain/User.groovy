@@ -13,6 +13,7 @@ class User {
 	boolean accountLocked
 	boolean passwordExpired
     static hasOne = [facebookUser:FacebookUser]
+    static hasMany = [tellings:Telling]
 
 	static transients = ['springSecurityService']
 
@@ -26,6 +27,7 @@ class User {
 
 	static mapping = {
 		password column: '`password`'
+        cache: true
 	}
 
 	Set<Role> getAuthorities() {

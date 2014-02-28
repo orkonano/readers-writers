@@ -12,4 +12,8 @@ class FacebookUser {
     static constraints = {
         uid unique: true
     }
+
+    static mapping = {
+        cache: true
+    }
 }
