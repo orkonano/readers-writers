@@ -6,8 +6,9 @@ import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.domain.UserRole
 import grails.transaction.Transactional
 
-@Transactional
 class UserService {
+
+    static transactional = true
 
     def saveUser(User userToSave) {
         userToSave.validate()

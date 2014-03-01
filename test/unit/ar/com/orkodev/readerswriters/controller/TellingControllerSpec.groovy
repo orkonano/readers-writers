@@ -1,7 +1,7 @@
-package ar.com.orkodev.readerswriters.domain
+package ar.com.orkodev.readerswriters.controller
 
-
-
+import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.TellingController
 import grails.test.mixin.*
 import spock.lang.*
 
