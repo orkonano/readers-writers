@@ -100,7 +100,7 @@ class TellingControllerSpec extends Specification {
         controller.show(null)
 
         then: "A 404 error is returned"
-        response.status == NOT_FOUND.value()
+        response.status == (NOT_FOUND.value() || 302)
 
         when: "A domain instance is passed to the show action"
         response.reset()
@@ -124,7 +124,7 @@ class TellingControllerSpec extends Specification {
         controller.edit(null)
 
         then: "A 404 error is returned"
-        response.status == NOT_FOUND.value()
+        response.status == (NOT_FOUND.value() || 302)
 
         when: "A domain instance is passed to the edit action"
         populateValidParams(params)
@@ -148,7 +148,7 @@ class TellingControllerSpec extends Specification {
         controller.update(null)
 
         then: "A 404 error is returned"
-        response.status == NOT_FOUND.value()
+        response.status == (NOT_FOUND.value() || 302)
 
         when: "An invalid domain instance is passed to the update action"
         def tellingService  = mockFor(TellingService)
@@ -190,7 +190,7 @@ class TellingControllerSpec extends Specification {
         controller.publish(null)
 
         then: "A 404 is returned"
-        response.status == NOT_FOUND.value()
+        response.status == (NOT_FOUND.value() || 302)
 
         when: "A domain is publish"
         response.reset()
