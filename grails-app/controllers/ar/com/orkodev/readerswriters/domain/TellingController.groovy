@@ -1,5 +1,6 @@
 package ar.com.orkodev.readerswriters.domain
 
+import ar.com.orkodev.readerswiters.exception.NotPublishedException
 import ar.com.orkodev.readerswiters.exception.ValidationException
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -22,8 +23,12 @@ class TellingController {
     }
 
     def show(Telling tellingInstance) {
+        if (tellingInstance == null) {
+            notFound()
+            return
+        }
         if (isTellingFromUserLogin(tellingInstance)){
-            respond tellingInstance
+            render model:["tellingInstance": tellingInstance],view:"show"
         }else{
             response.status = 403;
         }
@@ -45,7 +50,6 @@ class TellingController {
             return
         }
 
-        tellingService.save(tellingInstance)
         try {
             tellingInstance = tellingService.save(tellingInstance)
         }catch (ValidationException ex){
@@ -58,6 +62,10 @@ class TellingController {
     }
 
     def edit(Telling tellingInstance) {
+        if (tellingInstance == null) {
+            notFound()
+            return
+        }
         if (isTellingFromUserLogin(tellingInstance)){
             render  model:generarModelViewSaveAndUpdate(tellingInstance), view:'create'
         }else{
@@ -66,13 +74,11 @@ class TellingController {
     }
 
     def update(Telling tellingInstance) {
+        if (tellingInstance == null) {
+            notFound()
+            return
+        }
         if (isTellingFromUserLogin(tellingInstance)){
-            if (tellingInstance == null) {
-                notFound()
-                return
-            }
-
-            tellingService.save(tellingInstance)
             try {
                 tellingInstance = tellingService.save(tellingInstance)
             }catch (ValidationException ex){
@@ -92,17 +98,34 @@ class TellingController {
     }
 
     def delete(Telling tellingInstance) {
+        if (tellingInstance == null) {
+            notFound()
+            return
+        }
         if (isTellingFromUserLogin(tellingInstance)){
-            if (tellingInstance == null) {
-                notFound()
-                return
-            }
-
             tellingService.delete(tellingInstance)
             redirect action: "index"
         }else{
             response.status = 403;
         }
+    }
+
+    def publish(Telling tellingInstance) {
+        if (tellingInstance == null) {
+            notFound()
+            return
+        }
+        if (isTellingFromUserLogin(tellingInstance)){
+            tellingService.publish(tellingInstance)
+            flash.success = "Se publicó con éxito"
+            redirect action: "index"
+        }else{
+            response.status = 403;
+        }
+    }
+
+    def handleNotPublishedException(NotPublishedException ex){
+        flash.error = ex.message
     }
 
     protected void notFound() {

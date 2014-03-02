@@ -1,5 +1,6 @@
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Role
+import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingType
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.domain.UserRole
@@ -34,6 +35,7 @@ class BootStrap {
 
         new NarrativeGenre(name: "Suspenso",parent: padre1).save(flush: true,failOnError: true)
         new NarrativeGenre(name: "Detective",parent: padre1).save(flush: true,failOnError: true)
+
 
     }
     def destroy = {

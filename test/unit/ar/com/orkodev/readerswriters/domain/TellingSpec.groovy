@@ -61,5 +61,73 @@ class TellingSpec extends Specification {
         telling.state == Telling.DRAFT
     }
 
+    void "test if de telling is publicable"() {
+        given:
+        mockForConstraintsTests Telling
+        when: "el estado del telling es draft"
+        def telling = new Telling(state: Telling.DRAFT)
+        then: "es publicable"
+        telling.isPublicable()
+
+        when: "el estado no es draft"
+        telling.state = Telling.PUBLISHED
+        def telling1 = new Telling(state: Telling.ERASED)
+        then: "No es publicable"
+        !telling.isPublicable()
+        !telling1.isPublicable()
+
+    }
+
+    void "test if de telling is eliminable"() {
+        given:
+        mockForConstraintsTests Telling
+        when: "el estado del telling es draft"
+        def telling = new Telling(state: Telling.DRAFT)
+        then: "es eliminable"
+        telling.isEliminable()
+
+        when: "el estado no es draft"
+        telling.state = Telling.PUBLISHED
+        def telling1 = new Telling(state: Telling.ERASED)
+        then: "No es eliminable"
+        !telling.isEliminable()
+        !telling1.isEliminable()
+
+    }
+
+    void "test if de telling is editable"() {
+        given:
+        mockForConstraintsTests Telling
+        when: "el estado del telling es draft"
+        def telling = new Telling(state: Telling.DRAFT)
+        then: "es editable"
+        telling.isEditable()
+
+        when: "el estado no es draft"
+        telling.state = Telling.PUBLISHED
+        def telling1 = new Telling(state: Telling.ERASED)
+        then: "No es editable"
+        !telling.isEditable()
+        !telling.isEditable()
+
+    }
+
+    void "test if de telling is string stat"() {
+        when: "el estado del telling es draft"
+        def telling = new Telling(state: Telling.DRAFT)
+        then:"El estado string es BORRADOR"
+        telling.getStringState() == 'Borrador'
+
+        when: "el estado del telling es erased"
+        telling = new Telling(state: Telling.ERASED)
+        then:"El estado string es Eliminado"
+        telling.getStringState() == 'Eliminado'
+
+        when: "el estado del telling es publish"
+        telling = new Telling(state: Telling.PUBLISHED)
+        then:"El estado string es Publicado"
+        telling.getStringState() == 'Publicado'
+
+    }
 
 }

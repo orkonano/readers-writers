@@ -49,4 +49,24 @@ class Telling {
     def beforeUpdate() {
         setDefaultState()
     }
+
+    def isPublicable(){
+        return this.state == Telling.DRAFT
+    }
+
+    def isEliminable(){
+        return this.state == Telling.DRAFT
+    }
+
+    def isEditable(){
+        return this.state == Telling.DRAFT
+    }
+
+    def getStringState(){
+        switch (this.state){
+            case DRAFT: return "Borrador"
+            case ERASED: return "Eliminado"
+            case PUBLISHED: return "Publicado"
+        }
+    }
 }

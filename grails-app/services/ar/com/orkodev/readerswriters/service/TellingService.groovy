@@ -1,5 +1,7 @@
 package ar.com.orkodev.readerswriters.service
 
+import ar.com.orkodev.readerswiters.exception.NotErasedException
+import ar.com.orkodev.readerswiters.exception.NotPublishedException
 import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.Telling
 
@@ -19,13 +21,17 @@ class TellingService {
     }
 
     def delete(Telling tellingToErase) {
-        tellingToErase.state = Telling.ERASED
-        tellingToErase.save()
+        if (!tellingToErase.isEliminable()){
+            throw new NotErasedException("Debe estar en estado borrador para eliminarse")
+        }else{
+            tellingToErase.state = Telling.ERASED
+            tellingToErase.save()
+        }
     }
 
     def publish(Telling tellingToPublish){
-        if (tellingToPublish.state != Telling.DRAFT){
-            throw new ValidationException()
+        if (!tellingToPublish.isPublicable()){
+            throw new NotPublishedException("Debe estar en estado borrador para publicarse")
         }else{
             tellingToPublish.state = Telling.PUBLISHED
             tellingToPublish.save()

@@ -31,7 +31,9 @@
 						<th><g:message code="telling.narrativeGenre.label" default="Narrative Genre" /></th>
 					
 						<th><g:message code="telling.tellingType.label" default="Telling Type" /></th>
-					
+
+                        <th><g:message code="telling.state.label" default="State" /></th>
+
 					</tr>
 				</thead>
 				<tbody>
@@ -45,6 +47,8 @@
 						<td>${fieldValue(bean: tellingInstance, field: "narrativeGenre")}</td>
 					
 						<td>${fieldValue(bean: tellingInstance, field: "tellingType")}</td>
+
+                        <td>${tellingInstance.getStringState()}</td>
 					
 					</tr>
 				</g:each>

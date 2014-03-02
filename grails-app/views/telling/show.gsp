@@ -80,8 +80,16 @@
 			</ol>
 			<g:form url="[resource:tellingInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
+                    <g:if test="${tellingInstance.isEditable()}">
 					<g:link class="edit" action="edit" resource="${tellingInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                    </g:if>
+                    <g:if test="${tellingInstance.isEliminable()}">
+					    <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                    </g:if>
+                    <g:if test="${tellingInstance.isPublicable()}">
+                        <g:link class="publish" action="publish" resource="${tellingInstance}"><g:message code="default.button.publish.label" default="Publish" /></g:link>
+                    </g:if>
+
 				</fieldset>
 			</g:form>
 		</div>
