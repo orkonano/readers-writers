@@ -8,6 +8,34 @@ import ar.com.orkodev.readerswriters.domain.UserRole
 class BootStrap {
 
     def init = { servletContext ->
+        environments {
+            production {
+                if (!Role.list())
+                    common()
+            }
+            development {
+                common()
+                def tellingType = TellingType.get(1)
+                def narrativeGenre = NarrativeGenre.get(1)
+                def user = User.get(1)
+                new Telling(title: "la fantastica historia de un orko",description: "un pequeño orko está caminando por el mundo",
+                text: "Yo vivía en el bosque muy contento, caminaba caminaba sin cesar", author: user,
+                narrativeGenre:narrativeGenre,tellingType: tellingType).save(flush: true,failOnError: true)
+                new Telling(title: "la fantastica historia de una foca",description: "un pequeña foca está nadando en el mar",
+                        text: "Yo vivía en el puerto muy contanta, comia comia sin cesar", author: user,
+                        narrativeGenre:narrativeGenre,tellingType: tellingType).save(flush: true,failOnError: true)
+            }
+        }
+
+
+
+
+    }
+    def destroy = {
+    }
+
+
+    def common = {
         //Creo los roles en caso de no existir y además creo el usuario ADM
         //Sólo se tiene los roles ROLE_US y ROLE_ADM
         def roleAdm = Role.findByAuthority(Role.ROLE_ADM)
@@ -35,9 +63,5 @@ class BootStrap {
 
         new NarrativeGenre(name: "Suspenso",parent: padre1).save(flush: true,failOnError: true)
         new NarrativeGenre(name: "Detective",parent: padre1).save(flush: true,failOnError: true)
-
-
-    }
-    def destroy = {
     }
 }

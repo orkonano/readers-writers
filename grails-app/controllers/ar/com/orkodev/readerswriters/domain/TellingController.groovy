@@ -22,8 +22,15 @@ class TellingController {
         respond query.list(params), model: [tellingInstanceCount: query.count()]
     }
 
-    def list(){
-
+    def list(Telling tellingSearch){
+        if (params.init){
+           render view:"list",model: [tellingInstanceList:[],tellingInstanceCount: 0,narrativesGenre:NarrativeGenre.list(),tellingsType:TellingType.list()]
+        }else{
+            def max = params.max?:15
+            def offset = params.ofsset?:0
+            def result = tellingService.list(tellingSearch,max,offset)
+            render view:"list",model: [tellingInstanceList:result.result,tellingInstanceCount: result.countResult,narrativesGenre:NarrativeGenre.list(),tellingsType:TellingType.list()]
+        }
     }
 
     def show(Telling tellingInstance) {

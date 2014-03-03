@@ -240,4 +240,38 @@ class TellingControllerSpec extends Specification {
 //        response.redirectedUrl == '/telling/index'
 //    }
 
+    void "Test that the list action"() {
+        given:
+        mockForConstraintsTests NarrativeGenre
+        mockForConstraintsTests TellingType
+        def ng1 = new NarrativeGenre(name: "ng 1").save(flush: true, failOnError: true)
+        def ng2 = new NarrativeGenre(name: "ng 2").save(flush: true, failOnError: true)
+        def tt1 = new TellingType(name: "tt 1").save(flush: true, failOnError: true)
+        def tt2 = new TellingType(name: "tt 2").save(flush: true, failOnError: true)
+        def tellingService  = mockFor(TellingService)
+        def telling = new Telling(title: "3")
+        tellingService.demandExplicit.list(){Telling telling1,Integer max, Integer offset ->
+            return [result:[telling],countResult:1]
+        }
+        controller.tellingService = tellingService.createMock()
+        when:"Es la primera vez que se llama y los paramestros son nulos"
+        controller.list(null)
+        then:"se redirecciona al listado, cargando los combos para buscar"
+        view == "/telling/list"
+        model.tellingInstanceList == []
+        model.tellingInstanceCount == 0
+        model.narrativesGenre == [ng1,ng2]
+        model.tellingsType == [tt1,tt2]
+
+        when: "se recibe un telling con datos"
+        controller.list(new Telling())
+        then:"se redirecciona al listado con datos"
+        view == "/telling/list"
+        model.tellingInstanceList == [telling]
+        model.tellingInstanceCount == 1
+        model.narrativesGenre == [ng1,ng2]
+        model.tellingsType == [tt1,tt2]
+
+    }
+
 }

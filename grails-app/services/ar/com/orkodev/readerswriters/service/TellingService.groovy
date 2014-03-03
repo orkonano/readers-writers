@@ -38,4 +38,21 @@ class TellingService {
         }
     }
 
+    def list(Telling tellingSearch, Integer max,Integer offset){
+        def query = Telling.where {}
+        if (tellingSearch.narrativeGenre!= null && tellingSearch.narrativeGenre.id != null){
+            query = query.where {
+                narrativeGenre.id == tellingSearch.narrativeGenre.id
+            }
+        }
+        if (tellingSearch.tellingType!= null && tellingSearch.tellingType.id != null){
+            query = query.where {
+                tellingType.id == tellingSearch.tellingType.id
+            }
+        }
+        def count = query.count()
+        def resultList = query.list(offset: offset?:0,max: max?:15)
+        return ["result":resultList,"countResult":count]
+    }
+
 }
