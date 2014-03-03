@@ -38,33 +38,19 @@
     <table>
         <thead>
         <tr>
-
             <g:sortableColumn property="title" title="${message(code: 'telling.title.label', default: 'Title')}" />
-
             <g:sortableColumn property="description" title="${message(code: 'telling.description.label', default: 'Description')}" />
-
             <th><g:message code="telling.narrativeGenre.label" default="Narrative Genre" /></th>
-
             <th><g:message code="telling.tellingType.label" default="Telling Type" /></th>
-
-            <th><g:message code="telling.state.label" default="State" /></th>
-
         </tr>
         </thead>
         <tbody>
         <g:each in="${tellingInstanceList}" status="i" var="tellingInstance">
             <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-
-                <td><g:link action="show" id="${tellingInstance.id}">${fieldValue(bean: tellingInstance, field: "title")}</g:link></td>
-
+                <td><g:link action="read" id="${tellingInstance.id}">${fieldValue(bean: tellingInstance, field: "title")}</g:link></td>
                 <td>${fieldValue(bean: tellingInstance, field: "description")}</td>
-
                 <td>${fieldValue(bean: tellingInstance, field: "narrativeGenre")}</td>
-
                 <td>${fieldValue(bean: tellingInstance, field: "tellingType")}</td>
-
-                <td>${tellingInstance.getStringState()}</td>
-
             </tr>
         </g:each>
         </tbody>

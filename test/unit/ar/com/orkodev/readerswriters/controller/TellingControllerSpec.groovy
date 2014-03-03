@@ -263,7 +263,20 @@ class TellingControllerSpec extends Specification {
         model.narrativesGenre == [ng1,ng2]
         model.tellingsType == [tt1,tt2]
 
+        when:"Es la primera vez que se llama y los paramestros tiene init cargado"
+        response.reset()
+        params['init'] = true
+        controller.list(new Telling())
+        then:"se redirecciona al listado, cargando los combos para buscar"
+        view == "/telling/list"
+        model.tellingInstanceList == []
+        model.tellingInstanceCount == 0
+        model.narrativesGenre == [ng1,ng2]
+        model.tellingsType == [tt1,tt2]
+
         when: "se recibe un telling con datos"
+        response.reset()
+        params.remove("init")
         controller.list(new Telling())
         then:"se redirecciona al listado con datos"
         view == "/telling/list"
@@ -273,5 +286,17 @@ class TellingControllerSpec extends Specification {
         model.tellingsType == [tt1,tt2]
 
     }
+
+    void "Test that the read action returns the correct model"() {
+        when: "A domain instance is passed to the read action"
+        params['id']=1
+        def telling = new Telling(params)
+        controller.read(telling)
+        then: "A model is populated containing the domain instance"
+        response.status == 200
+        model!=null
+        view == '/telling/read'
+    }
+
 
 }

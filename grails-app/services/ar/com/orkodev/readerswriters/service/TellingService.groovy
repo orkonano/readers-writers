@@ -39,7 +39,9 @@ class TellingService {
     }
 
     def list(Telling tellingSearch, Integer max,Integer offset){
-        def query = Telling.where {}
+        def query = Telling.where {
+            state == Telling.PUBLISHED
+        }
         if (tellingSearch.narrativeGenre!= null && tellingSearch.narrativeGenre.id != null){
             query = query.where {
                 narrativeGenre.id == tellingSearch.narrativeGenre.id

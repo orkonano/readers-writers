@@ -103,7 +103,8 @@ class TellingServiceSpec extends Specification {
         def ng2 = new NarrativeGenre(name: "ng 2").save(flush: true, failOnError: true)
         def tt = new TellingType(name: "tt 1").save(flush: true, failOnError: true)
         def tt2 = new TellingType(name: "tt 2").save(flush: true, failOnError: true)
-        def jj = new Telling(title: "t1",description: "d1",text: "long text 1",author: user,narrativeGenre: ng,tellingType: tt).save(flush: true, failOnError: true)
+        def jj = new Telling(title: "t1",description: "d1",text: "long text 1",author: user,narrativeGenre: ng,tellingType: tt,state: Telling.DRAFT).save(flush: true, failOnError: true)
+        def jj1 = new Telling(title: "t1",description: "d1",text: "long text 1",author: user,narrativeGenre: ng,tellingType: tt,state: Telling.PUBLISHED).save(flush: true, failOnError: true)
         when: "se busca en la base de datos con diferentes parámetros"
         def tellingSearch = new Telling(narrativeGenre: ng)
         def tellingSearch1 = new Telling(narrativeGenre: ng,tellingType: tt)

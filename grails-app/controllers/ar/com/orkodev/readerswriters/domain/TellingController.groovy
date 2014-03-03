@@ -23,7 +23,7 @@ class TellingController {
     }
 
     def list(Telling tellingSearch){
-        if (params.init){
+        if (tellingSearch == null || params.init){
            render view:"list",model: [tellingInstanceList:[],tellingInstanceCount: 0,narrativesGenre:NarrativeGenre.list(),tellingsType:TellingType.list()]
         }else{
             def max = params.max?:15
@@ -43,7 +43,14 @@ class TellingController {
         }else{
             response.status = 403;
         }
+    }
 
+    def read(Telling tellingInstance) {
+        if (tellingInstance == null) {
+            notFound()
+            return
+        }
+        render model:["tellingInstance": tellingInstance],view:"read"
     }
 
     private boolean isTellingFromUserLogin(Telling telling){
