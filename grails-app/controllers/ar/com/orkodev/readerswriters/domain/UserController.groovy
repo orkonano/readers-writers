@@ -27,20 +27,22 @@ class UserController {
 
     @Secured('permitAll')
     def save(User userInstance) {
-        if (userInstance == null) {
-            notFound()
-            return
+        withForm {
+            if (userInstance == null) {
+                notFound()
+                return
+            }
+            def password = userInstance.password
+            try {
+                userInstance = userService.saveUser(userInstance)
+            }catch (ValidationException ex){
+                userInstance.errors = ex.errors
+                render  model:["userInstance":userInstance], view:'create'
+                return
+            }
+            springSecurityService.reauthenticate(userInstance.username,password)
+            redirect url:"/"
         }
-        def password = userInstance.password
-        try {
-            userInstance = userService.saveUser(userInstance)
-        }catch (ValidationException ex){
-            userInstance.errors = ex.errors
-            render  model:["userInstance":userInstance], view:'create'
-            return
-        }
-        springSecurityService.reauthenticate(userInstance.username,password)
-        redirect url:"/"
     }
 
     @Secured("ROLE_US")

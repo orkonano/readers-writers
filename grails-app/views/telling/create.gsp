@@ -18,6 +18,9 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
+            <g:if test="${flash.invalidToken}">
+                Don't click the button twice!
+            </g:if>
 			<g:hasErrors bean="${tellingInstance}">
 			<ul class="errors" role="alert">
 				<g:eachError bean="${tellingInstance}" var="error">
@@ -25,7 +28,7 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form url="[resource:tellingInstance, action:'save']" >
+			<g:form url="[resource:tellingInstance, action:'save']" useToken="true">
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

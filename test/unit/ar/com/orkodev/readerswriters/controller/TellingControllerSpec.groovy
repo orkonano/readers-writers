@@ -6,6 +6,7 @@ import ar.com.orkodev.readerswriters.service.TellingService
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
 import spock.lang.Specification
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
@@ -60,7 +61,11 @@ class TellingControllerSpec extends Specification {
     }
 
     void "Test the save action correctly persists an instance"() {
-
+        given:
+        def holder = SynchronizerTokensHolder.store(session)
+        def token = holder.generateToken('/telling/save')
+        params[SynchronizerTokensHolder.TOKEN_URI] = '/telling/save'
+        params[SynchronizerTokensHolder.TOKEN_KEY] = token
         when: "The save action is executed with an invalid instance"
         def tellingService  = mockFor(TellingService)
         tellingService.demandExplicit.save(){Telling telling ->
@@ -71,21 +76,22 @@ class TellingControllerSpec extends Specification {
         request.contentType = FORM_CONTENT_TYPE
         def telling = new Telling()
         controller.save(telling)
-
         then: "The create view is rendered again with the correct model"
         model.tellingInstance != null
         view == '/telling/create'
 
         when: "The save action is executed with a valid instance"
         response.reset()
+        holder = SynchronizerTokensHolder.store(session)
+        token = holder.generateToken('/telling/save')
+        params[SynchronizerTokensHolder.TOKEN_URI] = '/telling/save'
+        params[SynchronizerTokensHolder.TOKEN_KEY] = token
         populateValidParams(params)
         telling = new Telling(params)
         tellingService  = mockFor(TellingService)
         tellingService.demandExplicit.save(){Telling telling1 -> return telling1.save()}
         controller.tellingService = tellingService.createMock()
-
         controller.save(telling)
-
         then: "A redirect is issued to the show action"
         response.redirectedUrl == '/telling/index'
     }

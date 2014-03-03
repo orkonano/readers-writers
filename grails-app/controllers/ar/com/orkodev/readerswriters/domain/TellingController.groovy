@@ -22,6 +22,10 @@ class TellingController {
         respond query.list(params), model: [tellingInstanceCount: query.count()]
     }
 
+    def list(){
+
+    }
+
     def show(Telling tellingInstance) {
         if (tellingInstance == null) {
             notFound()
@@ -45,20 +49,22 @@ class TellingController {
     }
 
     def save(Telling tellingInstance) {
-        if (tellingInstance == null) {
-            notFound()
-            return
-        }
+        withForm {
+            if (tellingInstance == null) {
+                notFound()
+                return
+            }
 
-        try {
-            tellingInstance = tellingService.save(tellingInstance)
-        }catch (ValidationException ex){
-            tellingInstance.errors = ex.errors
-            render  model:generarModelViewSaveAndUpdate(tellingInstance), view:'create'
-            return
-        }
+            try {
+                tellingInstance = tellingService.save(tellingInstance)
+            }catch (ValidationException ex){
+                tellingInstance.errors = ex.errors
+                render  model:generarModelViewSaveAndUpdate(tellingInstance), view:'create'
+                return
+            }
 
-        redirect action: "index"
+            redirect action: "index"
+        }
     }
 
     def edit(Telling tellingInstance) {
