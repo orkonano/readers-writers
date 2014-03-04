@@ -13,6 +13,7 @@ class Telling {
     NarrativeGenre narrativeGenre
     TellingType tellingType
     Integer state
+    Date dateCreated
 
 
     static constraints = {

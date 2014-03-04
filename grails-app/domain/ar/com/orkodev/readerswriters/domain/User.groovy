@@ -12,11 +12,11 @@ class User {
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
+    Date dateCreated
+
     static hasOne = [facebookUser:FacebookUser]
     static hasMany = [tellings:Telling]
-
 	static transients = ['springSecurityService']
-
 	static constraints = {
 		username blank: false, unique: true, email: true
 		password blank: false
@@ -24,7 +24,6 @@ class User {
         lastname nullable: true
         facebookUser nullable: true
 	}
-
 	static mapping = {
 		password column: '`password`'
         cache: true
@@ -47,5 +46,13 @@ class User {
 	protected void encodePassword() {
 		password = springSecurityService.encodePassword(password)
 	}
+
+    Set<User> getFollowings(){
+        Follower.findAllByAuthor(this,[sort:"dateCreated"]).collect { it.following } as Set
+    }
+
+    Set<User> getAuthorFollowed(){
+        Follower.findAllByFollowing(this,[sort:"dateCreated"]).collect { it.author } as Set
+    }
 
 }
