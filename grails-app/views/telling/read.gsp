@@ -27,7 +27,11 @@
         </li>
         <li class="fieldcontain">
             <span id="author-label" class="property-label"><g:message code="telling.author.label" default="Author" /></span>
-            <span class="property-value" aria-labelledby="author-label">${tellingInstance.author.username}</span>
+            <span class="property-value" aria-labelledby="author-label">
+                <g:link controller="user" action="showAuthor" id="${tellingInstance.author.id}">
+                    ${tellingInstance.author.username}
+                </g:link>
+                </span>
         </li>
         <li class="fieldcontain">
             <span id="description-label" class="property-label"><g:message code="telling.description.label" default="Description" /></span>

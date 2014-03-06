@@ -17,9 +17,7 @@ class UserController {
         respond User.list(params), model:[userInstanceCount: User.count()]
     }*/
 
- /*   def show(User userInstance) {
-        respond userInstance
-    }*/
+
     @Secured('permitAll')
     def create() {
         respond new User(params)
@@ -73,6 +71,11 @@ class UserController {
         }
 
         redirect action: "edit"
+    }
+
+    @Secured("ROLE_US")
+    def showAuthor(User userInstance) {
+        render model:[userInstance: userInstance],view:"showAuthor"
     }
 
     /*@Transactional

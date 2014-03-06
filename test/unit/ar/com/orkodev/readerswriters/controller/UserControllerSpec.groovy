@@ -1,6 +1,7 @@
 package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswiters.exception.ValidationException
+import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.domain.UserController
 import grails.plugin.springsecurity.SpringSecurityService
@@ -19,6 +20,13 @@ class UserControllerSpec extends Specification {
         assert params != null
         params["username"] = 'orko@@gmail.com'
         params["password"] = '343434'
+    }
+
+    def populateShowParams(params) {
+        assert params != null
+        params["username"] = 'orko@@gmail.com'
+        params["password"] = '343434'
+        params["id"] = 1
     }
 
      void "Test the create action returns the correct model"() {
@@ -110,5 +118,17 @@ class UserControllerSpec extends Specification {
 
         then: "A redirect is issued to the show action"
         response.redirectedUrl == '/user/edit'
+    }
+
+    void "Test that the showAuthor action returns the correct model"() {
+        when: "A domain instance is passed to the show action"
+        response.reset()
+        populateShowParams(params)
+        def user = new User(params)
+        controller.showAuthor(user)
+
+        then: "A model is populated containing the domain instance"
+        response.status == 200
+        model!=null
     }
 }
