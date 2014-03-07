@@ -1,9 +1,7 @@
 package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswiters.exception.ValidationException
-import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
-import ar.com.orkodev.readerswriters.domain.UserController
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.*
 import ar.com.orkodev.readerswriters.service.UserService

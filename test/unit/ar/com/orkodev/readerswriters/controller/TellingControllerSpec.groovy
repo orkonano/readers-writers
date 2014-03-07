@@ -9,8 +9,6 @@ import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
 import spock.lang.Specification
 
-import static org.springframework.http.HttpStatus.NOT_FOUND
-
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */

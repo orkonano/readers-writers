@@ -1,13 +1,14 @@
-package ar.com.orkodev.readerswriters.domain
+package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswiters.exception.NotPublishedException
 import ar.com.orkodev.readerswiters.exception.ValidationException
+import ar.com.orkodev.readerswriters.domain.NarrativeGenre
+import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.TellingType
 import grails.plugin.springsecurity.annotation.Secured
 
-import static org.springframework.http.HttpStatus.*
-
 @Secured("ROLE_US")
-class TellingController {
+class TellingController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     def springSecurityService, tellingService
@@ -35,7 +36,7 @@ class TellingController {
 
     def show(Telling tellingInstance) {
         if (tellingInstance == null) {
-            notFound()
+            notFound('tellingInstance.label','Telling')
             return
         }
         if (isTellingFromUserLogin(tellingInstance)){
@@ -47,7 +48,7 @@ class TellingController {
 
     def read(Telling tellingInstance) {
         if (tellingInstance == null) {
-            notFound()
+            notFound('tellingInstance.label','Telling')
             return
         }
         render model:["tellingInstance": tellingInstance],view:"read"
@@ -65,7 +66,7 @@ class TellingController {
     def save(Telling tellingInstance) {
         withForm {
             if (tellingInstance == null) {
-                notFound()
+                notFound('tellingInstance.label','Telling')
                 return
             }
 
@@ -83,7 +84,7 @@ class TellingController {
 
     def edit(Telling tellingInstance) {
         if (tellingInstance == null) {
-            notFound()
+            notFound('tellingInstance.label','Telling')
             return
         }
         if (isTellingFromUserLogin(tellingInstance)){
@@ -95,7 +96,7 @@ class TellingController {
 
     def update(Telling tellingInstance) {
         if (tellingInstance == null) {
-            notFound()
+            notFound('tellingInstance.label','Telling')
             return
         }
         if (isTellingFromUserLogin(tellingInstance)){
@@ -119,7 +120,7 @@ class TellingController {
 
     def delete(Telling tellingInstance) {
         if (tellingInstance == null) {
-            notFound()
+            notFound('tellingInstance.label','Telling')
             return
         }
         if (isTellingFromUserLogin(tellingInstance)){
@@ -132,7 +133,7 @@ class TellingController {
 
     def publish(Telling tellingInstance) {
         if (tellingInstance == null) {
-            notFound()
+            notFound('tellingInstance.label','Telling')
             return
         }
         if (isTellingFromUserLogin(tellingInstance)){
@@ -148,13 +149,4 @@ class TellingController {
         flash.error = ex.message
     }
 
-    protected void notFound() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'tellingInstance.label', default: 'Telling'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*' { render status: NOT_FOUND }
-        }
-    }
 }

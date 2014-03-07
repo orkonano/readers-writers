@@ -1,11 +1,12 @@
-package ar.com.orkodev.readerswriters.domain
+package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswiters.exception.ValidationException
+import ar.com.orkodev.readerswriters.domain.User
 import grails.plugin.springsecurity.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
 
-class UserController {
+class UserController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -27,7 +28,7 @@ class UserController {
     def save(User userInstance) {
         withForm {
             if (userInstance == null) {
-                notFound()
+                notFound('userInstance.label','User')
                 return
             }
             def password = userInstance.password
@@ -52,7 +53,7 @@ class UserController {
     @Secured("ROLE_US")
     def update(User userInstance) {
         if (userInstance == null) {
-            notFound()
+            notFound('userInstance.label','User')
             return
         }
         def userLogin = springSecurityService.getCurrentUser()
@@ -97,13 +98,4 @@ class UserController {
         }
     }*/
 
-    protected void notFound() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'userInstance.label', default: 'User'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
-    }
 }
