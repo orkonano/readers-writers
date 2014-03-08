@@ -99,12 +99,20 @@ class TellingServiceSpec extends Specification {
         def user = new User(username: "gg@gg.com",password: "dsad")
         user.springSecurityService = springSecurityService
         user.save(flush: true, failOnError: true)
+        def currentUser = new User(username: "current@gg.com",password: "dsad")
+        currentUser.springSecurityService = springSecurityService
+        currentUser.save(flush: true, failOnError: true)
         def ng = new NarrativeGenre(name: "ng 1").save(flush: true, failOnError: true)
         def ng2 = new NarrativeGenre(name: "ng 2").save(flush: true, failOnError: true)
         def tt = new TellingType(name: "tt 1").save(flush: true, failOnError: true)
         def tt2 = new TellingType(name: "tt 2").save(flush: true, failOnError: true)
         def jj = new Telling(title: "t1",description: "d1",text: "long text 1",author: user,narrativeGenre: ng,tellingType: tt,state: Telling.DRAFT).save(flush: true, failOnError: true)
         def jj1 = new Telling(title: "t1",description: "d1",text: "long text 1",author: user,narrativeGenre: ng,tellingType: tt,state: Telling.PUBLISHED).save(flush: true, failOnError: true)
+        def jj2 = new Telling(title: "t1",description: "d1",text: "long text 1",author: currentUser,narrativeGenre: ng,tellingType: tt,state: Telling.PUBLISHED).save(flush: true, failOnError: true)
+        def springSecurityServiceMock = mockFor(SpringSecurityService)
+        springSecurityServiceMock.demandExplicit.getCurrentUser(4) { ->currentUser }
+        tellingService.springSecurityService = springSecurityServiceMock.createMock()
+
         when: "se busca en la base de datos con diferentes parámetros"
         def tellingSearch = new Telling(narrativeGenre: ng)
         def tellingSearch1 = new Telling(narrativeGenre: ng,tellingType: tt)

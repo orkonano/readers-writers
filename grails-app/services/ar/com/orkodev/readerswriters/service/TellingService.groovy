@@ -39,8 +39,9 @@ class TellingService {
     }
 
     def list(Telling tellingSearch, Integer max,Integer offset){
+        def currentUser = springSecurityService.getCurrentUser();
         def query = Telling.where {
-            state == Telling.PUBLISHED
+            state == Telling.PUBLISHED && author != currentUser
         }
         if (tellingSearch.narrativeGenre!= null && tellingSearch.narrativeGenre.id != null){
             query = query.where {
