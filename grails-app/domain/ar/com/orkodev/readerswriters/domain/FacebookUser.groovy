@@ -1,7 +1,5 @@
 package ar.com.orkodev.readerswriters.domain
 
-import ar.com.orkodev.readerswriters.domain.User
-
 class FacebookUser {
 
     long uid

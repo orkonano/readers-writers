@@ -55,4 +55,11 @@ class User {
         Follower.findAllByFollowing(this,[sort:"dateCreated"]).collect { it.author } as Set
     }
 
+    Set<Telling> getTellings(){
+        def query = TellingLike.where {
+            telling == this
+        }
+        query.list([sort:"dateCreated"]).collect { it.telling } as Set
+    }
+
 }

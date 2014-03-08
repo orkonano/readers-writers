@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswiters.exception.SameUserFollowException
+import ar.com.orkodev.readerswiters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
@@ -70,8 +70,8 @@ class FollowerServiceSpec extends Specification {
 
         when:"El usuario a seguir es el mismo que el usuario author"
         followerService.followAuthor(currentUser)
-        then: "Se arroja la excepción SameUserFollowException"
-        thrown(SameUserFollowException)
+        then: "Se arroja la excepción SameUserToCurrentException"
+        thrown(SameUserToCurrentException)
 
         when:"El usuario a seguir es diferente al actual"
         def follower = followerService.followAuthor(author)
@@ -111,8 +111,8 @@ class FollowerServiceSpec extends Specification {
         isFollowed
 
         when: "Se el author no es seguido por el current user"
-        isFollowed = followerService.leaveAuthor(author2)
-        then: "La relación no se puede borrar"
+        isFollowed = followerService.isFollowAuthor(author2)
+        then: "El resultado es falso"
         !isFollowed
     }
 }

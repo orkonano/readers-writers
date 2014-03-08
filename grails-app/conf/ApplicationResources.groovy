@@ -7,8 +7,14 @@ modules = {
 
     follow{
         defaultBundle 'common'
-        dependsOn 'application','mustache'
+        dependsOn 'application','mustache','switchAction'
         resource url:'js/follow.js'
+    }
+
+    like{
+        defaultBundle 'common'
+        dependsOn 'application','mustache','switchAction'
+        resource url:'js/like.js'
     }
 
     mustache{
@@ -16,6 +22,11 @@ modules = {
         defaultBundle 'common'
         resource url:'js/jquery.mustache.js'
         resource url:'js/mustache.js'
+    }
+
+    switchAction{
+        defaultBundle 'common'
+        resource url:'js/switchAction.js'
     }
 
     application {

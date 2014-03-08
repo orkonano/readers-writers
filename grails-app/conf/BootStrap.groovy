@@ -1,9 +1,4 @@
-import ar.com.orkodev.readerswriters.domain.NarrativeGenre
-import ar.com.orkodev.readerswriters.domain.Role
-import ar.com.orkodev.readerswriters.domain.Telling
-import ar.com.orkodev.readerswriters.domain.TellingType
-import ar.com.orkodev.readerswriters.domain.User
-import ar.com.orkodev.readerswriters.domain.UserRole
+import ar.com.orkodev.readerswriters.domain.*
 
 class BootStrap {
 

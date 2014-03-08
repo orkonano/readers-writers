@@ -1,7 +1,11 @@
 package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswiters.exception.ValidationException
-import ar.com.orkodev.readerswriters.domain.*
+import ar.com.orkodev.readerswriters.domain.NarrativeGenre
+import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.TellingType
+import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.service.TellingLikeService
 import ar.com.orkodev.readerswriters.service.TellingService
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
@@ -100,6 +104,7 @@ class TellingControllerSpec extends Specification {
         def user = getCurrentUser()
         springSecurityService.demandExplicit.getCurrentUser(2) { ->user }
         controller.springSecurityService = springSecurityService.createMock()
+
 //        when: "The show action is executed with a null domain"
 //        controller.show(null)
 //
@@ -115,6 +120,7 @@ class TellingControllerSpec extends Specification {
         then: "A model is populated containing the domain instance"
         response.status == 200
         model!=null
+
     }
 
 
@@ -286,6 +292,10 @@ class TellingControllerSpec extends Specification {
     }
 
     void "Test that the read action returns the correct model"() {
+        given:
+        def tellingLikeService = mockFor(TellingLikeService)
+        tellingLikeService.demandExplicit.isLike(){Telling telling -> return true}
+        controller.tellingLikeService = tellingLikeService.createMock()
         when: "A domain instance is passed to the read action"
         params['id']=1
         def telling = new Telling(params)
@@ -293,6 +303,7 @@ class TellingControllerSpec extends Specification {
         then: "A model is populated containing the domain instance"
         response.status == 200
         model!=null
+        model.isLike == true
         view == '/telling/read'
     }
 

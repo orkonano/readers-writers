@@ -3,11 +3,12 @@ package ar.com.orkodev.readerswriters.controller
 import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.service.FollowerService
-import grails.plugin.springsecurity.SpringSecurityService
-import grails.test.mixin.*
 import ar.com.orkodev.readerswriters.service.UserService
+import grails.plugin.springsecurity.SpringSecurityService
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
-import spock.lang.*
+import spock.lang.Specification
 
 @TestFor(UserController)
 @Mock(User)

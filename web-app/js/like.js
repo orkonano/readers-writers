@@ -4,15 +4,11 @@
 
 $(function () {
 
-    $(document).on('click',"#id-follow-link",function(e) {
+    $(document).on('click',"#id-like-link",function(e) {
         executeAjaxAction($(this),e);
     });
 
-    $(document).on('click',"#id-leavefollow-link",function(e) {
+    $(document).on('click',"#id-stop-like-link",function(e) {
         executeAjaxAction($(this),e);
     });
 });
-
-
-
-

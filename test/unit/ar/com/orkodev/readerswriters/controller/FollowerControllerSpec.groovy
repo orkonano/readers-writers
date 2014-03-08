@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswiters.exception.SameUserFollowException
+import ar.com.orkodev.readerswiters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.service.FollowerService
@@ -29,7 +29,7 @@ class FollowerControllerSpec extends Specification {
         followerServiceSucess.demandExplicit.followAuthor() {User user1 ->return new Follower()}
         def followerServiceFail1 = mockFor(FollowerService)
         def mensaje = "error"
-        followerServiceFail1.demandExplicit.followAuthor() {User user1 ->throw new SameUserFollowException(mensaje)}
+        followerServiceFail1.demandExplicit.followAuthor() {User user1 ->throw new SameUserToCurrentException(mensaje)}
         def user = new User()
 
         when: "Cuando se llama al action con el usuario definido"

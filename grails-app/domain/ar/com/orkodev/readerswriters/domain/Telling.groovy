@@ -70,4 +70,11 @@ class Telling {
             case PUBLISHED: return "Publicado"
         }
     }
+
+    Set<User> getReaders(){
+        def query = TellingLike.where {
+            reader == this
+        }
+        query.list([sort:"dateCreated"]).collect { it.reader } as Set
+    }
 }

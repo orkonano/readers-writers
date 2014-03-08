@@ -11,7 +11,7 @@ import grails.plugin.springsecurity.annotation.Secured
 class TellingController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-    def springSecurityService, tellingService
+    def springSecurityService, tellingService,tellingLikeService
 
 
     def index(Integer max) {
@@ -51,7 +51,8 @@ class TellingController extends BaseController {
             notFound('tellingInstance.label','Telling')
             return
         }
-        render model:["tellingInstance": tellingInstance],view:"read"
+        def isLike = tellingLikeService.isLike(tellingInstance)
+        render model:["tellingInstance": tellingInstance,isLike:isLike],view:"read"
     }
 
     private boolean isTellingFromUserLogin(Telling telling){

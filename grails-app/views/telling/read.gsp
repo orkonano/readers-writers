@@ -6,6 +6,7 @@
     <meta name="layout" content="main">
     <g:set var="entityName" value="${message(code: 'telling.label', default: 'Telling')}" />
     <title><g:message code="default.show.label" args="[entityName]" /></title>
+    <g:javascript library="like"/>
 </head>
 <body>
 <a href="#show-telling" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -51,6 +52,22 @@
             <span class="property-value" aria-labelledby="text-label">${tellingInstance.text}</span>
         </li>
     </ol>
+    <fieldset class="buttons" id="id-buttons-region">
+        <g:if test="${isLike}">
+            <g:link  data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+        </g:if>
+        <g:else>
+            <g:link data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
+        </g:else>
+    </fieldset>
 </div>
+
+<script id="template-link-stop-like" type="text/html">
+    <g:link  data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+</script>
+<script id="template-link-like" type="text/html">
+    <g:link data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
+</script>
+
 </body>
 </html>

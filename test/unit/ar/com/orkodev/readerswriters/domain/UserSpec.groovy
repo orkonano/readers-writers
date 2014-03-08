@@ -4,7 +4,6 @@ import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
-import groovy.mock.interceptor.MockFor
 import spock.lang.Specification
 
 /**

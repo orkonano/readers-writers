@@ -33,18 +33,18 @@
     </ol>
     <fieldset class="buttons" id="id-buttons-region">
         <g:if test="${isFollowed}">
-            <g:link  data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'leaveFollow')}" elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow">Dejar de seguir</g:link>
+            <g:link  data-object-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'leaveFollow')}" elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow">Dejar de seguir</g:link>
         </g:if>
         <g:else>
-            <g:link data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'follow')}" elementId="id-follow-link" data-template-id-next-action="template-link-leave-follow">Seguir</g:link>
+            <g:link data-object-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'follow')}" elementId="id-follow-link" data-template-id-next-action="template-link-leave-follow">Seguir</g:link>
         </g:else>
     </fieldset>
 </div>
 <script id="template-link-leave-follow" type="text/html">
-    <g:link data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'leaveFollow')}" elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow">Dejar de seguir</g:link>
+    <g:link data-object-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'leaveFollow')}" elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow">Dejar de seguir</g:link>
 </script>
 <script id="template-link-follow" type="text/html">
-    <g:link data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'follow')}" elementId="id-follow-link" data-template-id-next-action="template-link-leave-follow">Seguir</g:link>
+    <g:link data-object-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'follow')}" elementId="id-follow-link" data-template-id-next-action="template-link-leave-follow">Seguir</g:link>
 </script>
 </body>
 </html>
