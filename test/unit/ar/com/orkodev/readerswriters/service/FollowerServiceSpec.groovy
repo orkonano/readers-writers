@@ -85,4 +85,34 @@ class FollowerServiceSpec extends Specification {
         then: "Se arroja la excepción ValidationException"
         thrown(ValidationException)
     }
+
+    void "test isFollowed method"() {
+        given:
+        mockForConstraintsTests Follower
+        mockForConstraintsTests User
+        def followerService = new FollowerService()
+        def springSecurityService = mockFor(SpringSecurityService)
+        def springSecurityServiceUser = Mock(SpringSecurityService)
+        def author = new User(username: "author@example.com",password: "superpassword")
+        def author2 = new User(username: "author2@example.com",password: "superpassword")
+        author.springSecurityService = springSecurityServiceUser
+        author.save(flush: true,failOnError: true)
+        author2.springSecurityService = springSecurityServiceUser
+        author2.save(flush: true,failOnError: true)
+        def currentUser = new User(username: "current@example.com",password:"superpassword")
+        currentUser.springSecurityService = springSecurityServiceUser
+        currentUser.save(flush: true,failOnError: true)
+        springSecurityService.demandExplicit.getCurrentUser(2) { ->currentUser }
+        followerService.springSecurityService = springSecurityService.createMock()
+        new Follower(following: currentUser,author: author).save(flush: true,failOnError: true)
+        when:"Cuando el author es seguido por el current user"
+        def isFollowed = followerService.isFollowAuthor(author)
+        then: "El resultado es verdadero"
+        isFollowed
+
+        when: "Se el author no es seguido por el current user"
+        isFollowed = followerService.leaveAuthor(author2)
+        then: "La relación no se puede borrar"
+        !isFollowed
+    }
 }

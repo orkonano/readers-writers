@@ -29,7 +29,16 @@ class FollowerService {
         def currentFollowers = query.find()
         def erased = false
         if (currentFollowers)
-            erased = currentFollowers.delete() == null?true:false
+            erased = (currentFollowers.delete() == null)
         return erased
+    }
+
+    def isFollowAuthor(User authorToFind) {
+        User currentUser = springSecurityService.getCurrentUser()
+        def query = Follower.where {
+            author.id == authorToFind.id && following.id == currentUser.id
+        }
+        def currentFollowers = query.find()
+        currentFollowers != null
     }
 }

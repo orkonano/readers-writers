@@ -2,6 +2,7 @@ package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.service.FollowerService
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.*
 import ar.com.orkodev.readerswriters.service.UserService
@@ -30,7 +31,6 @@ class UserControllerSpec extends Specification {
      void "Test the create action returns the correct model"() {
         when: "The create action is executed"
         controller.create()
-
         then: "The model is correctly created"
         model != null
     }
@@ -119,14 +119,31 @@ class UserControllerSpec extends Specification {
     }
 
     void "Test that the showAuthor action returns the correct model"() {
-        when: "A domain instance is passed to the show action"
+        given:
+        def followService = mockFor(FollowerService)
+        followService.demandExplicit.isFollowAuthor(){User user -> return true}
+        def followServiceFail = mockFor(FollowerService)
+        followServiceFail.demandExplicit.isFollowAuthor(){User user -> return false}
+        def user = new User(params)
+
+        when: "A domain instance is passed to the show action and is followed"
         response.reset()
         populateShowParams(params)
-        def user = new User(params)
+        controller.followerService = followService.createMock()
         controller.showAuthor(user)
-
         then: "A model is populated containing the domain instance"
         response.status == 200
         model!=null
+        model.isFollowed
+
+        when: "A domain instance is passed to the show action and is not followed"
+        response.reset()
+        populateShowParams(params)
+        controller.followerService = followServiceFail.createMock()
+        controller.showAuthor(user)
+        then: "A model is populated containing the domain instance"
+        response.status == 200
+        model!=null
+        !model.isFollowed
     }
 }

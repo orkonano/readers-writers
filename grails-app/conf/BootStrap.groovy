@@ -23,7 +23,7 @@ class BootStrap {
                 narrativeGenre:narrativeGenre,tellingType: tellingType).save(flush: true,failOnError: true)
                 new Telling(title: "la fantastica historia de una foca",description: "un pequeña foca está nadando en el mar",
                         text: "Yo vivía en el puerto muy contanta, comia comia sin cesar", author: user,
-                        narrativeGenre:narrativeGenre,tellingType: tellingType).save(flush: true,failOnError: true)
+                        narrativeGenre:narrativeGenre,tellingType: tellingType,state: Telling.PUBLISHED).save(flush: true,failOnError: true)
             }
         }
 

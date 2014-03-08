@@ -6,6 +6,7 @@
     <meta name="layout" content="main">
     <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
     <title><g:message code="default.show.label" args="[entityName]" /></title>
+    <g:javascript library="follow"/>
 </head>
 <body>
 <a href="#show-user" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -30,6 +31,20 @@
                 </li>
             </g:if>
     </ol>
+    <fieldset class="buttons" id="id-buttons-region">
+        <g:if test="${isFollowed}">
+            <g:link  data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'leaveFollow')}" elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow">Dejar de seguir</g:link>
+        </g:if>
+        <g:else>
+            <g:link data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'follow')}" elementId="id-follow-link" data-template-id-next-action="template-link-leave-follow">Seguir</g:link>
+        </g:else>
+    </fieldset>
 </div>
+<script id="template-link-leave-follow" type="text/html">
+    <g:link data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'leaveFollow')}" elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow">Dejar de seguir</g:link>
+</script>
+<script id="template-link-follow" type="text/html">
+    <g:link data-author-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'follow')}" elementId="id-follow-link" data-template-id-next-action="template-link-leave-follow">Seguir</g:link>
+</script>
 </body>
 </html>

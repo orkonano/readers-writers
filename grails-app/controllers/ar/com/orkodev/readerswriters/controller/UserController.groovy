@@ -4,14 +4,11 @@ import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.User
 import grails.plugin.springsecurity.annotation.Secured
 
-import static org.springframework.http.HttpStatus.*
-
 class UserController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def userService
-    def springSecurityService
+    def userService, springSecurityService, followerService
 
     /*def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -76,7 +73,8 @@ class UserController extends BaseController {
 
     @Secured("ROLE_US")
     def showAuthor(User userInstance) {
-        render model:[userInstance: userInstance],view:"showAuthor"
+        def isFollowed = followerService.isFollowAuthor(userInstance)
+        render model:[userInstance: userInstance,isFollowed:isFollowed],view:"showAuthor"
     }
 
     /*@Transactional

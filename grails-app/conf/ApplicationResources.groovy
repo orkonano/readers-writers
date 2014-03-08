@@ -5,6 +5,19 @@ modules = {
         }
     }
 
+    follow{
+        defaultBundle 'common'
+        dependsOn 'application','mustache'
+        resource url:'js/follow.js'
+    }
+
+    mustache{
+        dependsOn 'jquery'
+        defaultBundle 'common'
+        resource url:'js/jquery.mustache.js'
+        resource url:'js/mustache.js'
+    }
+
     application {
         defaultBundle 'common'
         dependsOn 'jquery'
