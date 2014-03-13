@@ -37,6 +37,7 @@ class BootStrap {
         if (!roleAdm){
             roleAdm = new Role(authority: Role.ROLE_ADM).save(flush: true,failOnError: true)
         }
+
         Role.findOrSaveByAuthority(Role.ROLE_US)
         def superUser = User.findByUsername("orkosuperuser@reader.com")
         if (!superUser){
