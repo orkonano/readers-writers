@@ -117,4 +117,56 @@ class TellingLikeServiceSpec extends Specification {
         then: "La relación no se puede borrar"
         !isLiked
     }
+
+    void "test findLikeTelling method"() {
+        given:
+        mockForConstraintsTests TellingLike
+        mockForConstraintsTests User
+        mockForConstraintsTests Telling
+        def tellingLikeService = new TellingLikeService()
+        def springSecurityService = mockFor(SpringSecurityService)
+        def springSecurityServiceUser = Mock(SpringSecurityService)
+        def currentUser = new User(username: "current@example.com",password:"superpassword")
+        currentUser.springSecurityService = springSecurityServiceUser
+        currentUser.save(flush: true,failOnError: true)
+        def author = new User(username: "author@example.com",password: "superpassword")
+        author.springSecurityService = springSecurityServiceUser
+        author.save(flush: true,failOnError: true)
+        springSecurityService.demandExplicit.getCurrentUser(4) { ->currentUser }
+        tellingLikeService.springSecurityService = springSecurityService.createMock()
+        saveLotOfStoriesToTest(currentUser,author)
+
+        when:"Si busco las últimas 5 historias que gustan al current user"
+        def result = tellingLikeService.findLikeTelling(5)
+        then:"El resultado es el siguiente"
+        result.size() == 5
+        result.collect{it-> it.id} == [19, 17, 15, 13, 11]
+
+        when:"Si busco las todas las historias"
+        result = tellingLikeService.findLikeTelling()
+        then:"El resultado es el siguiente"
+        result.size() == 10
+        result.collect{it-> it.id} == [19, 17, 15, 13, 11, 9, 7, 5, 3, 1]
+
+        when:"Si busco más historias de las que tiene"
+        result = tellingLikeService.findLikeTelling(20)
+        then:"El resultado es el siguiente"
+        result.size() == 10
+        result.collect{it-> it.id} == [19, 17, 15, 13, 11, 9, 7, 5, 3, 1]
+
+        when:"Si busco las ultimas 5 pero con un offset"
+        result = tellingLikeService.findLikeTelling(5,3)
+        then:"El resultado es el siguiente"
+        result.size() == 5
+        result.collect{it-> it.id} == [13, 11, 9, 7, 5]
+    }
+
+    void saveLotOfStoriesToTest(User currentUser, User author) {
+        for ( i in (0..20).toArray() ) {
+            new Telling(title: "t"+i,author: author,description: "d"+i,text: "text"+i,narrativeGenre: new NarrativeGenre(),tellingType: new TellingType()).save(flush: true,failOnError: true)
+        }
+        for ( i in [1, 3, 5, 7, 9, 11, 13, 15, 17, 19] ) {
+            new TellingLike(reader: currentUser,telling: Telling.get(i)).save(flush: true,failOnError: true)
+        }
+    }
 }

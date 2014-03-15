@@ -42,4 +42,16 @@ class TellingLikeService {
         }
         query.find()!=null
     }
+
+    def findLikeTelling(Integer countLast = null, Integer offset = 0){
+        def currentUser = springSecurityService.getCurrentUser()
+        def query = TellingLike.where {
+            reader == currentUser
+        }
+        def params = [sort:'dateCreated',order:"desc",offset:offset]
+        if (countLast!=null){
+            params.max = countLast
+        }
+        query.list(params).collect{it -> it.telling} as List
+    }
 }

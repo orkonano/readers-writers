@@ -594,3 +594,8 @@ a.skip {
 	position: absolute;
 	left: -9999px;
 }
+
+/**custom css**/
+#dashboard-body ul{
+    padding-right: 3;
+}
