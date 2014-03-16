@@ -26,7 +26,9 @@
             <h2>Historias seguidas</h2>
         </div>
         <div class="dashboard-body historias-ajenas">
+            <ul id="historias-like-id">
 
+            </ul>
         </div>
     </div>
 
@@ -35,13 +37,21 @@
             <h2>Autores seguidas</h2>
         </div>
         <div class="dashboard-body historias-autores">
+            <ul id="autores-seguidos-id">
+
+            </ul>
         </div>
     </div>
 </div>
 <script id="template-telling-like" tytpe="text/html">
     <li>
-        <a href="${createLink(controller: 'telling',action: 'read')}/{{telling.id}}">{{telling.title}}</a>&nbsp;-&nbsp;
-        <a href="${createLink(controller: 'user',action: 'showAuthor')}/{{telling.author.id}}">{{telling.author.name}}</a>
+    <a href="${createLink(controller: 'telling',action: 'read')}/{{telling.id}}">{{telling.title}}</a>&nbsp;-&nbsp;
+    <a href="${createLink(controller: 'user',action: 'showAuthor')}/{{telling.author.id}}">{{telling.author.name}}</a>
+    </li>
+</script>
+<script id="template-author-followed" tytpe="text/html">
+    <li>
+    <a href="${createLink(controller: 'user',action: 'showAuthor')}/{{author.id}}">{{author.name}}</a>
     </li>
 </script>
 </body>

@@ -115,4 +115,50 @@ class FollowerServiceSpec extends Specification {
         then: "El resultado es falso"
         !isFollowed
     }
+
+    void "test getAuthorFollowed method"(){
+        given:
+        mockForConstraintsTests Follower
+        mockForConstraintsTests User
+        def followerService = new FollowerService()
+        def springSecurityService = mockFor(SpringSecurityService)
+        def springSecurityServiceUser = Mock(SpringSecurityService)
+        def currentUser = new User(username: "current@example.com",password:"superpassword")
+        currentUser.springSecurityService = springSecurityServiceUser
+        currentUser.save(flush: true,failOnError: true)
+        springSecurityService.demandExplicit.getCurrentUser(3) { ->currentUser }
+        followerService.springSecurityService = springSecurityService.createMock()
+        saveLotOfFollowers(currentUser)
+
+        when: "Cuando pido los autores seguidos por el current user, sin parametros"
+        def result = followerService.findAuthorFollowed()
+        then: "El resultado es 10"
+        result.size == 10
+        result.collect{it -> it.id} as List == [19, 17, 15, 13, 11, 9, 7, 5, 3, 1]
+
+        when: "Cuando pido una determinada cantidad de autores"
+        result = followerService.findAuthorFollowed(4)
+        then: "El resultado es 4"
+        result.size == 4
+        result.collect{it -> it.id} as List == [19, 17, 15, 13]
+
+        when: "Cuando pido por un offset y una cantidad determinada"
+        result = followerService.findAuthorFollowed(4,3)
+        then: "el resultado es 4 pero desde otra posicion"
+        result.size == 4
+        result.collect{it -> it.id} as List == [13, 11, 9, 7]
+    }
+
+    void saveLotOfFollowers(User currentUser) {
+        def springSecurityServiceUser = Mock(SpringSecurityService)
+        def userAuthor
+        for ( i in (0..20).toArray() ) {
+            userAuthor = new User(username: "user"+i+"@gg.com", password: "pass"+i)
+            userAuthor.springSecurityService = springSecurityServiceUser
+            userAuthor.save(flush: true,failOnError: true)
+        }
+        for ( i in [1, 3, 5, 7, 9, 11, 13, 15, 17, 19] ) {
+            new Follower(author: User.get(i), following: currentUser).save(flush: true,failOnError: true)
+        }
+    }
 }
