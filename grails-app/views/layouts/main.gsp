@@ -14,6 +14,9 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
+        <g:javascript>
+            var relativeUrl = '${createLink(url: '/')}';
+        </g:javascript>
 		<g:layoutHead/>
 		<g:javascript library="application"/>		
 		<r:layoutResources />
@@ -28,6 +31,7 @@
             </sec:ifNotLoggedIn>
             <sec:ifLoggedIn>
                 <sec:ifLoggedIn>Hola <sec:username/>!</sec:ifLoggedIn>
+                <g:link controller="panel" action="dashboard">Panel</g:link>
                 <g:link controller="user" action="edit">Editar Usuario</g:link>
                 <g:link controller="telling" action="index">Mis narrativos</g:link>
                 <g:link controller="telling" action="list" params="[init:true]">Todos los narrativos</g:link>

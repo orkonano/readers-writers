@@ -12,6 +12,7 @@
 // }
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
+grails.app.context = '/'
 
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
 grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
@@ -63,7 +64,7 @@ grails {
     }
 }
 
- 
+
 grails.converters.encoding = "UTF-8"
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
@@ -138,7 +139,8 @@ grails.plugin.springsecurity.roleHierarchy = '''
 grails.plugin.springsecurity.rememberMe.cookieName = 'reader-writers_remember_me'
 grails.plugin.springsecurity.useSessionFixationPrevention = true
 //--FACEBOOK--
-grails.plugin.springsecurity.facebook.domain.classname='ar.com.orkodev.readerswriters.domain.FacebookUser'
+grails.plugin.springsecurity.facebook.domain.classname = 'ar.com.orkodev.readerswriters.domain.FacebookUser'
+grails.plugin.springsecurity.facebook.filter.redirect.successHandler = 'authenticationSuccessHandler'
 environments {
     development {
         grails.plugin.springsecurity.facebook.appId='368555996619672'

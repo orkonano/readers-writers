@@ -58,4 +58,15 @@ class TellingService {
         return ["result":resultList,"countResult":count]
     }
 
+    def findCurrentUserTelling(Integer count = null, Integer offset = 0) {
+        def currentUser = springSecurityService.getCurrentUser()
+        def query = Telling.where {
+            author.id == currentUser.id
+        }
+        def params = [sort: 'dateCreated', order: "desc", offset: offset]
+        if (count != null){
+            params.max = count
+        }
+        query.list(params)
+    }
 }

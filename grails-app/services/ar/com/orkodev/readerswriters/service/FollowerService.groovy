@@ -41,4 +41,16 @@ class FollowerService {
         def currentFollowers = query.find()
         currentFollowers != null
     }
+
+    def findAuthorFollowed(Integer count = null, Integer offset = 0) {
+        User currentUser = springSecurityService.getCurrentUser()
+        def query = Follower.where {
+            following.id == currentUser.id
+        }
+        def params = [sort: 'dateCreated', order: "desc", offset: offset]
+        if (count != null){
+            params.max = count
+        }
+        query.list(params).collect{it -> it.author} as List
+    }
 }

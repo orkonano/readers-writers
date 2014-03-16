@@ -17,6 +17,12 @@ modules = {
         resource url:'js/like.js'
     }
 
+    dashboard{
+        defaultBundle 'common'
+        dependsOn 'application','mustache'
+        resource url:'js/dashboard.js'
+    }
+
     mustache{
         dependsOn 'jquery'
         defaultBundle 'common'
