@@ -48,8 +48,8 @@ class TellingLikeService {
         def query = TellingLike.where {
             reader.id == currentUser.id
         }
-        def params = [sort:'dateCreated',order:"desc",offset:offset]
-        if (countLast!=null){
+        def params = [sort: 'dateCreated', order: "desc", offset: offset]
+        if (countLast != null){
             params.max = countLast
         }
         query.list(params).collect{it -> it.telling} as List

@@ -4,6 +4,7 @@ import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.service.FollowerService
 import ar.com.orkodev.readerswriters.service.TellingLikeService
+import ar.com.orkodev.readerswriters.service.TellingService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -62,6 +63,27 @@ class PanelControllerSpec extends Specification {
 
         when:"Cuando se llama a la action authorsFollowed"
         controller.authorsFollowed()
+        then:"Se obtiene una response del tipo JSON"
+        response.json.success == true
+        response.json.model != null
+        response.json.model.elements != null
+    }
+
+    void "test ownTelling action"(){
+        given:
+        def tellingService = mockFor(TellingService)
+        tellingService.demandExplicit.findCurrentUserTelling(){Integer number ->
+            [new Telling(id: 1, title: "hola"),
+             new Telling(id: 2, title: "hola"),
+             new Telling(id: 3, title: "hola"),
+             new Telling(id: 4, title: "hola"),
+             new Telling(id: 5, title: "hola")
+            ]
+        }
+        controller.tellingService = tellingService.createMock()
+
+        when:"Cuando se llama a la action ownTelling"
+        controller.ownTelling()
         then:"Se obtiene una response del tipo JSON"
         response.json.success == true
         response.json.model != null

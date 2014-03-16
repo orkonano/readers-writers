@@ -132,4 +132,49 @@ class TellingServiceSpec extends Specification {
         result3.countResult == 0
         !result3.result
     }
+
+    void "test findCurrentUserTelling"() {
+        given:
+        mockForConstraintsTests Telling
+        def springSecurityService = Mock(SpringSecurityService)
+        def tellingService = new TellingService()
+        def author = new User(username: "gg@gg.com",password: "dsad")
+        author.springSecurityService = springSecurityService
+        author.save(flush: true, failOnError: true)
+        def currentUser = new User(username: "current@gg.com",password: "dsad")
+        currentUser.springSecurityService = springSecurityService
+        currentUser.save(flush: true, failOnError: true)
+        def springSecurityServiceMock = mockFor(SpringSecurityService)
+        springSecurityServiceMock.demandExplicit.getCurrentUser(3) { ->currentUser }
+        tellingService.springSecurityService = springSecurityServiceMock.createMock()
+        saveLotOfStoriesToTest(currentUser, author)
+
+        when: "Cuando busco a los telling del current user sin parametro, me tiene que traer todos"
+        def result = tellingService.findCurrentUserTelling()
+        then: "El resultado son 10"
+        result.size() == 10
+        result.collect{it -> it.id} == [19, 17, 15, 13, 11, 9, 7, 5, 3, 1]
+
+        when: "Cuando busco a los telling del current user con parametro de cantidad"
+        result = tellingService.findCurrentUserTelling(5)
+        then: "El resultado son 5"
+        result.size() == 5
+        result.collect{it -> it.id} == [19, 17, 15, 13, 11]
+
+        when: "Cuando busco a los telling del current user con parametro de cantidad y offset"
+        result = tellingService.findCurrentUserTelling(3,3)
+        then: "El resultado es 3 y desde el 13"
+        result.size() == 3
+        result.collect{it -> it.id} == [13, 11, 9]
+    }
+
+    void saveLotOfStoriesToTest(User currentUser, User author) {
+        for ( i in (1..19).toArray() ) {
+            if ((i % 2) == 0){
+               new Telling(title: "t"+i,author: author,description: "d"+i,text: "text"+i,narrativeGenre: new NarrativeGenre(),tellingType: new TellingType()).save(flush: true,failOnError: true)
+            }else{
+                new Telling(title: "t"+i,author: currentUser,description: "d"+i,text: "text"+i,narrativeGenre: new NarrativeGenre(),tellingType: new TellingType()).save(flush: true,failOnError: true)
+            }
+        }
+    }
 }

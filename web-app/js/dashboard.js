@@ -3,10 +3,14 @@
  */
 
 $(function () {
-
    loadTellingLike();
    loadAuthorsFollowed();
+   loadOwnTelling();
 });
+
+function loadOwnTelling(){
+    loadElementDashboard("template-own-telling", "own-telling-id", "ownTelling");
+}
 
 function loadTellingLike(){
     loadElementDashboard("template-telling-like", "historias-like-id", "likeTelling");

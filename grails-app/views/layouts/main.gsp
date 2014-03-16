@@ -31,6 +31,7 @@
             </sec:ifNotLoggedIn>
             <sec:ifLoggedIn>
                 <sec:ifLoggedIn>Hola <sec:username/>!</sec:ifLoggedIn>
+                <g:link controller="panel" action="dashboard">Panel</g:link>
                 <g:link controller="user" action="edit">Editar Usuario</g:link>
                 <g:link controller="telling" action="index">Mis narrativos</g:link>
                 <g:link controller="telling" action="list" params="[init:true]">Todos los narrativos</g:link>

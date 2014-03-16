@@ -6,7 +6,7 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured("ROLE_US")
 class PanelController extends BaseController {
 
-    def tellingLikeService, followerService;
+    def tellingLikeService, followerService, tellingService;
 
     def dashboard() {
         render view:"dashboard"
@@ -28,6 +28,14 @@ class PanelController extends BaseController {
             [author: [id: it.id, name: it.username]]
         }
         def result = [success:true,model:[elements:authorsList]]
+        render result as JSON
+    }
+
+    def ownTelling() {
+        def tellingList = tellingService.findCurrentUserTelling(5).collect{it ->
+            [telling:[id: it.id, title: it.title]]
+        }
+        def result = [success:true,model:[elements:tellingList]]
         render result as JSON
     }
 }

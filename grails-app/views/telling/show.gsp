@@ -72,7 +72,7 @@
 				<li class="fieldcontain">
 					<span id="state-label" class="property-label"><g:message code="telling.state.label" default="State" /></span>
 					
-						<span class="property-value" aria-labelledby="state-label"><g:fieldValue bean="${tellingInstance}" field="state"/></span>
+						<span class="property-value" aria-labelledby="state-label">${tellingInstance.getStringState()}</span>
 					
 				</li>
 				</g:if>

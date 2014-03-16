@@ -47,8 +47,8 @@ class FollowerService {
         def query = Follower.where {
             following.id == currentUser.id
         }
-        def params = [sort:'dateCreated',order:"desc",offset:offset]
-        if (count!=null){
+        def params = [sort: 'dateCreated', order: "desc", offset: offset]
+        if (count != null){
             params.max = count
         }
         query.list(params).collect{it -> it.author} as List

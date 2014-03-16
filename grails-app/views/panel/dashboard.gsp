@@ -15,7 +15,7 @@
             <h2>Historias escritas</h2>
         </div>
         <div class="dashboard-body historias-propias">
-            <ul id="historias-propias-id">
+            <ul id="own-telling-id">
 
             </ul>
         </div>
@@ -47,6 +47,11 @@
     <li>
     <a href="${createLink(controller: 'telling',action: 'read')}/{{telling.id}}">{{telling.title}}</a>&nbsp;-&nbsp;
     <a href="${createLink(controller: 'user',action: 'showAuthor')}/{{telling.author.id}}">{{telling.author.name}}</a>
+    </li>
+</script>
+<script id="template-own-telling" tytpe="text/html">
+    <li>
+    <a href="${createLink(controller: 'telling',action: 'show')}/{{telling.id}}">{{telling.title}}</a>
     </li>
 </script>
 <script id="template-author-followed" tytpe="text/html">
