@@ -139,6 +139,7 @@ grails.plugin.springsecurity.roleHierarchy = '''
 grails.plugin.springsecurity.rememberMe.cookieName = 'reader-writers_remember_me'
 grails.plugin.springsecurity.useSessionFixationPrevention = true
 //--FACEBOOK--
+grails.plugin.springsecurity.facebook.taglib.button.text = ''
 grails.plugin.springsecurity.facebook.domain.classname = 'ar.com.orkodev.readerswriters.domain.FacebookUser'
 grails.plugin.springsecurity.facebook.filter.redirect.successHandler = 'authenticationSuccessHandler'
 environments {

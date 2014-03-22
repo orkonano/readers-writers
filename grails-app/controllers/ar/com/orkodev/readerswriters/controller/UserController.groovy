@@ -37,7 +37,7 @@ class UserController extends BaseController {
                 return
             }
             springSecurityService.reauthenticate(userInstance.username,password)
-            redirect url:"/"
+            redirect controller: 'panel',action: 'dashboard'
         }
     }
 

@@ -7,13 +7,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title><g:layoutTitle default="Grails"/></title>
+		<title><g:layoutTitle default="Readers - Writers"/></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
 		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
         <g:javascript>
             var relativeUrl = '${createLink(url: '/')}';
         </g:javascript>
@@ -22,25 +20,35 @@
 		<r:layoutResources />
 	</head>
 	<body>
-		<div id="grailsLogo" role="banner"><a href="http://grails.org"><img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/></a></div>
-        <div>
-            <sec:ifNotLoggedIn>
-                <g:link controller='login' action='auth'>Entrar</g:link>
-                <facebookAuth:connect />
-                <g:link controller='user' action='create'>Registrate</g:link>
-            </sec:ifNotLoggedIn>
-            <sec:ifLoggedIn>
-                <sec:ifLoggedIn>Hola <sec:username/>!</sec:ifLoggedIn>
-                <g:link controller="panel" action="dashboard">Panel</g:link>
-                <g:link controller="user" action="edit">Editar Usuario</g:link>
-                <g:link controller="telling" action="index">Mis narrativos</g:link>
-                <g:link controller="telling" action="list" params="[init:true]">Todos los narrativos</g:link>
-                <g:link data-action="logout" data-url-logout="${createLink(controller:'logout')}" data-url-redirect="${createLinkTo(dir: '/')}">Salir</g:link>
-            </sec:ifLoggedIn>
+
+        <div class="container">
+            <div class="masthead">
+                <h3 class="text-muted">Readers & Writers</h3>
+                <nav class="navbar navbar-default" role="navigation">
+                    <sec:ifNotLoggedIn>
+                        <a class="navbar-brand" href="${createLink(url: '/')}">Home</a>
+                    </sec:ifNotLoggedIn>
+                    <sec:ifLoggedIn>
+                        <a class="navbar-brand" href="${createLink(controller: 'panel', action: 'dashboard')}">Home</a>
+                    </sec:ifLoggedIn>
+                    <sec:ifNotLoggedIn>
+                        <a class="navbar-brand" href="${createLink(controller: 'login', action: 'auth')}">Login</a>
+                        <a class="navbar-brand" href="${createLink(controller: 'user', action: 'create')}">Únete</a>
+                    </sec:ifNotLoggedIn>
+                    <sec:ifLoggedIn>
+                        <a class="navbar-brand" href="${createLink(controller: 'user', action: 'edit')}">Editar Usuario</a>
+                        <a class="navbar-brand" href="${createLink(controller: 'telling', action: 'index')}">Mis Narrativos</a>
+                        <a class="navbar-brand" href="${createLink(controller: 'telling', action: 'list',params: '[init:true]')}">Narrativos</a>
+                        <a class="navbar-brand" href="#" data-action="logout" data-url-logout="${createLink(controller:'logout')}" data-url-redirect="${createLinkTo(dir: '/')}">Salir</a>
+                    </sec:ifLoggedIn>
+               </nav>
+            </div>
+            <g:layoutBody/>
+            <r:layoutResources />
+            <!-- Site footer -->
+            <div class="footer">
+                <p>© Company 2014</p>
+            </div>
         </div>
-		<g:layoutBody/>
-		<div class="footer" role="contentinfo"></div>
-		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
-		<r:layoutResources />
 	</body>
 </html>

@@ -35,9 +35,15 @@ modules = {
         resource url:'js/switchAction.js'
     }
 
+    signin{
+        defaultBundle 'common'
+        dependsOn 'application'
+        resource url:'css/signin.css'
+    }
+
     application {
         defaultBundle 'common'
-        dependsOn 'jquery'
+        dependsOn 'jquery','bootstrap'
         resource url:'js/application.js'
         resource url:'js/login_logout.js'
     }

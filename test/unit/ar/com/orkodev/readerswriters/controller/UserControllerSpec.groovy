@@ -71,7 +71,7 @@ class UserControllerSpec extends Specification {
         controller.springSecurityService = springSecurityService.createMock()
         controller.save(user)
         then: "A redirect is issued to the show action"
-        response.redirectedUrl == '/'
+        response.redirectedUrl == '/panel/dashboard'
     }
 
     void "Test the edit action returns the correct model"() {
