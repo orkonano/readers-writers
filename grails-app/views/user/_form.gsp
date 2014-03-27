@@ -2,12 +2,14 @@
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'username', 'error')} required">
     <g:if test="${userInstance?.id}">
+        <h3><span class="label label-default">
         <g:if test="${!userInstance.facebookUser}">
-            ${userInstance.username}
+             ${userInstance.username}
          </g:if>
          <g:else>
              Cuenta asociada a facebook
          </g:else>
+        </span></h3>
     </g:if>
     <g:else>
         <g:field class="form-control" placeholder="Enter username" type="email" name="username" required="" value="${userInstance?.username}"/>
@@ -20,15 +22,9 @@
 </g:if>
 <g:if test="${userInstance?.id}">
     <div class="fieldcontain">
-        <label for="firstname">
-            <g:message code="user.firstname" default="Nombre" />
-        </label>
-        <g:textField name="firstname" value="${userInstance?.firstname}"/>
+        <g:textField class="form-control" placeholder="${message(code: 'user.firstname', default: 'Nombre')}" name="firstname" value="${userInstance?.firstname}"/>
     </div>
     <div class="fieldcontain">
-        <label for="lastname">
-            <g:message code="user.lastname" default="Apellido" />
-        </label>
-        <g:textField name="lastname"  value="${userInstance?.lastname}"/>
+        <g:textField class="form-control" placeholder="${message(code: 'user.lastname', default: 'Apellido')}" name="lastname"  value="${userInstance?.lastname}"/>
     </div>
 </g:if>

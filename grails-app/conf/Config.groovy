@@ -152,3 +152,6 @@ environments {
         grails.plugin.springsecurity.facebook.secret='2504f4860cfd2ae4036f17526c1a154d'
     }
 }
+
+//--BOOTSTRAP
+grails.plugins.twitterbootstrap.fixtaglib = true
