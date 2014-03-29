@@ -17,6 +17,6 @@ class NarrativeGenre {
     }
 
     public String toString(){
-        return name
+        return name.toLowerCase().capitalize()
     }
 }

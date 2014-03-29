@@ -1,9 +1,9 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswiters.exception.NotErasedException
-import ar.com.orkodev.readerswiters.exception.NotPublishedException
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.exception.NotErasedException
+import ar.com.orkodev.readerswriters.exception.NotPublishedException
+import ar.com.orkodev.readerswriters.exception.ValidationException
 
 class TellingService {
 
@@ -38,24 +38,29 @@ class TellingService {
         }
     }
 
-    def list(Telling tellingSearch, Integer max,Integer offset){
+    def listPublished(Telling tellingSearch, Integer max,Integer offset){
         def currentUser = springSecurityService.getCurrentUser();
         def query = Telling.where {
             state == Telling.PUBLISHED && author != currentUser
         }
-        if (tellingSearch.narrativeGenre!= null && tellingSearch.narrativeGenre.id != null){
+        if ( tellingSearch.narrativeGenre?.id != null ){
             query = query.where {
                 narrativeGenre.id == tellingSearch.narrativeGenre.id
             }
         }
-        if (tellingSearch.tellingType!= null && tellingSearch.tellingType.id != null){
+        if ( tellingSearch.tellingType?.id != null ){
             query = query.where {
                 tellingType.id == tellingSearch.tellingType.id
             }
         }
+        if ( tellingSearch.author?.id != null ){
+            query = query.where {
+                author == tellingSearch.author
+            }
+        }
         def count = query.count()
         def resultList = query.list(offset: offset?:0,max: max?:15)
-        return ["result":resultList,"countResult":count]
+        return [resultList, count]
     }
 
     def findCurrentUserTelling(Integer count = null, Integer offset = 0) {

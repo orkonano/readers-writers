@@ -1,9 +1,9 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswiters.exception.SameUserToCurrentException
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingLike
+import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
+import ar.com.orkodev.readerswriters.exception.ValidationException
 
 class TellingLikeService {
 

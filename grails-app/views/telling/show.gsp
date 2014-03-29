@@ -3,95 +3,65 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="main">
+		<meta name="layout" content="main_logged">
 		<g:set var="entityName" value="${message(code: 'telling.label', default: 'Telling')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
 	<body>
-		<a href="#show-telling" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="show-telling" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<ol class="property-list telling">
-			
-				<g:if test="${tellingInstance?.title}">
-				<li class="fieldcontain">
-					<span id="title-label" class="property-label"><g:message code="telling.title.label" default="Title" /></span>
-					
-						<span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${tellingInstance}" field="title"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${tellingInstance?.description}">
-				<li class="fieldcontain">
-					<span id="description-label" class="property-label"><g:message code="telling.description.label" default="Description" /></span>
-					
-						<span class="property-value" aria-labelledby="description-label"><g:fieldValue bean="${tellingInstance}" field="description"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${tellingInstance?.text}">
-				<li class="fieldcontain">
-					<span id="text-label" class="property-label"><g:message code="telling.text.label" default="Text" /></span>
-					
-						<span class="property-value" aria-labelledby="text-label"><g:fieldValue bean="${tellingInstance}" field="text"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${tellingInstance?.narrativeGenre}">
-				<li class="fieldcontain">
-					<span id="narrativeGenre-label" class="property-label"><g:message code="telling.narrativeGenre.label" default="Narrative Genre" /></span>
-					
-						<span class="property-value" aria-labelledby="narrativeGenre-label"><g:link controller="narrativeGenre" action="show" id="${tellingInstance?.narrativeGenre?.id}">${tellingInstance?.narrativeGenre?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${tellingInstance?.tellingType}">
-				<li class="fieldcontain">
-					<span id="tellingType-label" class="property-label"><g:message code="telling.tellingType.label" default="Telling Type" /></span>
-					
-						<span class="property-value" aria-labelledby="tellingType-label"><g:link controller="tellingType" action="show" id="${tellingInstance?.tellingType?.id}">${tellingInstance?.tellingType?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${tellingInstance?.state}">
-				<li class="fieldcontain">
-					<span id="state-label" class="property-label"><g:message code="telling.state.label" default="State" /></span>
-					
-						<span class="property-value" aria-labelledby="state-label">${tellingInstance.getStringState()}</span>
-					
-				</li>
-				</g:if>
-			
-			</ol>
-			<g:form url="[resource:tellingInstance, action:'delete']" method="DELETE">
-				<fieldset class="buttons">
-                    <g:if test="${tellingInstance.isEditable()}">
-					<g:link class="edit" action="edit" resource="${tellingInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-                    </g:if>
-                    <g:if test="${tellingInstance.isEliminable()}">
-					    <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-                    </g:if>
-                    <g:if test="${tellingInstance.isPublicable()}">
-                        <g:link class="publish" action="publish" resource="${tellingInstance}"><g:message code="default.button.publish.label" default="Publish" /></g:link>
-                    </g:if>
 
-				</fieldset>
-			</g:form>
-		</div>
+
+    <g:set var="titleSubMenu" value="${message(code: 'default.show.label',args: [entityName])}" />
+    <g:set var="titleSubMenuIndex" value="${message(code: 'default.list.label',args: [entityName])}" />
+    <g:set var="titleSubMenuCreate" value="${message(code: 'default.new.label',args: [entityName])}" />
+    <g:set var="titleSubMenuEdit" value="${message(code: 'default.edit.label',args: [entityName])}" />
+    <g:render template="/layouts/submenu-nav-logged"
+              model="['submenu':[
+                      'name' : titleSubMenu,
+                      'items':[
+                              ['controller':'panel',
+                                      'action':'dashboard',
+                                      'name':'Home'
+                              ],
+                              ['controller':'telling',
+                                      'action':'index',
+                                      'name':titleSubMenuIndex
+                              ],
+                              ['controller':'telling',
+                                      'action':'create',
+                                      'name':titleSubMenuCreate
+                              ]
+                      ]
+              ]
+              ]"/>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>${tellingInstance.title}
+                <g:form url="[resource:tellingInstance, action:'delete']" method="DELETE">
+                        <g:if test="${tellingInstance.isEditable()}">
+                            <a href="${createLink(action: 'edit',params: ['id': tellingInstance.id])}"
+                               class="btn btn-primary btn-sm">Editar</a>
+                        </g:if>
+                        <g:if test="${tellingInstance.isPublicable()}">
+                            <a href="${createLink(action: 'publish',params: ['id': tellingInstance.id])}"
+                               class="btn btn-success btn-sm">Publicar</a>
+                        </g:if>
+                        <g:if test="${tellingInstance.isEliminable()}">
+                            <g:actionSubmit class="btn btn-danger btn-sm" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                        </g:if>
+                </g:form>
+            </h3>
+
+            <span class="label label-info">${tellingInstance?.tellingType?.encodeAsHTML()}</span>&nbsp;
+            <span class="label label-primary">${tellingInstance?.narrativeGenre?.encodeAsHTML()}</span>
+            <br/><br/>
+            <div class="well well-lg">${tellingInstance.description}</div>
+            <p class="lead">
+
+                ${tellingInstance.text}
+            </p>
+        </div>
+    </div>
+
+
 	</body>
 </html>

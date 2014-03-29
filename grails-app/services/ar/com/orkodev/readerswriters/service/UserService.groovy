@@ -1,9 +1,9 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.Role
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.domain.UserRole
+import ar.com.orkodev.readerswriters.exception.ValidationException
 
 class UserService {
 

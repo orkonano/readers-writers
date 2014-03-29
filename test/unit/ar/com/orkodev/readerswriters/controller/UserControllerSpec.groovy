@@ -1,8 +1,10 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswiters.exception.ValidationException
+import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.service.FollowerService
+import ar.com.orkodev.readerswriters.service.TellingService
 import ar.com.orkodev.readerswriters.service.UserService
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
@@ -71,7 +73,7 @@ class UserControllerSpec extends Specification {
         controller.springSecurityService = springSecurityService.createMock()
         controller.save(user)
         then: "A redirect is issued to the show action"
-        response.redirectedUrl == '/'
+        response.redirectedUrl == '/panel/dashboard'
     }
 
     void "Test the edit action returns the correct model"() {
@@ -125,7 +127,13 @@ class UserControllerSpec extends Specification {
         followService.demandExplicit.isFollowAuthor(){User user -> return true}
         def followServiceFail = mockFor(FollowerService)
         followServiceFail.demandExplicit.isFollowAuthor(){User user -> return false}
+        def telling = new Telling(id: 1, title: "3")
+        def tellingService  = mockFor(TellingService)
+        tellingService.demandExplicit.listPublished(2){Telling telling1,Integer max, Integer offset ->
+            return [[telling], 1]
+        }
         def user = new User(params)
+        controller.tellingService = tellingService.createMock()
 
         when: "A domain instance is passed to the show action and is followed"
         response.reset()
@@ -136,6 +144,8 @@ class UserControllerSpec extends Specification {
         response.status == 200
         model!=null
         model.isFollowed
+        model.tellingInstanceList == [telling]
+        model.tellingInstanceCount == 1
 
         when: "A domain instance is passed to the show action and is not followed"
         response.reset()
@@ -146,5 +156,7 @@ class UserControllerSpec extends Specification {
         response.status == 200
         model!=null
         !model.isFollowed
+        model.tellingInstanceList == [telling]
+        model.tellingInstanceCount == 1
     }
 }

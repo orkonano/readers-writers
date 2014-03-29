@@ -20,6 +20,7 @@
 		<r:layoutResources />
 	</head>
 	<body>
+
         <div class="container">
             <g:render template="/layouts/menu"/>
             <g:layoutBody/>

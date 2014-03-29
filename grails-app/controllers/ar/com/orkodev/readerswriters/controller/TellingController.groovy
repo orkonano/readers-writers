@@ -1,10 +1,10 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswiters.exception.NotPublishedException
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingType
+import ar.com.orkodev.readerswriters.exception.NotPublishedException
+import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.springsecurity.annotation.Secured
 
 @Secured("ROLE_US")
@@ -29,8 +29,12 @@ class TellingController extends BaseController {
         }else{
             def max = params.max?:15
             def offset = params.ofsset?:0
-            def result = tellingService.list(tellingSearch,max,offset)
-            render view:"list",model: [tellingInstanceList:result.result,tellingInstanceCount: result.countResult,narrativesGenre:NarrativeGenre.list(),tellingsType:TellingType.list()]
+            def (tellingList, countResult) = tellingService.listPublished(tellingSearch,max,offset)
+            render view: "list", model: [tellingInstanceList: tellingList,
+                                         tellingInstanceCount: countResult,
+                                         narrativesGenre: NarrativeGenre.list(),
+                                         tellingsType: TellingType.list()
+                                        ]
         }
     }
 

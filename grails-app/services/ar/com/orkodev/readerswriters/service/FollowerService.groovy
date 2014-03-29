@@ -1,9 +1,9 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswiters.exception.SameUserToCurrentException
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
+import ar.com.orkodev.readerswriters.exception.ValidationException
 
 class FollowerService {
 

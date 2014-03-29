@@ -1,10 +1,10 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingType
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.service.TellingLikeService
 import ar.com.orkodev.readerswriters.service.TellingService
 import grails.plugin.springsecurity.SpringSecurityService
@@ -253,9 +253,9 @@ class TellingControllerSpec extends Specification {
         def tt1 = new TellingType(name: "tt 1").save(flush: true, failOnError: true)
         def tt2 = new TellingType(name: "tt 2").save(flush: true, failOnError: true)
         def tellingService  = mockFor(TellingService)
-        def telling = new Telling(title: "3")
-        tellingService.demandExplicit.list(){Telling telling1,Integer max, Integer offset ->
-            return [result:[telling],countResult:1]
+        def telling = new Telling(id: 1, title: "3")
+        tellingService.demandExplicit.listPublished(){Telling telling1,Integer max, Integer offset ->
+            return [[telling], 1]
         }
         controller.tellingService = tellingService.createMock()
         when:"Es la primera vez que se llama y los paramestros son nulos"
@@ -264,8 +264,8 @@ class TellingControllerSpec extends Specification {
         view == "/telling/list"
         model.tellingInstanceList == []
         model.tellingInstanceCount == 0
-        model.narrativesGenre == [ng1,ng2]
-        model.tellingsType == [tt1,tt2]
+        model.narrativesGenre == [ng1, ng2]
+        model.tellingsType == [tt1, tt2]
 
         when:"Es la primera vez que se llama y los paramestros tiene init cargado"
         response.reset()
@@ -275,8 +275,8 @@ class TellingControllerSpec extends Specification {
         view == "/telling/list"
         model.tellingInstanceList == []
         model.tellingInstanceCount == 0
-        model.narrativesGenre == [ng1,ng2]
-        model.tellingsType == [tt1,tt2]
+        model.narrativesGenre == [ng1, ng2]
+        model.tellingsType == [tt1, tt2]
 
         when: "se recibe un telling con datos"
         response.reset()
@@ -286,9 +286,8 @@ class TellingControllerSpec extends Specification {
         view == "/telling/list"
         model.tellingInstanceList == [telling]
         model.tellingInstanceCount == 1
-        model.narrativesGenre == [ng1,ng2]
-        model.tellingsType == [tt1,tt2]
-
+        model.narrativesGenre == [ng1, ng2]
+        model.tellingsType == [tt1, tt2]
     }
 
     void "Test that the read action returns the correct model"() {

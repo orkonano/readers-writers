@@ -1,14 +1,15 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswiters.exception.ValidationException
+import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.springsecurity.annotation.Secured
 
 class UserController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def userService, springSecurityService, followerService
+    def userService, springSecurityService, followerService, tellingService
 
     /*def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -37,7 +38,7 @@ class UserController extends BaseController {
                 return
             }
             springSecurityService.reauthenticate(userInstance.username,password)
-            redirect url:"/"
+            redirect controller: 'panel',action: 'dashboard'
         }
     }
 
@@ -74,26 +75,15 @@ class UserController extends BaseController {
     @Secured("ROLE_US")
     def showAuthor(User userInstance) {
         def isFollowed = followerService.isFollowAuthor(userInstance)
-        render model:[userInstance: userInstance,isFollowed:isFollowed],view:"showAuthor"
+        def tellingSearch = new Telling(author: userInstance)
+        def (tellingList, countResult) = tellingService.listPublished(tellingSearch, 15, 0)
+        render model:[
+                      userInstance: userInstance,
+                      isFollowed:isFollowed,
+                      tellingInstanceList: tellingList,
+                      tellingInstanceCount: countResult,
+                     ],
+                view:"showAuthor"
     }
-
-    /*@Transactional
-    def delete(User userInstance) {
-
-        if (userInstance == null) {
-            notFound()
-            return
-        }
-
-        userInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }*/
 
 }

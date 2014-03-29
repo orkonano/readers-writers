@@ -1,8 +1,8 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswiters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.service.FollowerService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor

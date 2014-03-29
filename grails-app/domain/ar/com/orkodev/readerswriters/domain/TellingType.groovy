@@ -9,6 +9,6 @@ class TellingType {
     }
 
     public String toString(){
-        return name
+        return name.toLowerCase().capitalize()
     }
 }
