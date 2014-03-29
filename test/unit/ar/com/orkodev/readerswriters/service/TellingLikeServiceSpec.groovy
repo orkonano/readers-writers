@@ -1,7 +1,7 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswiters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.domain.*
+import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor

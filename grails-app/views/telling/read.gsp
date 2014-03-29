@@ -5,68 +5,42 @@
 <head>
     <meta name="layout" content="main">
     <g:set var="entityName" value="${message(code: 'telling.label', default: 'Telling')}" />
-    <title><g:message code="default.show.label" args="[entityName]" /></title>
+    <title><g:message code="default.read.label" args="[entityName]" default="Leer {0}" /></title>
     <g:javascript library="like"/>
 </head>
 <body>
-<a href="#show-telling" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-<div class="nav" role="navigation">
-    <ul>
-        <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-        <li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-    </ul>
-</div>
-<div id="show-telling" class="content scaffold-show" role="main">
-    <h1><g:message code="default.read.label" default="Leer {0}" args="[entityName]" /></h1>
-    <g:if test="${flash.message}">
-        <div class="message" role="status">${flash.message}</div>
-    </g:if>
-    <ol class="property-list telling">
-        <li class="fieldcontain">
-            <span id="title-label" class="property-label"><g:message code="telling.title.label" default="Title" /></span>
-            <span class="property-value" aria-labelledby="title-label">${tellingInstance.title}</span>
-        </li>
-        <li class="fieldcontain">
-            <span id="author-label" class="property-label"><g:message code="telling.author.label" default="Author" /></span>
-            <span class="property-value" aria-labelledby="author-label">
-                <g:link controller="user" action="showAuthor" id="${tellingInstance.author.id}">
-                    ${tellingInstance.author.username}
-                </g:link>
-                </span>
-        </li>
-        <li class="fieldcontain">
-            <span id="description-label" class="property-label"><g:message code="telling.description.label" default="Description" /></span>
-            <span class="property-value" aria-labelledby="description-label">${tellingInstance.description}</span>
-        </li>
-        <li class="fieldcontain">
-            <span id="narrativeGenre-label" class="property-label"><g:message code="telling.narrativeGenre.label" default="Narrative Genre" /></span>
-            <span class="property-value" aria-labelledby="narrativeGenre-label">${tellingInstance.narrativeGenre.name}</span>
-        </li>
-        <li class="fieldcontain">
-            <span id="tellingType-label" class="property-label"><g:message code="telling.tellingType.label" default="Telling Type" /></span>
-            <span class="property-value" aria-labelledby="tellingType-label">${tellingInstance.tellingType.name}</span>
-        </li>
-        <li class="fieldcontain">
-            <span id="text-label" class="property-label"><g:message code="telling.text.label" default="Text" /></span>
+<div class="row">
+    <div class="col-md-12">
+        <h3>${tellingInstance.title}&nbsp;&nbsp;
+            <span id="id-buttons-region">
+            <g:if test="${isLike}">
+                <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+            </g:if>
+            <g:else>
+                <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
+            </g:else>
+        </span></h3>
+        <a class="btn btn-link" href="${createLink(controller: 'user', action: 'showAuthor', params: ['id': tellingInstance.author.id])}">
+        ${tellingInstance.author.username.encodeAsHTML()}
+        </a>
+        &nbsp;
+        <span class="label label-info">${tellingInstance?.tellingType?.encodeAsHTML()}</span>&nbsp;
+        <span class="label label-success">${tellingInstance?.narrativeGenre?.encodeAsHTML()}</span>
 
-            <span class="property-value" aria-labelledby="text-label">${tellingInstance.text}</span>
-        </li>
-    </ol>
-    <fieldset class="buttons" id="id-buttons-region">
-        <g:if test="${isLike}">
-            <g:link  data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
-        </g:if>
-        <g:else>
-            <g:link data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
-        </g:else>
-    </fieldset>
+        <br/>
+        <br/>
+        <div class="well well-lg">${tellingInstance.description}</div>
+        <p class="lead">
+            ${tellingInstance.text}
+        </p>
+    </div>
 </div>
 
 <script id="template-link-stop-like" type="text/html">
-    <g:link  data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+    <g:link class="btn btn-warning btn-xs"  data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
 </script>
 <script id="template-link-like" type="text/html">
-    <g:link data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
+    <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
 </script>
 
 </body>

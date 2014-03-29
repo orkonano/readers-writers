@@ -6,21 +6,15 @@
     <g:javascript library="dashboard"/>
 </head>
 <body>
-    <div class="page-header">
-        <h1>Dashboard</h1>
-    </div>
-
     <div class="row">
         <g:render template="common-dashboard-content"
          model="['columnNumber':6,'panelTitle':'Historias escritas','panelBodyClass':'historias-propias','panelBodyListId':'own-telling-id']"/>
         <g:render template="common-dashboard-content"
            model="['columnNumber':6,'panelTitle':'Historias seguidas','panelBodyClass':'historias-ajenas','panelBodyListId':'historias-like-id']"/>
-
     </div>
      <div class="row">
          <g:render template="common-dashboard-content"
                    model="['columnNumber':12,'panelTitle':'Autores seguidos','panelBodyClass':'historias-autores','panelBodyListId':'autores-seguidos-id']"/>
-
       </div>
 </div>
 <script id="template-telling-like" tytpe="text/html">

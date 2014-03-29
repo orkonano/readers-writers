@@ -1,4 +1,4 @@
-package ar.com.orkodev.readerswiters.exception
+package ar.com.orkodev.readerswriters.exception
 
 /**
  * Created by orko on 02/03/14.

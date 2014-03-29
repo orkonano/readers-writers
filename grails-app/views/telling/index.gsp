@@ -7,18 +7,18 @@
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 	</head>
 	<body>
-        <div class="navbar navbar-default" role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#"><g:message code="default.list.label" args="[entityName]" /></a>
-                </div>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="${createLink(action: 'create')}"><g:message code="default.new.label" args="[entityName]" /></a></li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div>
+        <g:set var="titleSubMenu" value="${message(code: 'default.list.label',args: [entityName])}" />
+        <g:set var="titleSubMenuCreate" value="${message(code: 'default.new.label',args: [entityName])}" />
+        <g:render template="/layouts/submenu-nav-logged"
+                  model="['submenu':[
+                          'name' : titleSubMenu,
+                          'items':[
+                                   ['controller':'telling',
+                                    'action':'create',
+                                    'name':titleSubMenuCreate]
+                                 ]
+                            ]
+                          ]"/>
         <div class="row">
             <div class="col-lg-12">
                 <table class="table table-hover">
@@ -45,12 +45,6 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-6">
-                    <g:paginate total="${tellingInstanceCount}" action="index" class="pagination-sm" />
-            </div>
-            <div class="col-lg-3"></div>
-        </div>
+        <g:render template="/layouts/paginator" model="[total: tellingInstanceCount]"/>
     </body>
 </html>

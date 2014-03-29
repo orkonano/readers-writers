@@ -1,4 +1,4 @@
-package ar.com.orkodev.readerswiters.exception
+package ar.com.orkodev.readerswriters.exception
 
 import org.springframework.validation.Errors
 

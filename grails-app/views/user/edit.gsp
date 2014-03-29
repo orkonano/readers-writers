@@ -7,13 +7,12 @@
 		<title><g:message code="default.edit.label" args="[entityName]" /></title>
 	</head>
 	<body>
-		<div class="navbar navbar-default" role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#"><g:message code="default.edit.label" args="[entityName]" /></a>
-                </div>
-             </div>
-		</div>
+    <g:set var="titleSubMenu" value="${message(code: 'default.edit.label',args: [entityName])}" />
+    <g:render template="/layouts/submenu-nav-logged"
+              model="['submenu':[
+                                  'name' : titleSubMenu,
+                              ]
+                     ]"/>
     <div class="row">
         <div class="col-md-4">
         </div>

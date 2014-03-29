@@ -1,12 +1,12 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswiters.exception.NotErasedException
-import ar.com.orkodev.readerswiters.exception.NotPublishedException
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingType
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.NotErasedException
+import ar.com.orkodev.readerswriters.exception.NotPublishedException
+import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
@@ -106,31 +106,41 @@ class TellingServiceSpec extends Specification {
         def ng2 = new NarrativeGenre(name: "ng 2").save(flush: true, failOnError: true)
         def tt = new TellingType(name: "tt 1").save(flush: true, failOnError: true)
         def tt2 = new TellingType(name: "tt 2").save(flush: true, failOnError: true)
-        def jj = new Telling(title: "t1",description: "d1",text: "long text 1",author: user,narrativeGenre: ng,tellingType: tt,state: Telling.DRAFT).save(flush: true, failOnError: true)
-        def jj1 = new Telling(title: "t1",description: "d1",text: "long text 1",author: user,narrativeGenre: ng,tellingType: tt,state: Telling.PUBLISHED).save(flush: true, failOnError: true)
-        def jj2 = new Telling(title: "t1",description: "d1",text: "long text 1",author: currentUser,narrativeGenre: ng,tellingType: tt,state: Telling.PUBLISHED).save(flush: true, failOnError: true)
+        def jj = new Telling(title: "t1", description: "d1", text: "long text 1", author: user,
+                            narrativeGenre: ng, tellingType: tt, state: Telling.DRAFT)
+                            .save(flush: true, failOnError: true)
+        def jj1 = new Telling(title: "t1", description: "d1", text: "long text 1", author: user,
+                             narrativeGenre: ng, tellingType: tt, state: Telling.PUBLISHED).
+                            save(flush: true, failOnError: true)
+        def jj2 = new Telling(title: "t1", description: "d1", text: "long text 1", author: currentUser,
+                            narrativeGenre: ng, tellingType: tt, state: Telling.PUBLISHED).
+                            save(flush: true, failOnError: true)
         def springSecurityServiceMock = mockFor(SpringSecurityService)
-        springSecurityServiceMock.demandExplicit.getCurrentUser(4) { ->currentUser }
+        springSecurityServiceMock.demandExplicit.getCurrentUser(5) { ->currentUser }
         tellingService.springSecurityService = springSecurityServiceMock.createMock()
 
         when: "se busca en la base de datos con diferentes parámetros"
         def tellingSearch = new Telling(narrativeGenre: ng)
-        def tellingSearch1 = new Telling(narrativeGenre: ng,tellingType: tt)
+        def tellingSearch1 = new Telling(narrativeGenre: ng, tellingType: tt)
         def tellingSearch2 = new Telling(tellingType: tt)
         def tellingSearch3 = new Telling(tellingType: tt2)
-        def result = tellingService.list(tellingSearch,15,0)
-        def result1 = tellingService.list(tellingSearch1,15,0)
-        def result2 = tellingService.list(tellingSearch2,15,0)
-        def result3 = tellingService.list(tellingSearch3,15,0)
+        def tellingSearch4 = new Telling(author: user)
+        def (result, count) = tellingService.listPublished(tellingSearch, 15, 0)
+        def (result1, count1) = tellingService.listPublished(tellingSearch1, 15, 0)
+        def (result2, count2) = tellingService.listPublished(tellingSearch2, 15, 0)
+        def (result3, count3) = tellingService.listPublished(tellingSearch3, 15, 0)
+        def (result4, count4) = tellingService.listPublished(tellingSearch4, 15, 0)
         then: "los resultado son los siguientes"
-        result.countResult == 1
-        result.result
-        result1.countResult == 1
-        result1.result
-        result2.countResult == 1
-        result2.result
-        result3.countResult == 0
-        !result3.result
+        count == 1
+        result
+        count1 == 1
+        result1
+        count2 == 1
+        result2
+        count3 == 0
+        !result3
+        count4 == 1
+        result4
     }
 
     void "test findCurrentUserTelling"() {

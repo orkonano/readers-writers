@@ -1,8 +1,8 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswiters.exception.SameUserToCurrentException
-import ar.com.orkodev.readerswiters.exception.ValidationException
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
+import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
