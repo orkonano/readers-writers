@@ -82,7 +82,18 @@ grails.web.disable.multipart=false
 grails.exceptionresolver.params.exclude = ['password']
 
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
+grails.cache.enabled = true
 grails.hibernate.cache.queries = false
+
+grails.cache.config = {
+    cache {
+        name 'readers-writers'
+        eternal false
+        overflowToDisk true
+        maxElementsInMemory 10000
+        maxElementsOnDisk 10000000
+    }
+}
 
 environments {
     development {
@@ -103,6 +114,10 @@ log4j = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
 
+    appenders {
+        file name:'ehcache', file:'/home/orko/dev/apps/readers-writers/logs/ehcache.log'
+    }
+
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
            'org.codehaus.groovy.grails.web.sitemesh',       // layouts
@@ -112,8 +127,8 @@ log4j = {
            'org.codehaus.groovy.grails.plugins',            // plugins
            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
            'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate'
+           'org.hibernate'
+    debug   ehcache:  'net.sf.ehcache'
 }
 
 

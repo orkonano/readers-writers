@@ -1,6 +1,8 @@
 package ar.com.orkodev.readerswriters.domain
 
-class Telling {
+class Telling implements Serializable{
+
+    private static final long serialVersionUID = 1
 
     final static DRAFT = 0
     final static PUBLISHED = 1

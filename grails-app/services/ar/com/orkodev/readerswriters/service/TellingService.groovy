@@ -1,15 +1,18 @@
 package ar.com.orkodev.readerswriters.service
 
+import ar.com.orkodev.readerswriters.Searchable.TellingSearcher
 import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import grails.plugin.cache.Cacheable
 
 class TellingService {
 
     static transactional = true
 
-    def springSecurityService
+    def springSecurityService, grailsApplication
 
     def save(Telling tellingToSave) {
         tellingToSave.author = springSecurityService.getCurrentUser()
@@ -38,8 +41,13 @@ class TellingService {
         }
     }
 
-    def listPublished(Telling tellingSearch, Integer max,Integer offset){
+    def listPublished(TellingSearcher tellingSearch, Integer max = 15, Integer offset = 0){
         def currentUser = springSecurityService.getCurrentUser();
+        grailsApplication.mainContext.tellingService.listPublished(tellingSearch, currentUser, max, offset)
+    }
+
+    @Cacheable(value = ['readers-writers'], key = '#currentUser.id')
+    def listPublished(TellingSearcher tellingSearch, User currentUser, Integer max,Integer offset){
         def query = Telling.where {
             state == Telling.PUBLISHED && author != currentUser
         }
@@ -60,7 +68,7 @@ class TellingService {
         }
         def count = query.count()
         def resultList = query.list(offset: offset?:0,max: max?:15)
-        return [resultList, count]
+        [resultList, count]
     }
 
     def findCurrentUserTelling(Integer count = null, Integer offset = 0) {

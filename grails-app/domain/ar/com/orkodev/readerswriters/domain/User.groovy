@@ -62,4 +62,16 @@ class User {
         query.list([sort:"dateCreated"]).collect { it.telling } as Set
     }
 
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (!(o instanceof User)) return false
+        User user = (User) o
+        if (id == null && user.id == null) return false
+        if (id != user.id) return false
+        return true
+    }
+
+    int hashCode() {
+        return id.hashCode()
+    }
 }

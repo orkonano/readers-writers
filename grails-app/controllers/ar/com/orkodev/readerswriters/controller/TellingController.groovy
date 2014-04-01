@@ -1,5 +1,6 @@
 package ar.com.orkodev.readerswriters.controller
 
+import ar.com.orkodev.readerswriters.Searchable.TellingSearcher
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingType
@@ -11,7 +12,7 @@ import grails.plugin.springsecurity.annotation.Secured
 class TellingController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-    def springSecurityService, tellingService,tellingLikeService
+    def springSecurityService, tellingService, tellingLikeService, grailsCacheManager
 
 
     def index(Integer max) {
@@ -23,12 +24,13 @@ class TellingController extends BaseController {
         respond query.list(params), model: [tellingInstanceCount: query.count()]
     }
 
-    def list(Telling tellingSearch){
+    def list(TellingSearcher tellingSearch){
         if (tellingSearch == null || params.init){
            render view:"list",model: [tellingInstanceList:[],tellingInstanceCount: 0,narrativesGenre:NarrativeGenre.list(),tellingsType:TellingType.list()]
         }else{
             def max = params.max?:15
             def offset = params.ofsset?:0
+            def cache =  grailsCacheManager.getCache('readers-writers').getNativeCache();
             def (tellingList, countResult) = tellingService.listPublished(tellingSearch,max,offset)
             render view: "list", model: [tellingInstanceList: tellingList,
                                          tellingInstanceCount: countResult,
