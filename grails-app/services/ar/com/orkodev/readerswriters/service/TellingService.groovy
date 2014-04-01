@@ -46,7 +46,7 @@ class TellingService {
         grailsApplication.mainContext.tellingService.listPublished(tellingSearch, currentUser, max, offset)
     }
 
-    @Cacheable(value = ['readers-writers'], key = '#currentUser.id')
+    @Cacheable(value = ['readers-writers'])
     def listPublished(TellingSearcher tellingSearch, User currentUser, Integer max,Integer offset){
         def query = Telling.where {
             state == Telling.PUBLISHED && author != currentUser
