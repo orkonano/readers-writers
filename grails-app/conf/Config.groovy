@@ -128,7 +128,7 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
            'org.springframework',
            'org.hibernate'
-    debug   ehcache:  'net.sf.ehcache'
+   // debug   ehcache:  'net.sf.ehcache'
 }
 
 
