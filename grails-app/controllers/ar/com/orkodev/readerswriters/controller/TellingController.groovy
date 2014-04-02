@@ -11,7 +11,8 @@ import grails.plugin.springsecurity.annotation.Secured
 class TellingController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-    def springSecurityService, tellingService, tellingLikeService, grailsCacheManager
+    def springSecurityService, tellingService, tellingLikeService, narrativeGenreService,
+        tellingTypeService
 
 
     def index(Integer max) {
@@ -32,8 +33,8 @@ class TellingController extends BaseController {
             def (tellingList, countResult) = tellingService.listPublished(tellingSearch,max,offset)
             render view: "list", model: [tellingInstanceList: tellingList,
                                          tellingInstanceCount: countResult,
-                                         narrativesGenre: NarrativeGenre.list(),
-                                         tellingsType: TellingType.list()
+                                         narrativesGenre: narrativeGenreService.getAll(),
+                                         tellingsType: tellingTypeService.getAll()
                                         ]
         }
     }
@@ -120,7 +121,7 @@ class TellingController extends BaseController {
     }
 
     private Map generarModelViewSaveAndUpdate(Telling telling){
-        return ["tellingInstance":telling,"narrativesGenre":NarrativeGenre.list(),"tellingsType":TellingType.list()]
+        return ["tellingInstance":telling,"narrativesGenre":narrativeGenreService.getAll(),"tellingsType":tellingTypeService.getAll()]
     }
 
     def delete(Telling tellingInstance) {

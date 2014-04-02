@@ -1,6 +1,7 @@
 package ar.com.orkodev.readerswriters.service
 
 import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
@@ -77,10 +78,15 @@ class TellingService {
         Telling.get(id)
     }
 
-    def findCurrentUserTelling(Integer count = null, Integer offset = 0) {
+    List<Telling> findCurrentUserTelling(Integer count = null, Integer offset = 0) {
         def currentUser = springSecurityService.getCurrentUser()
+        grailsApplication.mainContext.tellingService.findTellingByAuthor(currentUser, count, offset)
+    }
+
+    @Cacheable('readers-writers')
+    List<Telling> findTellingByAuthor(User authorParams, Integer count = null, Integer offset = 0){
         def query = Telling.where {
-            author.id == currentUser.id
+            author.id == authorParams.id
         }
         def params = [sort: 'dateCreated', order: "desc", offset: offset]
         if (count != null){

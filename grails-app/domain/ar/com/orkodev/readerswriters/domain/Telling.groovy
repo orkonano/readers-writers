@@ -36,7 +36,6 @@ class Telling implements Serializable{
     }
 
     static mapping = {
-        cache: true
         text type: 'text'
     }
 
