@@ -6,7 +6,7 @@ dataSource {
         username = "sa"
         password = ""
     }
-
+    logSql = true
 }
 
 hibernate {

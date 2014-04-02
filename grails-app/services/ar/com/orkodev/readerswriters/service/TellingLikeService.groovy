@@ -2,14 +2,16 @@ package ar.com.orkodev.readerswriters.service
 
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingLike
+import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import grails.plugin.cache.Cacheable
 
 class TellingLikeService {
 
     static transactional = true
 
-    static springSecurityService
+    static springSecurityService, grailsApplication, tellingService
 
     def like(Telling tellingToLike) {
         def currentUser = springSecurityService.getCurrentUser()
@@ -45,13 +47,19 @@ class TellingLikeService {
 
     def findLikeTelling(Integer countLast = null, Integer offset = 0){
         def currentUser = springSecurityService.getCurrentUser()
+        grailsApplication.mainContext.tellingLikeService.findLikeTellingByUser(currentUser, countLast, offset)
+    }
+
+    @Cacheable('readers-writers')
+    List<Telling> findLikeTellingByUser(User user, Integer countLast = null, Integer offset = 0){
         def query = TellingLike.where {
-            reader.id == currentUser.id
+            reader.id == user.id
         }
         def params = [sort: 'dateCreated', order: "desc", offset: offset]
         if (countLast != null){
             params.max = countLast
         }
-        query.list(params).collect{it -> it.telling} as List
+        query.property('telling.id')
+        tellingService.findTellingsByIds(query.list(params))
     }
 }

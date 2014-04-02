@@ -1,11 +1,14 @@
 package ar.com.orkodev.readerswriters.domain
 
-class Telling {
+class Telling implements Serializable{
+
+    private static final long serialVersionUID = 1
 
     final static DRAFT = 0
     final static PUBLISHED = 1
     final static ERASED = 2
 
+    Long id
     String title
     String description
     String text
@@ -33,8 +36,9 @@ class Telling {
     }
 
     static mapping = {
-        cache: true
         text type: 'text'
+        narrativeGenre fetch: 'join'
+        tellingType fetch: 'join'
     }
 
     def beforeInsert() {

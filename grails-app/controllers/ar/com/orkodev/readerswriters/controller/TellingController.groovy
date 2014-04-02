@@ -11,16 +11,15 @@ import grails.plugin.springsecurity.annotation.Secured
 class TellingController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-    def springSecurityService, tellingService,tellingLikeService
+    def springSecurityService, tellingService, tellingLikeService, narrativeGenreService,
+        tellingTypeService
 
 
     def index(Integer max) {
         def userLogin = springSecurityService.getCurrentUser()
         params.max = Math.min(max ?: 10, 100)
-        def query = Telling.where {
-            author == userLogin && state != Telling.ERASED
-        }
-        respond query.list(params), model: [tellingInstanceCount: query.count()]
+        def (tellingList, countResult) = tellingService.listAllAuthorUserTelling(userLogin, params.max );
+        respond tellingList, model: [tellingInstanceCount: countResult]
     }
 
     def list(Telling tellingSearch){
@@ -32,8 +31,8 @@ class TellingController extends BaseController {
             def (tellingList, countResult) = tellingService.listPublished(tellingSearch,max,offset)
             render view: "list", model: [tellingInstanceList: tellingList,
                                          tellingInstanceCount: countResult,
-                                         narrativesGenre: NarrativeGenre.list(),
-                                         tellingsType: TellingType.list()
+                                         narrativesGenre: narrativeGenreService.getAll(),
+                                         tellingsType: tellingTypeService.getAll()
                                         ]
         }
     }
@@ -120,7 +119,7 @@ class TellingController extends BaseController {
     }
 
     private Map generarModelViewSaveAndUpdate(Telling telling){
-        return ["tellingInstance":telling,"narrativesGenre":NarrativeGenre.list(),"tellingsType":TellingType.list()]
+        return ["tellingInstance":telling,"narrativesGenre":narrativeGenreService.getAll(),"tellingsType":tellingTypeService.getAll()]
     }
 
     def delete(Telling tellingInstance) {

@@ -4,12 +4,13 @@ import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import grails.plugin.cache.Cacheable
 
 class FollowerService {
 
     static transactional = true
 
-    static springSecurityService
+    static springSecurityService, grailsApplication
 
     def followAuthor(User author) {
         User currentUser = springSecurityService.getCurrentUser()
@@ -42,15 +43,21 @@ class FollowerService {
         currentFollowers != null
     }
 
-    def findAuthorFollowed(Integer count = null, Integer offset = 0) {
+    List<User> findAuthorFollowed(Integer count = null, Integer offset = 0) {
         User currentUser = springSecurityService.getCurrentUser()
+        grailsApplication.mainContext.followerService.findAuthorFollowedByUser(currentUser, count, offset)
+    }
+
+    @Cacheable('readers-writers')
+    List<User> findAuthorFollowedByUser(User user, Integer count = null, Integer offset = 0){
         def query = Follower.where {
-            following.id == currentUser.id
+            following.id == user.id
         }
         def params = [sort: 'dateCreated', order: "desc", offset: offset]
         if (count != null){
             params.max = count
         }
-        query.list(params).collect{it -> it.author} as List
+        query = query.property('author')
+        query.list(params)
     }
 }
