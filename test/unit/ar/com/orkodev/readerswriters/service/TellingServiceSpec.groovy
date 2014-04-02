@@ -88,7 +88,7 @@ class TellingServiceSpec extends Specification {
     }
 
 
-    void "test list method"() {
+    void "test list published method"() {
         given:
         mockForConstraintsTests Telling
         mockForConstraintsTests NarrativeGenre

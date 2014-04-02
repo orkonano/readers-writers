@@ -8,6 +8,7 @@ class Telling implements Serializable{
     final static PUBLISHED = 1
     final static ERASED = 2
 
+    Long id
     String title
     String description
     String text

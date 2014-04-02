@@ -1,8 +1,6 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.Searchable.TellingSearcher
 import ar.com.orkodev.readerswriters.domain.Telling
-import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
@@ -41,13 +39,8 @@ class TellingService {
         }
     }
 
-    def listPublished(TellingSearcher tellingSearch, Integer max = 15, Integer offset = 0){
+    def listPublished(Telling tellingSearch, Integer max = 15, Integer offset = 0){
         def currentUser = springSecurityService.getCurrentUser();
-        grailsApplication.mainContext.tellingService.listPublished(tellingSearch, currentUser, max, offset)
-    }
-
-    @Cacheable(value = ['readers-writers'])
-    def listPublished(TellingSearcher tellingSearch, User currentUser, Integer max,Integer offset){
         def query = Telling.where {
             state == Telling.PUBLISHED && author != currentUser
         }
@@ -67,8 +60,21 @@ class TellingService {
             }
         }
         def count = query.count()
-        def resultList = query.list(offset: offset?:0,max: max?:15)
-        [resultList, count]
+        query = query.property('id')
+        List<Long> idsTellings = query.list(offset: offset?:0,max: max?:15)
+        List<Telling> tellingResult = findTellingsByIds(idsTellings);
+        [tellingResult, count]
+    }
+
+    List<Telling> findTellingsByIds(List<Long> idsTelling){
+        List<Telling> tellings = new ArrayList(idsTelling.size());
+        idsTelling.each {it -> tellings.add(grailsApplication.mainContext.tellingService.findTellingById(it))}
+        tellings
+    }
+
+    @Cacheable('readers-writers')
+    Telling findTellingById(Long id){
+        Telling.get(id)
     }
 
     def findCurrentUserTelling(Integer count = null, Integer offset = 0) {
