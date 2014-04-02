@@ -57,6 +57,7 @@ class FollowerService {
         if (count != null){
             params.max = count
         }
-        query.list(params).collect{it -> it.author} as List
+        query = query.property('author')
+        query.list(params)
     }
 }

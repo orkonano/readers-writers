@@ -37,6 +37,8 @@ class Telling implements Serializable{
 
     static mapping = {
         text type: 'text'
+        narrativeGenre fetch: 'join'
+        tellingType fetch: 'join'
     }
 
     def beforeInsert() {

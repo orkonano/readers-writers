@@ -11,7 +11,7 @@ class TellingLikeService {
 
     static transactional = true
 
-    static springSecurityService, grailsApplication
+    static springSecurityService, grailsApplication, tellingService
 
     def like(Telling tellingToLike) {
         def currentUser = springSecurityService.getCurrentUser()
@@ -59,6 +59,7 @@ class TellingLikeService {
         if (countLast != null){
             params.max = countLast
         }
-        query.list(params).collect{it -> it.telling} as List
+        query.property('telling.id')
+        tellingService.findTellingsByIds(query.list(params))
     }
 }

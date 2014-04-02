@@ -5,13 +5,17 @@ import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import grails.gorm.DetachedCriteria
 import grails.plugin.cache.Cacheable
+
+import java.lang.reflect.Method
 
 class TellingService {
 
     static transactional = true
 
-    def springSecurityService, grailsApplication
+    def springSecurityService, grailsApplication, grailsCacheManager,
+        customCacheKeyGenerator
 
     def save(Telling tellingToSave) {
         tellingToSave.author = springSecurityService.getCurrentUser()
@@ -20,6 +24,20 @@ class TellingService {
             throw new ValidationException(errors: tellingToSave.errors)
         }
         tellingToSave.save()
+        cleanCacheInSave(tellingToSave)
+    }
+
+    private void cleanCacheInSave(Telling telling){
+        //borro los listados del usuario donde se mantiene como cache
+        Method method = this.getClass().getDeclaredMethod("listAllAuthorUserTelling", User.class, Integer.class)
+        def key = customCacheKeyGenerator.generate(this, method, telling.author, 10)
+        grailsCacheManager.getCache('readers-writers').evict(key)
+        method = this.getClass().getDeclaredMethod("findTellingById", Long.class)
+        key = customCacheKeyGenerator.generate(this, method, telling.id)
+        grailsCacheManager.getCache('readers-writers').evict(key)
+        method = this.getClass().getDeclaredMethod("findTellingByAuthor", User.class, Integer.class, Integer.class)
+        key = customCacheKeyGenerator.generate(this, method, telling.author, 5, 0)
+        grailsCacheManager.getCache('readers-writers').evict(key)
     }
 
     def delete(Telling tellingToErase) {
@@ -28,6 +46,7 @@ class TellingService {
         }else{
             tellingToErase.state = Telling.ERASED
             tellingToErase.save()
+            cleanCacheInSave(tellingToErase)
         }
     }
 
@@ -37,6 +56,7 @@ class TellingService {
         }else{
             tellingToPublish.state = Telling.PUBLISHED
             tellingToPublish.save()
+            cleanCacheInSave(tellingToPublish)
         }
     }
 
@@ -61,9 +81,7 @@ class TellingService {
             }
         }
         def count = query.count()
-        query = query.property('id')
-        List<Long> idsTellings = query.list(offset: offset?:0,max: max?:15)
-        List<Telling> tellingResult = findTellingsByIds(idsTellings);
+        List<Telling> tellingResult = loadTelling(query, [max: max?:15, offset: offset?:0]);
         [tellingResult, count]
     }
 
@@ -86,12 +104,27 @@ class TellingService {
     @Cacheable('readers-writers')
     List<Telling> findTellingByAuthor(User authorParams, Integer count = null, Integer offset = 0){
         def query = Telling.where {
-            author.id == authorParams.id
+            author.id == authorParams.id && state != Telling.ERASED
         }
         def params = [sort: 'dateCreated', order: "desc", offset: offset]
         if (count != null){
             params.max = count
         }
-        query.list(params)
+        loadTelling(query, params)
+    }
+
+    List<Telling> loadTelling(DetachedCriteria query, params){
+        query = query.property('id')
+        findTellingsByIds(query.list(params));
+    }
+
+    @Cacheable(value = 'readers-writers')
+    def listAllAuthorUserTelling(User userLogin, Integer limit){
+        def query = Telling.where {
+            author == userLogin && state != Telling.ERASED
+        }
+        def count = query.count()
+        List<Telling> tellingResult = loadTelling(query, [max: limit]);
+        [tellingResult, count]
     }
 }
