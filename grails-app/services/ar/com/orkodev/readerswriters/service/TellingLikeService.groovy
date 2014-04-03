@@ -7,11 +7,14 @@ import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
 
+import java.lang.reflect.Method
+
 class TellingLikeService {
 
     static transactional = true
 
-    static springSecurityService, grailsApplication, tellingService
+    static springSecurityService, grailsApplication, tellingService,
+            grailsCacheManager, customCacheKeyGenerator
 
     def like(Telling tellingToLike) {
         def currentUser = springSecurityService.getCurrentUser()
@@ -23,6 +26,13 @@ class TellingLikeService {
             throw new ValidationException(errors: tellingLike.errors)
         }
         tellingLike.save()
+        cleanCacheInSave(tellingLike)
+    }
+
+    private void cleanCacheInSave(TellingLike tellingLike){
+        Method method = this.getClass().getDeclaredMethod("findLikeTellingByUser", User.class, Integer.class, Integer.class)
+        def key = customCacheKeyGenerator.generate(this, method, tellingLike.reader, 5, 0)
+        grailsCacheManager.getCache('readers-writers').evict(key)
     }
 
     def stopLike(Telling tellingToStopLike) {
@@ -34,7 +44,10 @@ class TellingLikeService {
         if (!tellingLikeToDelete){
             return false
         }
-        tellingLikeToDelete.delete() == null
+        def deleted = tellingLikeToDelete.delete() == null
+        if (deleted)
+            cleanCacheInSave(tellingLikeToDelete)
+        deleted
     }
 
     def isLike(Telling telling){
@@ -59,7 +72,7 @@ class TellingLikeService {
         if (countLast != null){
             params.max = countLast
         }
-        query.property('telling.id')
+        query = query.property('telling.id')
         tellingService.findTellingsByIds(query.list(params))
     }
 }
