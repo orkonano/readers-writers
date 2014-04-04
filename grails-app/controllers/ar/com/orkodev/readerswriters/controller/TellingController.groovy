@@ -37,7 +37,8 @@ class TellingController extends BaseController {
         }
     }
 
-    def show(Telling tellingInstance) {
+    def show(Long id) {
+        Telling tellingInstance = id != null ? tellingService.findTellingById(id) : null
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
             return
@@ -49,7 +50,8 @@ class TellingController extends BaseController {
         }
     }
 
-    def read(Telling tellingInstance) {
+    def read(Long id) {
+        Telling tellingInstance = id != null ? tellingService.findTellingById(id) : null
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
             return
@@ -86,7 +88,8 @@ class TellingController extends BaseController {
         }
     }
 
-    def edit(Telling tellingInstance) {
+    def edit(Long id) {
+        Telling tellingInstance = id != null ? tellingService.findTellingById(id) : null
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
             return
@@ -122,7 +125,8 @@ class TellingController extends BaseController {
         return ["tellingInstance":telling,"narrativesGenre":narrativeGenreService.getAll(),"tellingsType":tellingTypeService.getAll()]
     }
 
-    def delete(Telling tellingInstance) {
+    def delete(Long id) {
+        Telling tellingInstance = id != null ? tellingService.findTellingById(id) : null
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
             return
@@ -135,7 +139,8 @@ class TellingController extends BaseController {
         }
     }
 
-    def publish(Telling tellingInstance) {
+    def publish(Long id) {
+        Telling tellingInstance = id != null ? tellingService.findTellingById(id) : null
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
             return
