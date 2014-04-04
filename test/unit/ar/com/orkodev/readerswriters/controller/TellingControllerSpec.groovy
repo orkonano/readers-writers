@@ -115,7 +115,7 @@ class TellingControllerSpec extends Specification {
         response.reset()
         populateValidParams(params)
         def telling = new Telling(params)
-        controller.show(telling)
+        controller.show(telling.id)
 
         then: "A model is populated containing the domain instance"
         response.status == 200
@@ -139,7 +139,7 @@ class TellingControllerSpec extends Specification {
         when: "A domain instance is passed to the edit action"
         populateValidParams(params)
         def telling = new Telling(params)
-        controller.edit(telling)
+        controller.edit(telling.id)
 
         then: "A model is populated containing the domain instance"
         model.tellingInstance != null
@@ -209,7 +209,7 @@ class TellingControllerSpec extends Specification {
             telling1.state = Telling.PUBLISHED
         }
         controller.tellingService = tellingService.createMock()
-        controller.publish(telling)
+        controller.publish(telling.id)
         then: "The instance is published"
         response.redirectedUrl == '/telling/index'
         flash.success != null
@@ -296,9 +296,9 @@ class TellingControllerSpec extends Specification {
         tellingLikeService.demandExplicit.isLike(){Telling telling -> return true}
         controller.tellingLikeService = tellingLikeService.createMock()
         when: "A domain instance is passed to the read action"
-        params['id']=1
+        params['id'] = 1
         def telling = new Telling(params)
-        controller.read(telling)
+        controller.read(telling.id)
         then: "A model is populated containing the domain instance"
         response.status == 200
         model!=null
