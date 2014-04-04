@@ -26,7 +26,7 @@ class User {
 	}
 	static mapping = {
 		password column: '`password`'
-        cache: true
+        facebookUser fetch: 'join'
 	}
 
 	Set<Role> getAuthorities() {
