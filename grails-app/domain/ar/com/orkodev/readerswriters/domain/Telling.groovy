@@ -39,6 +39,7 @@ class Telling implements Serializable{
         text type: 'text'
         narrativeGenre fetch: 'join'
         tellingType fetch: 'join'
+        cache true
     }
 
     def beforeInsert() {

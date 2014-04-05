@@ -27,6 +27,7 @@ class TellingLikeService {
         }
         tellingLike.save()
         cleanCacheInSave(tellingLike)
+        tellingLike
     }
 
     private void cleanCacheInSave(TellingLike tellingLike){
