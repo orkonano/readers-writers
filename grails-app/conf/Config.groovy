@@ -89,9 +89,18 @@ grails.cache.config = {
     cache {
         name 'readers-writers'
         eternal false
-        overflowToDisk true
+        overflowToDisk false
         maxElementsInMemory 10000
-        maxElementsOnDisk 10000000
+    }
+
+    defaultCache {
+        maxElementsInMemory 10000
+        eternal false
+        timeToIdleSeconds 0
+        timeToLiveSeconds 0
+        overflowToDisk false
+        diskPersistent false
+        memoryStoreEvictionPolicy 'LRU'
     }
 }
 

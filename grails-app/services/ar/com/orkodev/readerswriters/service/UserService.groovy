@@ -27,4 +27,14 @@ class UserService {
         }
         userToSave.save()
     }
+
+    User findById(Long idUser) {
+        User.get(idUser)
+    }
+
+    List<User> loadUserByIds(List<Long> idsUsers) {
+        List<User> users = new ArrayList(idsUsers.size());
+        idsUsers.each {it -> users.add(findById(it))}
+        users
+    }
 }

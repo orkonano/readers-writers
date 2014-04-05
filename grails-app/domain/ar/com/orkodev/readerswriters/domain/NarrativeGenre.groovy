@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.domain
 
-class NarrativeGenre {
+class NarrativeGenre implements Serializable{
 
     String name
     NarrativeGenre parent
@@ -14,6 +14,7 @@ class NarrativeGenre {
 
     static mapping = {
         subNarrativeGenres joinTable: false, column: "parent_id"
+        cache true
     }
 
     public String toString(){
