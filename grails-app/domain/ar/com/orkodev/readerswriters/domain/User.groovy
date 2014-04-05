@@ -1,8 +1,12 @@
 package ar.com.orkodev.readerswriters.domain
 
-class User {
+class User implements Serializable{
+
+    private static final long serialVersionUID = 8799656478674716638L;
 
 	transient springSecurityService
+
+    public static final String CACHE_NAME = 'USER_'
 
 	String username
 	String password
@@ -26,7 +30,8 @@ class User {
 	}
 	static mapping = {
 		password column: '`password`'
-        facebookUser fetch: 'join'
+       facebookUser fetch: 'join'
+        cache true
 	}
 
 	Set<Role> getAuthorities() {

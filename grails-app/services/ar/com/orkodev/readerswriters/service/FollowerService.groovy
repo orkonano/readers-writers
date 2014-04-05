@@ -6,11 +6,17 @@ import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
 
+import java.lang.reflect.Method
+
 class FollowerService {
 
     static transactional = true
 
-    static springSecurityService, grailsApplication
+    def springSecurityService
+    def grailsApplication
+    def userService
+    def grailsCacheManager
+    def customCacheKeyGenerator
 
     def followAuthor(User author) {
         User currentUser = springSecurityService.getCurrentUser()
@@ -20,6 +26,15 @@ class FollowerService {
         if (!follower.validate())
             throw new ValidationException(errors: follower.errors)
         follower.save()
+        cleanCacheInSave(follower)
+        follower
+    }
+
+    private void cleanCacheInSave(Follower follower){
+        Method method = this.getClass().getDeclaredMethod("findAuthorFollowedByUser", User.class,
+                Integer.class, Integer.class)
+        def key = customCacheKeyGenerator.generate(this, method, follower.following, 5, 0)
+        grailsCacheManager.getCache('readers-writers').evict(key)
     }
 
     def leaveAuthor(User authorLeave){
@@ -31,6 +46,8 @@ class FollowerService {
         def erased = false
         if (currentFollowers)
             erased = (currentFollowers.delete() == null)
+        if (erased)
+            cleanCacheInSave(currentFollowers)
         return erased
     }
 
@@ -57,7 +74,7 @@ class FollowerService {
         if (count != null){
             params.max = count
         }
-        query = query.property('author')
-        query.list(params)
+        query = query.property('author.id')
+        userService.loadUserByIds(query.list(params))
     }
 }

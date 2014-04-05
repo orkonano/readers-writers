@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.domain
 
-class FacebookUser {
+class FacebookUser implements Serializable {
 
     long uid
     String accessToken

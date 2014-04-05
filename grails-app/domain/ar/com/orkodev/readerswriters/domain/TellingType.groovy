@@ -1,11 +1,15 @@
 package ar.com.orkodev.readerswriters.domain
 
-class TellingType {
+class TellingType implements Serializable{
 
     String name
 
     static constraints = {
         name blank: false, unique: true
+    }
+
+    static mapping = {
+        cache true
     }
 
     public String toString(){

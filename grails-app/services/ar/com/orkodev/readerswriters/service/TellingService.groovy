@@ -87,11 +87,10 @@ class TellingService {
 
     List<Telling> findTellingsByIds(List<Long> idsTelling){
         List<Telling> tellings = new ArrayList(idsTelling.size());
-        idsTelling.each {it -> tellings.add(grailsApplication.mainContext.tellingService.findTellingById(it))}
+        idsTelling.each {it -> tellings.add(findTellingById(it))}
         tellings
     }
 
-    @Cacheable('readers-writers')
     Telling findTellingById(Long id){
         Telling.get(id)
     }
@@ -118,7 +117,6 @@ class TellingService {
         findTellingsByIds(query.list(params));
     }
 
-    @Cacheable(value = 'readers-writers')
     def listAllAuthorUserTelling(User userLogin, Integer limit){
         def query = Telling.where {
             author == userLogin && state != Telling.ERASED
