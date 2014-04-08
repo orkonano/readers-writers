@@ -9,7 +9,7 @@ import grails.plugin.cache.Cacheable
 
 import java.lang.reflect.Method
 
-class TellingLikeService {
+class TellingLikeService{
 
     static transactional = true
 
@@ -34,6 +34,10 @@ class TellingLikeService {
         Method method = this.getClass().getDeclaredMethod("findLikeTellingByUser", User.class, Integer.class, Integer.class)
         def key = customCacheKeyGenerator.generate(this, method, tellingLike.reader, 5, 0)
         grailsCacheManager.getCache('readers-writers').evict(key)
+
+        method = this.getClass().getDeclaredMethod("isLike", Telling.class, User.class)
+        key = customCacheKeyGenerator.generate(this, method, tellingLike.telling, tellingLike.reader)
+        grailsCacheManager.getCache('readers-writers').evict(key)
     }
 
     def stopLike(Telling tellingToStopLike) {
@@ -53,9 +57,15 @@ class TellingLikeService {
 
     def isLike(Telling telling){
         def currentUser = springSecurityService.getCurrentUser()
+        grailsApplication.mainContext.tellingLikeService.isLike(telling, currentUser)
+    }
+
+    @Cacheable('readers-writers')
+    Boolean isLike(Telling telling, User readerUser){
         def query = TellingLike.where {
-            reader == currentUser && telling == telling
+            reader == readerUser && telling == telling
         }
+        query = query.property('id')
         query.find()!=null
     }
 

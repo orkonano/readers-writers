@@ -9,6 +9,17 @@ class NarrativeGenreService {
 
     @Cacheable('readers-writers')
     List<NarrativeGenre> getAll() {
-        NarrativeGenre.list()
+        def query = NarrativeGenre.where {}.property('id')
+        loadByIds(query.list())
+    }
+
+    List<NarrativeGenre> loadByIds(List<Long> ids){
+        List<NarrativeGenre> narrativesGenre = new ArrayList<>(ids.size())
+        ids.each {it -> narrativesGenre.add(findById(it))}
+        narrativesGenre
+    }
+
+    NarrativeGenre findById(Long id){
+        NarrativeGenre.get(id)
     }
 }
