@@ -9,6 +9,17 @@ class TellingTypeService {
 
     @Cacheable('readers-writers')
     List<TellingType> getAll() {
-        TellingType.list()
+        def query = TellingType.where {}.property('id')
+        loadByIds(query.list())
+    }
+
+    List<TellingType> loadByIds(List<Long> ids){
+        List<TellingType> tellingTypes = new ArrayList<>(ids.size())
+        ids.each {it -> tellingTypes.add(findById(it))}
+        tellingTypes
+    }
+
+    TellingType findById(Long id){
+        TellingType.get(id)
     }
 }

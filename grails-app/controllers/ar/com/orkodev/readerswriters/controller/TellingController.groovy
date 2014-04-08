@@ -1,8 +1,6 @@
 package ar.com.orkodev.readerswriters.controller
 
-import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Telling
-import ar.com.orkodev.readerswriters.domain.TellingType
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.springsecurity.annotation.Secured
@@ -11,8 +9,11 @@ import grails.plugin.springsecurity.annotation.Secured
 class TellingController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-    def springSecurityService, tellingService, tellingLikeService, narrativeGenreService,
-        tellingTypeService
+    def springSecurityService
+    def tellingService
+    def tellingLikeService
+    def narrativeGenreService
+    def tellingTypeService
 
 
     def index(Integer max) {
@@ -23,16 +24,19 @@ class TellingController extends BaseController {
     }
 
     def list(Telling tellingSearch){
+        def narrativeGenres = narrativeGenreService.getAll()
+        def tellingTypes = tellingTypeService.getAll()
         if (tellingSearch == null || params.init){
-           render view:"list",model: [tellingInstanceList:[],tellingInstanceCount: 0,narrativesGenre:NarrativeGenre.list(),tellingsType:TellingType.list()]
+           render view:"list",model: [tellingInstanceList:[], tellingInstanceCount: 0,
+                   narrativesGenre: narrativeGenres, tellingsType: tellingTypes ]
         }else{
             def max = params.max?:15
             def offset = params.ofsset?:0
             def (tellingList, countResult) = tellingService.listPublished(tellingSearch,max,offset)
             render view: "list", model: [tellingInstanceList: tellingList,
                                          tellingInstanceCount: countResult,
-                                         narrativesGenre: narrativeGenreService.getAll(),
-                                         tellingsType: tellingTypeService.getAll()
+                                         narrativesGenre: narrativeGenres,
+                                         tellingsType: tellingTypes
                                         ]
         }
     }
@@ -57,6 +61,7 @@ class TellingController extends BaseController {
             return
         }
         def isLike = tellingLikeService.isLike(tellingInstance)
+       // def kk = tellingLikeService.findById(1)
         render model:["tellingInstance": tellingInstance,isLike:isLike],view:"read"
     }
 
@@ -122,7 +127,10 @@ class TellingController extends BaseController {
     }
 
     private Map generarModelViewSaveAndUpdate(Telling telling){
-        return ["tellingInstance":telling,"narrativesGenre":narrativeGenreService.getAll(),"tellingsType":tellingTypeService.getAll()]
+        return [tellingInstance: telling,
+                narrativesGenre: narrativeGenreService.getAll(),
+                tellingsType: tellingTypeService.getAll()
+                ]
     }
 
     def delete(Long id) {
