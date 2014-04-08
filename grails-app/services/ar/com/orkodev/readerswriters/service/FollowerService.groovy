@@ -35,6 +35,10 @@ class FollowerService {
                 Integer.class, Integer.class)
         def key = customCacheKeyGenerator.generate(this, method, follower.following, 5, 0)
         grailsCacheManager.getCache('readers-writers').evict(key)
+
+        method = this.getClass().getDeclaredMethod("isFollowerAuthor", User.class, User.class)
+        key = customCacheKeyGenerator.generate(this, method, follower.author, follower.following)
+        grailsCacheManager.getCache('readers-writers').evict(key)
     }
 
     def leaveAuthor(User authorLeave){
@@ -53,11 +57,16 @@ class FollowerService {
 
     def isFollowAuthor(User authorToFind) {
         User currentUser = springSecurityService.getCurrentUser()
+        grailsApplication.mainContext.followerService.isFollowerAuthor(authorToFind, currentUser)
+    }
+
+    @Cacheable('readers-writers')
+    Boolean isFollowerAuthor(User authorToFind, User followingUser){
         def query = Follower.where {
-            author.id == authorToFind.id && following.id == currentUser.id
+            author.id == authorToFind.id && following.id == followingUser.id
         }
-        def currentFollowers = query.find()
-        currentFollowers != null
+        query = query.property('id')
+        query.find() != null
     }
 
     List<User> findAuthorFollowed(Integer count = null, Integer offset = 0) {

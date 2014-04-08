@@ -82,4 +82,19 @@ class Telling implements Serializable{
         }
         query.list([sort:"dateCreated"]).collect { it.reader } as Set
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Telling telling = (Telling) o
+
+        if (id != telling.id) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return (id != null ? id.hashCode() : 0)
+    }
 }
