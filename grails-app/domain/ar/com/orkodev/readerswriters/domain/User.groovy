@@ -29,8 +29,8 @@ class User implements Serializable{
         facebookUser nullable: true
 	}
 	static mapping = {
-		password column: '`password`'
-       facebookUser fetch: 'join'
+        password column: '`password`'
+        facebookUser fetch: 'join', cache: true
         cache true
 	}
 

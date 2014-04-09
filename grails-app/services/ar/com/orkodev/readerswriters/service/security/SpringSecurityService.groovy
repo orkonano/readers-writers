@@ -4,7 +4,6 @@ class SpringSecurityService extends grails.plugin.springsecurity.SpringSecurityS
 
     def userService
 
-
     Object getCurrentUser() {
         if (!isLoggedIn()) {
             return null

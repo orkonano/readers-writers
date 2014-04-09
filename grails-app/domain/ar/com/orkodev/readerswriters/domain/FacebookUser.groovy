@@ -12,6 +12,7 @@ class FacebookUser implements Serializable {
     }
 
     static mapping = {
+        user fetch: 'join', cache: true
         cache: true
     }
 }
