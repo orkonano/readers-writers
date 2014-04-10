@@ -30,12 +30,15 @@ class User implements Serializable{
 	}
 	static mapping = {
         password column: '`password`'
-        facebookUser fetch: 'join', cache: true
+        facebookUser lazy: 'false', cache: true
         cache true
 	}
 
 	Set<Role> getAuthorities() {
-		UserRole.findAllByUser(this).collect { it.role } as Set
+        def query = UserRole.where {
+            user == this
+        }
+		query.list().collect { it.role } as Set
 	}
 
 	def beforeInsert() {

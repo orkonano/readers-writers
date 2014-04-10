@@ -5,6 +5,8 @@ import ar.com.orkodev.readerswriters.domain.User
 import com.the6hours.grails.springsecurity.facebook.FacebookAuthToken
 import grails.plugin.cache.Cacheable
 import grails.transaction.Transactional
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.social.facebook.api.Facebook
 import org.springframework.social.facebook.api.FacebookProfile
 import org.springframework.social.facebook.api.impl.FacebookTemplate
@@ -17,6 +19,7 @@ class FacebookAuthService {
     def userService
     def grailsCacheManager
     def customCacheKeyGenerator
+    def grailsApplication
 
     User createAppUser(FacebookUser fUser, FacebookAuthToken token){
         Facebook facebook = new FacebookTemplate(token.accessToken.accessToken)
@@ -41,5 +44,12 @@ class FacebookAuthService {
 
     User getAppUser(FacebookUser facebookUser){
         facebookUser.user
+    }
+
+
+    Collection<GrantedAuthority> getRoles(User user){
+        grailsApplication.mainContext.userService.getRoles(user).collect(){
+            new SimpleGrantedAuthority(it.authority)
+        }
     }
 }
