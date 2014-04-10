@@ -14,8 +14,10 @@ class TellingService {
 
     static transactional = true
 
-    def springSecurityService, grailsApplication, grailsCacheManager,
-        customCacheKeyGenerator
+    def springSecurityService
+    def grailsApplication
+    def grailsCacheManager
+    def customCacheKeyGenerator
 
     def save(Telling tellingToSave) {
         tellingToSave.author = springSecurityService.getCurrentUser()
