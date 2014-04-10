@@ -2,6 +2,8 @@ package ar.com.orkodev.readerswriters.domain
 
 class FacebookUser implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     long uid
     String accessToken
     Date accessTokenExpires
@@ -12,6 +14,7 @@ class FacebookUser implements Serializable {
     }
 
     static mapping = {
+        user lazy: 'false', cache: true
         cache: true
     }
 }

@@ -4,6 +4,7 @@ import ar.com.orkodev.readerswriters.domain.Role
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.domain.UserRole
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import grails.plugin.cache.Cacheable
 
 class UserService {
 
@@ -36,5 +37,10 @@ class UserService {
         List<User> users = new ArrayList(idsUsers.size());
         idsUsers.each {it -> users.add(findById(it))}
         users
+    }
+
+    @Cacheable('readers-writers')
+    Set<Role> getRoles(User user){
+        user.getAuthorities()
     }
 }
