@@ -1,20 +1,23 @@
 package ar.com.orkodev.readerswriters.service
 
+import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
+import org.springframework.beans.factory.annotation.Autowired
 
-import java.lang.reflect.Method
-
-class TellingLikeService{
+class TellingLikeService{def cacheHelper
 
     static transactional = true
 
-    static springSecurityService, grailsApplication, tellingService,
-            grailsCacheManager, customCacheKeyGenerator
+    def springSecurityService
+    def grailsApplication
+    def tellingService
+    @Autowired
+    private CacheHelper cacheHelper
 
     def like(Telling tellingToLike) {
         def currentUser = springSecurityService.getCurrentUser()
@@ -31,13 +34,10 @@ class TellingLikeService{
     }
 
     private void cleanCacheInSave(TellingLike tellingLike){
-        Method method = this.getClass().getDeclaredMethod("findLikeTellingByUser", User.class, Integer.class, Integer.class)
-        def key = customCacheKeyGenerator.generate(this, method, tellingLike.reader, 5, 0)
-        grailsCacheManager.getCache('readers-writers').evict(key)
-
-        method = this.getClass().getDeclaredMethod("isLike", Telling.class, User.class)
-        key = customCacheKeyGenerator.generate(this, method, tellingLike.telling, tellingLike.reader)
-        grailsCacheManager.getCache('readers-writers').evict(key)
+        cacheHelper.deleteFromCache('readers-writers', this,  "findLikeTellingByUser", [User.class, Integer.class,
+                Integer.class] as Class[], [tellingLike.reader, 5, 0] as Object[])
+        cacheHelper.deleteFromCache('readers-writers', this, "isLike", [Telling.class, User.class] as Class[],
+                [tellingLike.telling, tellingLike.reader] as Object[])
     }
 
     def stopLike(Telling tellingToStopLike) {

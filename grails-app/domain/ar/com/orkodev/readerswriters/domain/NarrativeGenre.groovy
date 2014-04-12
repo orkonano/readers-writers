@@ -14,7 +14,7 @@ class NarrativeGenre implements Serializable{
 
     static mapping = {
         subNarrativeGenres joinTable: false, column: "parent_id"
-        cache true
+        cache usage: 'read-only'
     }
 
     public String toString(){
