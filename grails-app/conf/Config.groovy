@@ -82,25 +82,16 @@ grails.web.disable.multipart=false
 grails.exceptionresolver.params.exclude = ['password']
 
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
-grails.cache.enabled = true
-grails.hibernate.cache.queries = false
+//grails.cache.enabled = true
+//grails.hibernate.cache.queries = false
 
-grails.cache.config = {
+grails{
     cache {
-        name 'readers-writers'
-        eternal false
-        overflowToDisk false
-        maxElementsInMemory 10000
-    }
-
-    defaultCache {
-        maxElementsInMemory 10000
-        eternal false
-        timeToIdleSeconds 0
-        timeToLiveSeconds 0
-        overflowToDisk false
-        diskPersistent false
-        memoryStoreEvictionPolicy 'LRU'
+        enabled = true
+        ehcache {
+            ehcacheXmlLocation = 'classpath:ehcache.xml' // conf/ehcache.xml
+            reloadable = false
+        }
     }
 }
 
@@ -119,12 +110,16 @@ environments {
 log4j = {
     // Example of changing the log pattern for the default console appender:
     //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
-
     appenders {
-        file name:'ehcache', file:'/home/orko/dev/apps/readers-writers/logs/ehcache.log'
+        console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+    }
+
+    environments {
+        development {
+            appenders {
+              file name:'ehcache', file:'/home/orko/dev/apps/readers-writers/logs/ehcache.log'
+            }
+        }
     }
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
@@ -137,7 +132,11 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
            'org.springframework',
            'org.hibernate'
-   // debug   ehcache:  'net.sf.ehcache'
+    environments {
+        development {
+            debug   ehcache:  'net.sf.ehcache'
+        }
+    }
 }
 
 

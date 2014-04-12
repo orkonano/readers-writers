@@ -2,7 +2,14 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 // Place your Spring DSL code here
 beans = {
+
+    //cacheHelper(CacheHelper)
+
+    xmlns context:"http://www.springframework.org/schema/context"
+    context.'component-scan'('base-package': "ar.com.orkodev.readerswriters")
+
     authenticationSuccessHandler(SimpleUrlAuthenticationSuccessHandler) {
         defaultTargetUrl = '/panel/dashboard'
     }
+
 }

@@ -1,25 +1,25 @@
 package ar.com.orkodev.readerswriters.service
 
+import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.FacebookUser
 import ar.com.orkodev.readerswriters.domain.User
 import com.the6hours.grails.springsecurity.facebook.FacebookAuthToken
 import grails.plugin.cache.Cacheable
 import grails.transaction.Transactional
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.social.facebook.api.Facebook
 import org.springframework.social.facebook.api.FacebookProfile
 import org.springframework.social.facebook.api.impl.FacebookTemplate
 
-import java.lang.reflect.Method
-
 @Transactional
 class FacebookAuthService {
 
     def userService
-    def grailsCacheManager
-    def customCacheKeyGenerator
     def grailsApplication
+    @Autowired
+    private CacheHelper cacheHelper
 
     User createAppUser(FacebookUser fUser, FacebookAuthToken token){
         Facebook facebook = new FacebookTemplate(token.accessToken.accessToken)
@@ -37,9 +37,7 @@ class FacebookAuthService {
     }
 
     void afterCreate(FacebookUser user, FacebookAuthToken token){
-        Method method = this.getClass().getDeclaredMethod("findUser", Long.class)
-        def key = customCacheKeyGenerator.generate(this, method, user.uid)
-        grailsCacheManager.getCache('readers-writers').evict(key)
+        cacheHelper.deleteFromCache('readers-writers', this, "findUser", [Long.class] as Class[], [user.uid] as Object[])
     }
 
     User getAppUser(FacebookUser facebookUser){

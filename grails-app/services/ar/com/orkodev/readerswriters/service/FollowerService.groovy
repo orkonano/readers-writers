@@ -1,12 +1,12 @@
 package ar.com.orkodev.readerswriters.service
 
+import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
-
-import java.lang.reflect.Method
+import org.springframework.beans.factory.annotation.Autowired
 
 class FollowerService {
 
@@ -15,8 +15,8 @@ class FollowerService {
     def springSecurityService
     def grailsApplication
     def userService
-    def grailsCacheManager
-    def customCacheKeyGenerator
+    @Autowired
+    private CacheHelper cacheHelper
 
     def followAuthor(User author) {
         User currentUser = springSecurityService.getCurrentUser()
@@ -31,14 +31,10 @@ class FollowerService {
     }
 
     private void cleanCacheInSave(Follower follower){
-        Method method = this.getClass().getDeclaredMethod("findAuthorFollowedByUser", User.class,
-                Integer.class, Integer.class)
-        def key = customCacheKeyGenerator.generate(this, method, follower.following, 5, 0)
-        grailsCacheManager.getCache('readers-writers').evict(key)
-
-        method = this.getClass().getDeclaredMethod("isFollowerAuthor", User.class, User.class)
-        key = customCacheKeyGenerator.generate(this, method, follower.author, follower.following)
-        grailsCacheManager.getCache('readers-writers').evict(key)
+        cacheHelper.deleteFromCache('readers-writers', this, "findAuthorFollowedByUser", [User.class, Integer.class,
+                Integer.class] as Class[], [follower.following, 5, 0] as Object[])
+        cacheHelper.deleteFromCache('readers-writers', this, "isFollowerAuthor", [User.class, User.class] as Class[],
+                [follower.author, follower.following] as Object[])
     }
 
     def leaveAuthor(User authorLeave){
