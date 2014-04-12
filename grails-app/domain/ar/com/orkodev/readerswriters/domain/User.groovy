@@ -30,8 +30,8 @@ class User implements Serializable{
 	}
 	static mapping = {
         password column: '`password`'
-        facebookUser lazy: 'false', cache: true
-        cache true
+        facebookUser fetch: 'join', cache: true
+        cache usage: 'nonstrict-read-write'
 	}
 
 	Set<Role> getAuthorities() {

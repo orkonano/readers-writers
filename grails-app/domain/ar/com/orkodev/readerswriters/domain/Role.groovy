@@ -8,7 +8,7 @@ class Role {
 	String authority
 
 	static mapping = {
-		cache true
+		cache usage: 'read-only'
 	}
 
 	static constraints = {

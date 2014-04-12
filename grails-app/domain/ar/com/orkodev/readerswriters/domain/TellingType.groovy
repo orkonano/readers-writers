@@ -9,7 +9,7 @@ class TellingType implements Serializable{
     }
 
     static mapping = {
-        cache true
+        cache usage: 'read-only'
     }
 
     public String toString(){

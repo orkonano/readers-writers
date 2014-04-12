@@ -1,5 +1,6 @@
 package ar.com.orkodev.readerswriters.service
 
+import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
@@ -7,8 +8,7 @@ import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.gorm.DetachedCriteria
 import grails.plugin.cache.Cacheable
-
-import java.lang.reflect.Method
+import org.springframework.beans.factory.annotation.Autowired
 
 class TellingService {
 
@@ -16,8 +16,8 @@ class TellingService {
 
     def springSecurityService
     def grailsApplication
-    def grailsCacheManager
-    def customCacheKeyGenerator
+    @Autowired
+    private CacheHelper cacheHelper
 
     def save(Telling tellingToSave) {
         tellingToSave.author = springSecurityService.getCurrentUser()
@@ -31,15 +31,12 @@ class TellingService {
 
     private void cleanCacheInSave(Telling telling){
         //borro los listados del usuario donde se mantiene como cache
-        Method method = this.getClass().getDeclaredMethod("listAllAuthorUserTelling", User.class, Integer.class)
-        def key = customCacheKeyGenerator.generate(this, method, telling.author, 10)
-        grailsCacheManager.getCache('readers-writers').evict(key)
-        method = this.getClass().getDeclaredMethod("findTellingById", Long.class)
-        key = customCacheKeyGenerator.generate(this, method, telling.id)
-        grailsCacheManager.getCache('readers-writers').evict(key)
-        method = this.getClass().getDeclaredMethod("findTellingByAuthor", User.class, Integer.class, Integer.class)
-        key = customCacheKeyGenerator.generate(this, method, telling.author, 5, 0)
-        grailsCacheManager.getCache('readers-writers').evict(key)
+        cacheHelper.deleteFromCache('readers-writers', this, "listAllAuthorUserTelling", [User.class, Integer.class]
+                                    as Class[], [telling.author, 10] as Object[])
+        cacheHelper.deleteFromCache('readers-writers', this, "findTellingById", [Long.class] as Class[], [telling.id]
+                                    as Object[])
+        cacheHelper.deleteFromCache('readers-writers', this, "findTellingByAuthor", [User.class, Integer.class,
+                                    Integer.class] as Class[], [telling.author, 5, 0] as Object[])
     }
 
     def delete(Telling tellingToErase) {
