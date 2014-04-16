@@ -6,8 +6,6 @@ class User implements Serializable{
 
 	transient springSecurityService
 
-    public static final String CACHE_NAME = 'USER_'
-
 	String username
 	String password
     String firstname
@@ -17,8 +15,8 @@ class User implements Serializable{
 	boolean accountLocked
 	boolean passwordExpired
     Date dateCreated
+    FacebookUser facebook
 
-    static hasOne = [facebookUser:FacebookUser]
     static hasMany = [tellings:Telling]
 	static transients = ['springSecurityService']
 	static constraints = {
@@ -26,11 +24,11 @@ class User implements Serializable{
 		password blank: false
         firstname nullable: true
         lastname nullable: true
-        facebookUser nullable: true
+        facebook nullable: true, unique: true
 	}
 	static mapping = {
         password column: '`password`'
-        facebookUser fetch: 'join', cache: true
+        facebook lazy: false, cache: true
         cache usage: 'nonstrict-read-write'
 	}
 

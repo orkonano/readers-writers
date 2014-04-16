@@ -7,14 +7,15 @@ class FacebookUser implements Serializable {
     long uid
     String accessToken
     Date accessTokenExpires
-    User user
 
     static constraints = {
         uid unique: true
     }
 
     static mapping = {
-        user fetch: 'join', cache: true
-        cache: true
+        user fetch: 'join'
+        cache usage: 'nonstrict-read-write'
     }
+
+    static belongsTo = [user: User]
 }
