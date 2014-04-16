@@ -3,7 +3,7 @@
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'username', 'error')} required">
     <g:if test="${userInstance?.id}">
         <h3><span class="label label-default">
-        <g:if test="${!userInstance.facebookUser}">
+        <g:if test="${!userInstance.facebook}">
              ${userInstance.username}
          </g:if>
          <g:else>

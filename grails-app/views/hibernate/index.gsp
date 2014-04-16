@@ -191,7 +191,15 @@
                         <td>${query}</td>
                         <td>${statistitcs.getQueryStatistics(query).cacheHitCount}</td>
                         <td>${statistitcs.getQueryStatistics(query).cacheMissCount}</td>
-                        <td>${statistitcs.getQueryStatistics(query).cacheHitCount / (statistitcs.getQueryStatistics(query).cacheHitCount + statistitcs.getQueryStatistics(query).cacheMissCount)}</td>
+                        <td>
+                            <g:set var="dividendoQueryRatio" value="${(statistitcs.getQueryStatistics(query).cacheHitCount + statistitcs.getQueryStatistics(query).cacheMissCount)}"/>
+                            <g:if test="${dividendoQueryRatio > 0}">
+                                ${statistitcs.getQueryStatistics(query).cacheHitCount / dividendoQueryRatio}
+                            </g:if>
+                            <g:else>
+                                0
+                            </g:else>
+                        </td>
                         <td>${statistitcs.getQueryStatistics(query).cachePutCount}</td>
                         <td>${statistitcs.getQueryStatistics(query).executionAvgTime}</td>
                         <td>${statistitcs.getQueryStatistics(query).executionMaxTime}</td>
@@ -251,7 +259,14 @@
                         <td>${statistitcs.getSecondLevelCacheStatistics(region).elementCountOnDisk}</td>
                         <td>${statistitcs.getSecondLevelCacheStatistics(region).hitCount}</td>
                         <td>${statistitcs.getSecondLevelCacheStatistics(region).missCount}</td>
-                        <td>${statistitcs.getSecondLevelCacheStatistics(region).hitCount / (statistitcs.getSecondLevelCacheStatistics(region).hitCount + statistitcs.getSecondLevelCacheStatistics(region).missCount)}</td>
+                        <td>
+                            <g:set var="dividendoSecondCacheRatio" value="${statistitcs.getSecondLevelCacheStatistics(region).hitCount + statistitcs.getSecondLevelCacheStatistics(region).missCount}"/>
+                            <g:if test="${dividendoSecondCacheRatio > 0}">
+                                ${statistitcs.getSecondLevelCacheStatistics(region).hitCount / dividendoSecondCacheRatio}
+                            </g:if>
+                            <g:else>
+                                0
+                            </g:else>
                         <td>${statistitcs.getSecondLevelCacheStatistics(region).putCount}</td>
                         <td>${statistitcs.getSecondLevelCacheStatistics(region).sizeInMemory}</td>
                         <td>${statistitcs.getSecondLevelCacheStatistics(region).entries}</td>
