@@ -28,12 +28,25 @@ class FacebookAuthService {
         userService.saveUser(user)
     }
 
+    void create(FacebookAuthToken token){
+        FacebookUser newFacebookUser = new FacebookUser(uid: token.uid, accessToken: token.accessToken.accessToken,
+        accessTokenExpires: token.accessToken.expireAt)
+        newFacebookUser.save()
+        Facebook facebook = new FacebookTemplate(token.accessToken.accessToken)
+        FacebookProfile fbProfile = facebook.userOperations().userProfile
+        def user = new User(username: fbProfile.email, password: "facebookPass", facebook: newFacebookUser)
+        userService.saveUser(user)
+        cacheHelper.deleteFromCache('readers-writers', this, "findUser", [Long.class] as Class[], [newFacebookUser.uid] as Object[])
+    }
+
     @Cacheable('readers-writers')
     FacebookUser findUser(Long uidFind){
         def query = FacebookUser.where {
             uid == uidFind
         }
-        query.get()
+        FacebookUser fu =  query.get()
+        //sacrifico un query pero para poner en cache al FacebookUser
+        FacebookUser.get(fu?.id)
     }
 
     void afterCreate(FacebookUser user, FacebookAuthToken token){
