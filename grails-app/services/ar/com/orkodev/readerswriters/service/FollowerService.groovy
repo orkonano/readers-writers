@@ -80,6 +80,6 @@ class FollowerService {
             params.max = count
         }
         query = query.property('author.id')
-        userService.loadUserByIds(query.list(params))
+        userService.findByIds(query.list(params), new User())
     }
 }

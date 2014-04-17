@@ -9,7 +9,7 @@ import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
 import org.springframework.beans.factory.annotation.Autowired
 
-class TellingLikeService{def cacheHelper
+class TellingLikeService{
 
     static transactional = true
 
@@ -84,6 +84,6 @@ class TellingLikeService{def cacheHelper
             params.max = countLast
         }
         query = query.property('telling.id')
-        tellingService.findTellingsByIds(query.list(params))
+        tellingService.findByIds(query.list(params), new Telling())
     }
 }

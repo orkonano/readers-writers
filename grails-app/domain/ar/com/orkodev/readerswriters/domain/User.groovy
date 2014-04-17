@@ -25,6 +25,7 @@ class User implements Serializable{
         firstname nullable: true
         lastname nullable: true
         facebook nullable: true, unique: true
+        id bindable: true
 	}
 	static mapping = {
         password column: '`password`'

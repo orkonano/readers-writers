@@ -1,25 +1,17 @@
 package ar.com.orkodev.readerswriters.service
 
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
+import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.plugin.cache.Cacheable
 
-class NarrativeGenreService {
+class NarrativeGenreService extends BaseService<NarrativeGenre> {
 
     static transactional = true
 
     @Cacheable('readers-writers')
     List<NarrativeGenre> getAll() {
         def query = NarrativeGenre.where {}.property('id')
-        loadByIds(query.list())
+        findByIds(query.list(), new NarrativeGenre())
     }
 
-    List<NarrativeGenre> loadByIds(List<Long> ids){
-        List<NarrativeGenre> narrativesGenre = new ArrayList<>(ids.size())
-        ids.each {it -> narrativesGenre.add(findById(it))}
-        narrativesGenre
-    }
-
-    NarrativeGenre findById(Long id){
-        NarrativeGenre.get(id)
-    }
 }

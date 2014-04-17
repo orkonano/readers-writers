@@ -8,6 +8,7 @@ class NarrativeGenre implements Serializable{
     static constraints = {
         name blank: false, unique: true
         parent nullable: true
+        id bindable: true
     }
 
     static hasMany = [subNarrativeGenres: NarrativeGenre]

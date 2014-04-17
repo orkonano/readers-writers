@@ -4,9 +4,10 @@ import ar.com.orkodev.readerswriters.domain.Role
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.domain.UserRole
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.plugin.cache.Cacheable
 
-class UserService {
+class UserService extends BaseService<User>{
 
     static transactional = true
 
@@ -29,15 +30,6 @@ class UserService {
         userToSave.save()
     }
 
-    User findById(Long idUser) {
-        User.get(idUser)
-    }
-
-    List<User> loadUserByIds(List<Long> idsUsers) {
-        List<User> users = new ArrayList(idsUsers.size());
-        idsUsers.each {it -> users.add(findById(it))}
-        users
-    }
 
     @Cacheable('readers-writers')
     Set<Role> getRoles(User user){

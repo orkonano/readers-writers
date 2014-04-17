@@ -1,5 +1,7 @@
 package ar.com.orkodev.readerswriters.service.security
 
+import ar.com.orkodev.readerswriters.domain.User
+
 class SpringSecurityService extends grails.plugin.springsecurity.SpringSecurityService{
 
     def userService
@@ -8,6 +10,6 @@ class SpringSecurityService extends grails.plugin.springsecurity.SpringSecurityS
         if (!isLoggedIn()) {
             return null
         }
-        userService.findById(principal.getId())
+        userService.findById(new User(id: principal.getId()))
     }
 }

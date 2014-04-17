@@ -6,11 +6,12 @@ import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.gorm.DetachedCriteria
 import grails.plugin.cache.Cacheable
 import org.springframework.beans.factory.annotation.Autowired
 
-class TellingService {
+class TellingService extends BaseService<Telling>{
 
     static transactional = true
 
@@ -33,8 +34,6 @@ class TellingService {
         //borro los listados del usuario donde se mantiene como cache
         cacheHelper.deleteFromCache('readers-writers', this, "listAllAuthorUserTelling", [User.class, Integer.class]
                                     as Class[], [telling.author, 10] as Object[])
-        cacheHelper.deleteFromCache('readers-writers', this, "findTellingById", [Long.class] as Class[], [telling.id]
-                                    as Object[])
         cacheHelper.deleteFromCache('readers-writers', this, "findTellingByAuthor", [User.class, Integer.class,
                                     Integer.class] as Class[], [telling.author, 5, 0] as Object[])
     }
@@ -84,16 +83,6 @@ class TellingService {
         [tellingResult, count]
     }
 
-    List<Telling> findTellingsByIds(List<Long> idsTelling){
-        List<Telling> tellings = new ArrayList(idsTelling.size());
-        idsTelling.each {it -> tellings.add(findTellingById(it))}
-        tellings
-    }
-
-    Telling findTellingById(Long id){
-        Telling.get(id)
-    }
-
     List<Telling> findCurrentUserTelling(Integer count = null, Integer offset = 0) {
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingService.findTellingByAuthor(currentUser, count, offset)
@@ -113,7 +102,7 @@ class TellingService {
 
     List<Telling> loadTelling(DetachedCriteria query, params){
         query = query.property('id')
-        findTellingsByIds(query.list(params));
+        findByIds(query.list(params), new Telling());
     }
 
     def listAllAuthorUserTelling(User userLogin, Integer limit){

@@ -1,19 +1,32 @@
 package ar.com.orkodev.readerswriters.platform.service
 
-import java.lang.reflect.ParameterizedType
-
 abstract class BaseService<T> {
-
-    static transactional = true
 
     protected Class<T> persistenceClass
 
     BaseService(){
-        persistenceClass = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0];
+        persistenceClass = new T().getClass()
     }
 
-    T findById(Long id) {
-        persistenceClass.get(id)
+    /**
+     * El objecto debe tener el id cargado, sino no va a traer nada
+     * @param id
+     * @return
+     */
+    T findById(T object) {
+        object.get(object.id)
+    }
+
+    /**
+     * Se debe pasar una instancia de un objeto que admita tener un id como atributo
+     * @param ids
+     * @param object
+     * @return
+     */
+    List<T> findByIds(List<Long> ids, T object){
+        ids.collect{it ->
+                object.id = it
+                findById(object)
+        }
     }
 }
