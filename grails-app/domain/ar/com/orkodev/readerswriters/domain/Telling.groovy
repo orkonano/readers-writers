@@ -26,6 +26,7 @@ class Telling implements Serializable{
         author nullable: false
         narrativeGenre nullable: false
         tellingType nullable: false
+        id bindable: true
         state nullable:true, validator:{val ->
             if (val && val != DRAFT && val != PUBLISHED && val != ERASED){
                 return false

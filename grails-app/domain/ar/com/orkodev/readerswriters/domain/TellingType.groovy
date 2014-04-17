@@ -6,6 +6,7 @@ class TellingType implements Serializable{
 
     static constraints = {
         name blank: false, unique: true
+        id bindable: true
     }
 
     static mapping = {
