@@ -94,9 +94,9 @@ class TellingService extends BaseService<Telling>{
             author.id == authorParams.id && state != Telling.ERASED
         }
         def params = [sort: 'dateCreated', order: "desc", offset: offset]
-        if (count != null){
-            params.max = count
-        }
+//        if (count != null){
+//            params.max = count
+//        }
         loadTelling(query, params)
     }
 
