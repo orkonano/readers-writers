@@ -8,13 +8,16 @@ import java.util.concurrent.atomic.AtomicLong
 class Metric {
 
     String name
-    AtomicLong totalTimeProcessor
     AtomicLong totalAccess
+    AtomicLong timeProcessor
+    AtomicLong renderTimeProcessor
+
 
 
     public Metric(){
-        totalTimeProcessor = new AtomicLong(0)
+        timeProcessor = new AtomicLong(0)
         totalAccess = new AtomicLong(0)
+        renderTimeProcessor = new AtomicLong(0)
     }
 
     /**
@@ -22,11 +25,27 @@ class Metric {
      * @param time
      */
     def addTimeProcessor(long time){
-        totalTimeProcessor.addAndGet(time)
+        timeProcessor.addAndGet(time)
         totalAccess.addAndGet(1)
     }
 
+    def addRenderTimeProcessor(long time){
+        renderTimeProcessor.addAndGet(time)
+    }
+
     def getAvg(){
-        totalAccess.get() != 0 ? totalTimeProcessor.get() / totalAccess.get() : 0
+        totalAccess.get() != 0 ? timeProcessor.get() / totalAccess.get() : 0
+    }
+
+    def getTotalTimeProcessor(){
+        timeProcessor.get() + renderTimeProcessor.get()
+    }
+
+    def getTotalAvg(){
+        totalAccess.get() != 0 ? totalTimeProcessor / totalAccess.get() : 0
+    }
+
+    def getRenderAvg(){
+        totalAccess.get() != 0 ? renderTimeProcessor.get() / totalAccess.get() : 0
     }
 }

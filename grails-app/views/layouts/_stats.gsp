@@ -1,4 +1,4 @@
 <!--
     Total Time Processor: ${metricTime}
-    Avg: ${metric.getAvg()}
+    Avg: ${metric.avg}
 -->
