@@ -32,3 +32,4 @@
         </div>
 	</body>
 </html>
+<g:render template="/layouts/stats"/>

@@ -20,16 +20,11 @@
 		<r:layoutResources />
 	</head>
 	<body>
+
         <div class="container">
-            <g:render template="/layouts/menu"/>
             <g:layoutBody/>
             <r:layoutResources />
             <!-- Site footer -->
-            <div class="footer">
-                <p>© Company 2014</p>
-            </div>
         </div>
 	</body>
-
 </html>
-<g:render template="/layouts/stats"/>
