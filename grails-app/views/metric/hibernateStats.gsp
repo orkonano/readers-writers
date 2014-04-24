@@ -15,7 +15,7 @@
 <body>
 <h1>Hibernate Stats</h1>
 <div>
-    <table>
+    <table class="table table-hover">
         <thead>
         <tr>
             <th colspan="100%">General Stats</th>
@@ -63,7 +63,7 @@
 </div>
 <br/>
 <div>
-    <table>
+    <table class="table table-hover">
         <thead>
         <tr>
             <th colspan="100%">Entity Stats</th>
@@ -104,7 +104,7 @@
         </tr>
         </tbody>
     </table>
-    <table>
+    <table class="table table-hover">
         <thead>
         <tr>
             <th>Clase</th>
@@ -133,7 +133,7 @@
 </div>
 <br/>
 <div>
-    <table>
+    <table class="table table-hover">
         <thead>
         <tr>
             <th colspan="100%">Query Stats</th>
@@ -170,7 +170,7 @@
         </tr>
         </tbody>
     </table>
-    <table>
+    <table class="table table-hover">
         <thead>
         <tr>
             <th>Query</th>
@@ -212,7 +212,7 @@
 </div>
 <br/>
 <div>
-    <table>
+    <table class="table table-hover">
         <thead>
         <tr>
             <th colspan="100%">Second Level Cache Stats</th>
@@ -237,7 +237,7 @@
         </tr>
         </tbody>
     </table>
-    <table>
+    <table class="table table-hover">
         <thead>
         <tr>
             <th>Region Name</th>

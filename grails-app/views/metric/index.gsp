@@ -16,13 +16,7 @@
     <h1>App Stats</h1>
     <g:set var="globalMetric" value="${appMetric.appMetric}"/>
     <g:render template="globalStats" model="[tituloStat: 'app stats',
-            timeProcessor: globalMetric.timeProcessor,
-            renderTimeProcessor: globalMetric.renderTimeProcessor,
-            totalTimeProcessor: globalMetric.totalTimeProcessor,
-            totalAccess: globalMetric.totalAccess,
-            avg: globalMetric.avg,
-            renderAvg: globalMetric.renderAvg,
-            totalAvg: globalMetric.totalAvg]"/>
+            metric: globalMetric]"/>
 <g:render template="specificStats" model="[tituloStat: 'Controllers',
             metrics: appMetric.getAllControllersMetrics(),
             templateName: 'nameController']"/>

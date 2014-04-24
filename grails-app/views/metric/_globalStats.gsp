@@ -11,31 +11,51 @@
         <tbody>
         <tr>
             <td>Proccessor time</td>
-            <td>${timeProcessor} ms</td>
+            <td>${metric.timeProcessor} ms</td>
+        </tr>
+        <tr>
+            <td>Last Proccessor time</td>
+            <td>${metric.lastTimeProcessor} ms</td>
         </tr>
         <tr>
             <td>Render Proccessor time</td>
-            <td>${renderTimeProcessor} ms</td>
+            <td>${metric.renderTimeProcessor} ms</td>
+        </tr>
+        <tr>
+            <td>Last render Proccessor time</td>
+            <td>${metric.lastRenderTimeProcessor} ms</td>
         </tr>
         <tr>
             <td>Total time</td>
-            <td>${totalTimeProcessor} ms</td>
+            <td>${metric.totalTimeProcessor} ms</td>
+        </tr>
+        <tr>
+            <td>Last Total time</td>
+            <td>${metric.lastTotalTimeProcessor} ms</td>
         </tr>
         <tr>
             <td>Total access</td>
-            <td>${totalAccess}</td>
+            <td>${metric.totalAccess}</td>
         </tr>
         <tr>
             <td>Avg</td>
-            <td>${avg} ms</td>
+            <td>${metric.avg} ms</td>
         </tr>
         <tr>
             <td>Render Avg</td>
-            <td>${renderAvg} ms</td>
+            <td>${metric.renderAvg} ms</td>
         </tr>
         <tr>
             <td>Total Avg</td>
-            <td>${totalAvg} ms</td>
+            <td>${metric.totalAvg} ms</td>
+        </tr>
+        <tr>
+            <td>Exception </td>
+            <td>${metric.totalException} u</td>
+        </tr>
+        <tr>
+            <td>Exception %</td>
+            <td>${metric.exceptionPercentage} %</td>
         </tr>
         </tbody>
     </table>

@@ -6,14 +6,17 @@
     <g:javascript library="dashboard"/>
 </head>
 <body>
+    <g:set var="NAME_CACHE_1_" value="DASH_1"/>
+    <g:set var="NAME_CACHE_2_" value="DASH_2"/>
+    <g:set var="NAME_CACHE_3_" value="DASH_3"/>
     <div class="row">
-        <g:render template="common-dashboard-content"
+        <cache:render key="${NAME_CACHE_1_+currentUser.id}" template="common-dashboard-content"
          model="['columnNumber':6,'panelTitle':'Historias escritas','panelBodyClass':'historias-propias','panelBodyListId':'own-telling-id']"/>
-        <g:render template="common-dashboard-content"
+        <cache:render key="${NAME_CACHE_2_+currentUser.id}" template="common-dashboard-content"
            model="['columnNumber':6,'panelTitle':'Historias seguidas','panelBodyClass':'historias-ajenas','panelBodyListId':'historias-like-id']"/>
     </div>
      <div class="row">
-         <g:render template="common-dashboard-content"
+         <cache:render key="${NAME_CACHE_3_+currentUser.id}" template="common-dashboard-content"
                    model="['columnNumber':12,'panelTitle':'Autores seguidos','panelBodyClass':'historias-autores','panelBodyListId':'autores-seguidos-id']"/>
       </div>
 </div>

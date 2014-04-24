@@ -30,8 +30,7 @@ class AppMetric extends Metric{
             inicializarMapas()
         }
         appMetric.addTimeProcessor(time)
-        controllerName = procesarControllerName(controllerName)
-        ControllerMetric controllerMetric = controllersMetrics.get(controllerName)
+        ControllerMetric controllerMetric = getControllerMetricByName(controllerName)
         controllerMetric.addTimeProcesor(actionName, time)
     }
 
@@ -44,9 +43,25 @@ class AppMetric extends Metric{
     }
 
     def addRenderTimeProcesor(String controllerName, String actionName, long time) {
+        if (appMetric == null){
+            inicializarMapas()
+        }
         appMetric.addRenderTimeProcessor(time)
-        controllerName = procesarControllerName(controllerName)
-        ControllerMetric controllerMetric = controllersMetrics.get(controllerName)
+        ControllerMetric controllerMetric = getControllerMetricByName(controllerName)
         controllerMetric.addRenderTimeProcessor(actionName, time)
+    }
+
+    private ControllerMetric getControllerMetricByName(controllerName){
+        controllerName = procesarControllerName(controllerName)
+        controllersMetrics.get(controllerName)
+    }
+
+    def addException(controllerName, actionName){
+        if (appMetric == null){
+            inicializarMapas()
+        }
+        appMetric.addException()
+        ControllerMetric controllerMetric = getControllerMetricByName(controllerName)
+        controllerMetric.addException(actionName)
     }
 }
