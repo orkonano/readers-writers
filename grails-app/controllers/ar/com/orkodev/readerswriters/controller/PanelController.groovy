@@ -6,7 +6,9 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured("ROLE_US")
 class PanelController extends BaseController {
 
-    def tellingLikeService, followerService, tellingService;
+    def tellingLikeService
+    def followerService
+    def tellingService;
 
     def dashboard() {
         render view:"dashboard"

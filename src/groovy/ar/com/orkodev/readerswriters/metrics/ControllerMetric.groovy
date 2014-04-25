@@ -18,10 +18,14 @@ class ControllerMetric extends Metric{
 
     def addTimeProcesor(String actionName, long time){
         super.addTimeProcessor(time)
+        Metric actionMetric = getActionMetricByName(actionName)
+        actionMetric.addTimeProcessor(time)
+    }
+
+    private Metric getActionMetricByName(actionName){
         actionName = procesarActionName(actionName)
         Metric actionMetric = new Metric(name: actionName)
-        actionMetric = actionMetrics.putIfAbsent(actionName, actionMetric) ?: actionMetric
-        actionMetric.addTimeProcessor(time)
+        actionMetrics.putIfAbsent(actionName, actionMetric) ?: actionMetric
     }
 
     def getAllActionMetric(){
@@ -34,10 +38,19 @@ class ControllerMetric extends Metric{
 
     def addRenderTimeProcessor(String actionName, long time) {
         super.addRenderTimeProcessor(time)
-        actionName = procesarActionName(actionName)
-        Metric actionMetric = new Metric(name: actionName)
-        actionMetric = actionMetrics.putIfAbsent(actionName, actionMetric) ?: actionMetric
+        Metric actionMetric = getActionMetricByName(actionName)
         actionMetric.addRenderTimeProcessor(time)
     }
 
+    def addException(actionName){
+        super.addException()
+        Metric actionMetric = getActionMetricByName(actionName)
+        actionMetric.addException()
+    }
+
+    def incrementAccess(actionName){
+        super.incrementAccess()
+        Metric actionMetric = getActionMetricByName(actionName)
+        actionMetric.incrementAccess()
+    }
 }

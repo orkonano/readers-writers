@@ -4,7 +4,7 @@ import grails.test.mixin.Mock
 import spock.lang.Specification
 
 @Mock(MetricFilters)
-class MetricFiltersSpec extends Specification {
+class AppFiltersSpec extends Specification {
 
     def setup() {
     }
