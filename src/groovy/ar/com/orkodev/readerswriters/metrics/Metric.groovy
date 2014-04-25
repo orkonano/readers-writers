@@ -32,8 +32,11 @@ class Metric {
      */
     def addTimeProcessor(long time){
         timeProcessor.addAndGet(time)
-        totalAccess.addAndGet(1)
         lastTimeProcessor.set((int)time)
+    }
+
+    def incrementAccess(){
+        totalAccess.addAndGet(1)
     }
 
     def addRenderTimeProcessor(long time){

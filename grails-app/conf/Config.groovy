@@ -178,3 +178,6 @@ environments {
 
 //--BOOTSTRAP
 grails.plugins.twitterbootstrap.fixtaglib = true
+
+//--MEtric
+metric.lowerBound = 1

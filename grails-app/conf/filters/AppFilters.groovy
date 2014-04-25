@@ -31,6 +31,7 @@ class AppFilters {
             before = {
                 long start = System.currentTimeMillis()
                 request[START_TIME_ATTRIBUTE] = start
+                appMetric.incrementAccess(controllerName, actionName)
             }
             after = { Map model ->
                 long start = request[START_TIME_ATTRIBUTE]
@@ -48,12 +49,13 @@ class AppFilters {
                 model.put('metricTime', timeProcess)
             }
             afterView = { Exception e ->
-                long start = request[AFTER_TIME_ATTRIBUTE]
-                long end = System.currentTimeMillis()
-                def timeProcess = end - start
-                appMetric.addRenderTimeProcesor(controllerName, actionName, timeProcess)
                 if (e != null) {
                     appMetric.addException(controllerName, actionName)
+                }else{
+                    long start = request[AFTER_TIME_ATTRIBUTE]
+                    long end = System.currentTimeMillis()
+                    def timeProcess = end - start
+                    appMetric.addRenderTimeProcesor(controllerName, actionName, timeProcess)
                 }
             }
         }

@@ -25,6 +25,15 @@ class AppMetric extends Metric{
         }
     }
 
+    def incrementAccess(String controllerName, String actionName){
+        if (appMetric == null){
+            inicializarMapas()
+        }
+        appMetric.incrementAccess()
+        ControllerMetric controllerMetric = getControllerMetricByName(controllerName)
+        controllerMetric.incrementAccess(actionName)
+    }
+
     def addTimeProcesor(String controllerName, String actionName, long time){
         if (appMetric == null){
             inicializarMapas()

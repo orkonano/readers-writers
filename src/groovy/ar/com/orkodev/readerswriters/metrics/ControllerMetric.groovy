@@ -47,4 +47,10 @@ class ControllerMetric extends Metric{
         Metric actionMetric = getActionMetricByName(actionName)
         actionMetric.addException()
     }
+
+    def incrementAccess(actionName){
+        super.incrementAccess()
+        Metric actionMetric = getActionMetricByName(actionName)
+        actionMetric.incrementAccess()
+    }
 }
