@@ -27,6 +27,11 @@ function executeAjaxAction($element,event){
             },
             complete:function(){
                 $element.removeClass("ajaxRunning");
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                if (jqXHR.status == '401'){
+                    alert("Usted debe loggearse");
+                }
             }
         });
     }

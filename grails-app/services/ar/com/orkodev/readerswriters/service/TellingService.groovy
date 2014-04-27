@@ -113,4 +113,17 @@ class TellingService extends BaseService<Telling>{
         List<Telling> tellingResult = loadTelling(query, [max: limit]);
         [tellingResult, count]
     }
+
+    @Cacheable('readers-writers')
+    /**
+     * La variable hour sirve para la cache, quizá es medio sucia, pero al manejarla sólo
+     * es conveniente ya que es trasparente al desarrollador.
+     * El peligro es que se pueda borrar ya que alquien puede interpretar cmo que no se usa
+     */
+    def findLastTellingPublish(Integer max, Integer hour) {
+        def query = Telling.where {
+            state == Telling.PUBLISHED
+        }
+        loadTelling(query, [max: max])
+    }
 }

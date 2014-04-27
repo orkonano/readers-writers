@@ -1,5 +1,7 @@
 package ar.com.orkodev.readerswriters.domain
 
+import ar.com.orkodev.readerswriters.utils.StringHelper
+
 class Telling implements Serializable{
 
     private static final long serialVersionUID = 1
@@ -97,5 +99,9 @@ class Telling implements Serializable{
 
     int hashCode() {
         return (id != null ? id.hashCode() : 0)
+    }
+
+    def getTitleToUrl(){
+        StringHelper.convertStringToFriendlyUrl(this.title?.toLowerCase())
     }
 }
