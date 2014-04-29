@@ -179,5 +179,10 @@ environments {
 //--BOOTSTRAP
 grails.plugins.twitterbootstrap.fixtaglib = true
 
-//--MEtric
+//--Metric
 metric.lowerBound = 1
+seo{
+    title{
+        appDisplay = 'Readers & Writers Red Social'
+    }
+}

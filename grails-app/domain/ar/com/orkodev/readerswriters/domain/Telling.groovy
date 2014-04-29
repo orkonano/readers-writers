@@ -1,6 +1,7 @@
 package ar.com.orkodev.readerswriters.domain
 
 import ar.com.orkodev.readerswriters.utils.StringHelper
+import org.apache.commons.lang.WordUtils
 
 class Telling implements Serializable{
 
@@ -47,6 +48,7 @@ class Telling implements Serializable{
 
     def beforeInsert() {
        setDefaultState()
+       normalizarTitulo()
     }
 
     private def setDefaultState(){
@@ -57,6 +59,11 @@ class Telling implements Serializable{
 
     def beforeUpdate() {
         setDefaultState()
+        normalizarTitulo()
+    }
+
+    def normalizarTitulo(){
+        this.title = WordUtils.capitalizeFully(this.title)
     }
 
     def isPublicable(){

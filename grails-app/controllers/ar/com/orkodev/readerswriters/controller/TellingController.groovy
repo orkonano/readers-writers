@@ -3,6 +3,7 @@ package ar.com.orkodev.readerswriters.controller
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.utils.StringHelper
 import grails.plugin.springsecurity.annotation.Secured
 
 
@@ -72,7 +73,9 @@ class TellingController extends BaseController {
         }
 
         def isLike = islogged ? tellingLikeService.isLike(tellingInstance) : false
-        render model:["tellingInstance": tellingInstance, isLike:isLike], view:"read"
+        render model:["tellingInstance": tellingInstance, isLike:isLike,
+                      seoDescription: StringHelper.cortarStringPorEspacio(tellingInstance.description,300)],
+                view: !islogged ? "read_logout" : "read_logged"
     }
 
     private boolean isTellingFromUserLogin(Telling telling){

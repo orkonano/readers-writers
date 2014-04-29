@@ -15,6 +15,7 @@ class HomeController {
         def hourNow = dt.getHourOfDay()
         def lastTelling = tellingService.findLastTellingPublish(MAX_LAST_TELLING, hourNow)
         render view: 'index', model: [tellingInstanceList: lastTelling,
-                                      tellingInstanceCount: MAX_LAST_TELLING]
+                                      tellingInstanceCount: MAX_LAST_TELLING,
+                                        seoDescription: "Red social de escritores y lectores"]
     }
 }

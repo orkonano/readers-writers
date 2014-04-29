@@ -4,7 +4,7 @@ package ar.com.orkodev.readerswriters.utils
  */
 class StringHelper {
 
-    static final MAX_CHARACTER_URL = 100
+    static final MAX_CHARACTER_TO_CUT = 100
 
     static def quitarAcentos(String cadena){
         cadena.replaceAll("á", "a").replaceAll("Á", "A").replaceAll("é", "e")
@@ -13,14 +13,14 @@ class StringHelper {
         .replaceAll("Ú", "U")
     }
 
-    static def cortarUrl(String url){
+    static def cortarStringPorEspacio(String url, int numberOfWord = MAX_CHARACTER_TO_CUT){
         List<String> listWord = url.split(" ")
         def countChar = 0
         def cut = -1
         def index = 0
         for (word in listWord){
             countChar += word.length()
-            if (countChar > MAX_CHARACTER_URL){
+            if (countChar > MAX_CHARACTER_TO_CUT){
                 cut = index
                 break
             }else{
@@ -32,7 +32,7 @@ class StringHelper {
 
     static  def convertStringToFriendlyUrl(String cadena){
         cadena = quitarAcentos(cadena?.toLowerCase())
-        cadena = cortarUrl(cadena)
+        cadena = cortarStringPorEspacio(cadena)
         cadena.replaceAll("\\s{2,}", " ").replaceAll("\\s", "-")
     }
 
