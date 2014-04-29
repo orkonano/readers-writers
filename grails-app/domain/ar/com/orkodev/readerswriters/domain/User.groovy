@@ -81,4 +81,8 @@ class User implements Serializable{
     int hashCode() {
         return id.hashCode()
     }
+
+    def getNombreAMostrar(){
+        (this.firstname && this.lastname) ? (this.firstname + " " + this.lastname) : this.username
+    }
 }

@@ -1,0 +1,1 @@
+<g:render template="read" model="[tellingInstance: tellingInstance, content_layout: 'main']"/>

@@ -14,7 +14,8 @@
                 <span class="label label-success">${tellingInstance?.narrativeGenre?.encodeAsHTML()}</span>
                 <h3>${fieldValue(bean: tellingInstance, field: "title")}</h3>
                 <p>${fieldValue(bean: tellingInstance, field: "description")}</p>
-                <p><a href="${createLink(controller: 'telling', action: 'read', params: ['id': tellingInstance.id])}" class="btn btn-primary" role="button">Leer</a></p>
+                <p><a href="${createLink(controller: 'telling', action: 'read', params: ['id': tellingInstance.id, 'title': tellingInstance.titleToUrl])}"
+                      class="btn btn-primary" role="button">Leer</a></p>
             </div>
         </div>
     </div>

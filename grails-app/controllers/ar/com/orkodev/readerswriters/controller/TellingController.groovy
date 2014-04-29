@@ -3,9 +3,10 @@ package ar.com.orkodev.readerswriters.controller
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.utils.StringHelper
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured("ROLE_US")
+
 class TellingController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
@@ -16,6 +17,7 @@ class TellingController extends BaseController {
     def tellingTypeService
 
 
+    @Secured("ROLE_US")
     def index(Integer max) {
         def userLogin = springSecurityService.getCurrentUser()
         params.max = Math.min(max ?: 10, 100)
@@ -23,6 +25,7 @@ class TellingController extends BaseController {
         respond tellingList, model: [tellingInstanceCount: countResult]
     }
 
+    @Secured("ROLE_US")
     def list(Telling tellingSearch){
         def narrativeGenres = narrativeGenreService.getAll()
         def tellingTypes = tellingTypeService.getAll()
@@ -41,6 +44,7 @@ class TellingController extends BaseController {
         }
     }
 
+    @Secured("ROLE_US")
     def show(Long id) {
         Telling tellingInstance = bindingById(id)
         if (tellingInstance == null) {
@@ -58,15 +62,20 @@ class TellingController extends BaseController {
         id != null ? tellingService.findById(new Telling(id: id)) : null
     }
 
-    def read(Long id) {
+
+    @Secured('permitAll')
+    def read(Long id, String title) {
+        boolean islogged = springSecurityService.isLoggedIn()
         Telling tellingInstance = bindingById(id)
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
             return
         }
-        def isLike = tellingLikeService.isLike(tellingInstance)
-       // def kk = tellingLikeService.findById(1)
-        render model:["tellingInstance": tellingInstance,isLike:isLike],view:"read"
+
+        def isLike = islogged ? tellingLikeService.isLike(tellingInstance) : false
+        render model:["tellingInstance": tellingInstance, isLike:isLike,
+                      seoDescription: StringHelper.cortarStringPorEspacio(tellingInstance.description,300)],
+                view: !islogged ? "read_logout" : "read_logged"
     }
 
     private boolean isTellingFromUserLogin(Telling telling){
@@ -74,10 +83,12 @@ class TellingController extends BaseController {
         return userLogin.id == telling.author.id
     }
 
+    @Secured("ROLE_US")
     def create() {
         render  model:generarModelViewSaveAndUpdate(new Telling()), view:'create'
     }
 
+    @Secured("ROLE_US")
     def save(Telling tellingInstance) {
         withForm {
             if (tellingInstance == null) {
@@ -97,6 +108,7 @@ class TellingController extends BaseController {
         }
     }
 
+    @Secured("ROLE_US")
     def edit(Long id) {
         Telling tellingInstance = bindingById(id)
         if (tellingInstance == null) {
@@ -110,6 +122,7 @@ class TellingController extends BaseController {
         }
     }
 
+    @Secured("ROLE_US")
     def update(Telling tellingInstance) {
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
@@ -137,6 +150,7 @@ class TellingController extends BaseController {
                 ]
     }
 
+    @Secured("ROLE_US")
     def delete(Long id) {
         Telling tellingInstance = bindingById(id)
         if (tellingInstance == null) {
@@ -151,6 +165,7 @@ class TellingController extends BaseController {
         }
     }
 
+    @Secured("ROLE_US")
     def publish(Long id) {
         Telling tellingInstance = bindingById(id)
         if (tellingInstance == null) {

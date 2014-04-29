@@ -1,11 +1,14 @@
-
 <%@ page import="ar.com.orkodev.readerswriters.domain.Telling" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main">
+    <meta name="layout" content="${content_layout}">
     <g:set var="entityName" value="${message(code: 'telling.label', default: 'Telling')}" />
-    <title><g:message code="default.read.label" args="[entityName]" default="Leer {0}" /></title>
+    <sec:ifNotLoggedIn>
+        <meta name="layout" content="main">
+    </sec:ifNotLoggedIn>
+    <title>${tellingInstance.title} de ${tellingInstance.author.nombreAMostrar} en
+        ${grailsApplication.config.seo.title.appDisplay}</title>
     <g:javascript library="like"/>
 </head>
 <body>
@@ -13,15 +16,15 @@
     <div class="col-md-12">
         <h3>${tellingInstance.title}&nbsp;&nbsp;
             <span id="id-buttons-region">
-            <g:if test="${isLike}">
-                <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
-            </g:if>
-            <g:else>
-                <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
-            </g:else>
-        </span></h3>
+                <g:if test="${isLike}">
+                    <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+                </g:if>
+                <g:else>
+                    <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
+                </g:else>
+            </span></h3>
         <a class="btn btn-link" href="${createLink(controller: 'user', action: 'showAuthor', params: ['id': tellingInstance.author.id])}">
-        ${tellingInstance.author.username.encodeAsHTML()}
+            ${tellingInstance.author.username.encodeAsHTML()}
         </a>
         &nbsp;
         <span class="label label-info">${tellingInstance?.tellingType?.encodeAsHTML()}</span>&nbsp;
