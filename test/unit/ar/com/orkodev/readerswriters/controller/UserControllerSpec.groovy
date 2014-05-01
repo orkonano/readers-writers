@@ -139,7 +139,7 @@ class UserControllerSpec extends Specification {
         response.reset()
         populateShowParams(params)
         controller.followerService = followService.createMock()
-        controller.showAuthor(user)
+        controller.show(user)
         then: "A model is populated containing the domain instance"
         response.status == 200
         model!=null
@@ -151,7 +151,7 @@ class UserControllerSpec extends Specification {
         response.reset()
         populateShowParams(params)
         controller.followerService = followServiceFail.createMock()
-        controller.showAuthor(user)
+        controller.show(user)
         then: "A model is populated containing the domain instance"
         response.status == 200
         model!=null

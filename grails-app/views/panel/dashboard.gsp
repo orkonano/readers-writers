@@ -23,7 +23,7 @@
 <script id="template-telling-like" tytpe="text/html">
     <li class="list-group-item">
     <a href="${createLink(controller: 'telling',action: 'read')}/{{telling.id}}">{{telling.title}}</a>&nbsp;-&nbsp;
-    <a href="${createLink(controller: 'user',action: 'showAuthor')}/{{telling.author.id}}">{{telling.author.name}}</a>
+    <a href="${createLink(controller: 'user',action: 'show')}/{{telling.author.id}}">{{telling.author.name}}</a>
     </li>
 </script>
 <script id="template-own-telling" tytpe="text/html">
@@ -33,7 +33,7 @@
 </script>
 <script id="template-author-followed" tytpe="text/html">
     <li class="list-group-item">
-    <a href="${createLink(controller: 'user',action: 'showAuthor')}/{{author.id}}">{{author.name}}</a>
+    <a href="${createLink(controller: 'user',action: 'show')}/{{author.id}}">{{author.name}}</a>
     </li>
 </script>
 </body>

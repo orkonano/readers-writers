@@ -7,8 +7,9 @@
     <div class="col-sm-6 col-md-4">
         <div class="thumbnail">
             <div class="caption">
-                <a class="btn btn-link" href="${createLink(controller: 'user', action: 'showAuthor', params: ['id': tellingInstance.author.id])}">
-                    ${tellingInstance.author.username.encodeAsHTML()}
+                <a class="btn btn-link" href="${createLink(controller: 'user', action: 'show',
+                        params: ['id': tellingInstance.author.id, 'nombre': tellingInstance.author.nombreAMostrarToUrl])}">
+                    ${tellingInstance.author.nombreAMostrar.encodeAsHTML()}
                 </a>
                 <span class="label label-info">${tellingInstance?.tellingType?.encodeAsHTML()}</span>&nbsp;
                 <span class="label label-success">${tellingInstance?.narrativeGenre?.encodeAsHTML()}</span>
