@@ -43,7 +43,7 @@ modules = {
 
     application {
         defaultBundle 'common'
-        dependsOn 'jquery','bootstrap'
+        dependsOn 'jquery','bootstrap','jquery-ui'
         resource url:'js/application.js'
         resource url:'js/login_logout.js'
     }

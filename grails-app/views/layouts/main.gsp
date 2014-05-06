@@ -34,5 +34,9 @@
         </div>
 	</body>
 
+    <footer>
+        <g:render template="/shared/authAjax"/>
+    </footer>
+
 </html>
 <g:render template="/layouts/stats"/>

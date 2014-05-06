@@ -28,8 +28,11 @@ function executeAjaxAction($element,event){
             complete:function(){
                 $element.removeClass("ajaxRunning");
             },
-            error: function(jqXHR, textStatus, errorThrown){
-                if (jqXHR.status == '401'){
+            statusCode: {
+                404: function() {
+                    alert( "page not found" );
+                },
+                401: function(){
                     alert("Usted debe loggearse");
                 }
             }
