@@ -8,7 +8,7 @@
             <a class="navbar-brand" href="${createLink(controller: 'panel', action: 'dashboard')}">Home</a>
         </sec:ifLoggedIn>
         <sec:ifNotLoggedIn>
-            <a class="navbar-brand" href="${createLink(controller: 'login', action: 'auth')}">Login</a>
+            <a class="navbar-brand" id="id-auth-button" href="#">Login</a>
             <a class="navbar-brand" href="${createLink(controller: 'user', action: 'create')}">Únete</a>
         </sec:ifNotLoggedIn>
         <sec:ifLoggedIn>

@@ -7,30 +7,35 @@ function executeAjaxAction($element,event){
     if (!$element.hasClass("ajaxRunning")){
         var url = $element.data("url");
         var objectId = $element.data("object-id");
+        url += "/" + objectId;
         var idTemplate = $element.data("template-id-next-action");
         $.ajax({
             type: "POST",
             url: url,
             dateType: 'JSON',
-            data: {'id':objectId},
             beforeSend: function(){
                 $element.addClass("ajaxRunning");
             },
             success:function(data){
                 if (data.success){
-                    var template = $('#'+idTemplate).html();
-                    var html = Mustache.render(template, null);
-                    $("#id-buttons-region").html(html);
-                }else{
-                    alert("Ocurrió un error");
+                    if (data.errors == 'undefined'){
+                        var template = $('#'+idTemplate).html();
+                        var html = Mustache.render(template, null);
+                        $("#id-buttons-region").html(html);
+                    }else{
+                        alert(data.errors);
+                    }
                 }
             },
             complete:function(){
                 $element.removeClass("ajaxRunning");
             },
-            error: function(jqXHR, textStatus, errorThrown){
-                if (jqXHR.status == '401'){
-                    alert("Usted debe loggearse");
+            statusCode: {
+                404: function() {
+                    alert( "page not found" );
+                },
+                401: function(){
+                    showLogin();
                 }
             }
         });
