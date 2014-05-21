@@ -33,7 +33,7 @@ function executeAjaxAction($element,event){
                     alert( "page not found" );
                 },
                 401: function(){
-                    alert("Usted debe loggearse");
+                    showLogin();
                 }
             }
         });

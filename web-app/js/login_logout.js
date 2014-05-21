@@ -5,7 +5,7 @@ $(function() {
 
     $("#id-auth-button").click(function(e){
         e.preventDefault();
-        $('#auth-form').modal('show')
+        showLogin();
     });
 
     $("#id-login-button").click(function(e){
@@ -21,13 +21,14 @@ $(function() {
                 $(this).addClass("ajaxRunning");
             },
             success:function(data){
-                if (!data.error){
+                if (data.success){
                     window.location.assign(redirect);
                 }else{
-                    alert(data.error);
+                    $("#id-login-error").html(data.error);
+                    $("#id-login-error").show();
                 }
             },
-            error: function(){
+            error: function(jqXHR, textStatus, errorThrown){
               alert("error");
             },
             complete:function(){
@@ -59,4 +60,10 @@ $(function() {
     });
 
 });
+
+function showLogin(){
+    $('#auth-form').find(".form-control").val("");
+    $('#auth-form').modal('show');
+    $("#id-login-error").hide();
+}
 

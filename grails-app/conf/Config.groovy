@@ -164,7 +164,6 @@ grails.plugin.springsecurity.useSessionFixationPrevention = true
 //--FACEBOOK--
 grails.plugin.springsecurity.facebook.taglib.button.text = ''
 grails.plugin.springsecurity.facebook.domain.classname = 'ar.com.orkodev.readerswriters.domain.FacebookUser'
-grails.plugin.springsecurity.facebook.filter.redirect.successHandler = 'authenticationSuccessHandler'
 environments {
     development {
         grails.plugin.springsecurity.facebook.appId='368555996619672'

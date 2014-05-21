@@ -6,6 +6,7 @@
                 <h4 class="modal-title"><g:message code="springSecurity.login.header"/></h4>
             </div>
             <div class="modal-body">
+                <div class="alert alert-danger" id="id-login-error"></div>
                 <form role="form" action='${request.contextPath}/j_spring_security_check' method='POST'
                       id='ajaxLoginForm' name='ajaxLoginForm' autocomplete='off' class="form-signin">
                         <input type="email" class="form-control" placeholder="Enter user" name='j_username' required="" autofocus="" />
