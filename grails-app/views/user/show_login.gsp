@@ -1,0 +1,1 @@
+<g:render template="show" model="[userInstance: userInstance, content_layout: 'main_logged', isLogged: isLogged]"/>

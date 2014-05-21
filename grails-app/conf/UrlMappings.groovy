@@ -12,6 +12,11 @@ class UrlMappings {
             action = 'read'
         }
 
+        "/user/show/$id/$nombre"{
+            controller = 'user'
+            action = 'show'
+        }
+
         "/"(controller: "home", action: "index")
         "500"(view:'/error')
         "404"(view:'/pageNotFound')

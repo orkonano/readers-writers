@@ -83,6 +83,15 @@ class TellingService extends BaseService<Telling>{
         [tellingResult, count]
     }
 
+    def listTellingPublishByAuthor(Telling tellingSearch, Integer max = 15, Integer offset = 0){
+        def query = Telling.where {
+            state == Telling.PUBLISHED && author.id == tellingSearch.author.id
+        }
+         def count = query.count()
+        List<Telling> tellingResult = loadTelling(query, [max: max?:15, offset: offset?:0]);
+        [tellingResult, count]
+    }
+
     List<Telling> findCurrentUserTelling(Integer count = null, Integer offset = 0) {
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingService.findTellingByAuthor(currentUser, count, offset)

@@ -23,7 +23,7 @@
                     <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
                 </g:else>
             </span></h3>
-        <a class="btn btn-link" href="${createLink(controller: 'user', action: 'showAuthor', params: ['id': tellingInstance.author.id])}">
+        <a class="btn btn-link" href="${createLink(controller: 'user', action: 'show', params: ['id': tellingInstance.author.id])}">
             ${tellingInstance.author.username.encodeAsHTML()}
         </a>
         &nbsp;

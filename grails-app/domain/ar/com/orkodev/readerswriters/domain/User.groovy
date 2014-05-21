@@ -1,5 +1,7 @@
 package ar.com.orkodev.readerswriters.domain
 
+import ar.com.orkodev.readerswriters.utils.StringHelper
+
 class User implements Serializable{
 
     private static final long serialVersionUID = 8799656478674716638L;
@@ -84,5 +86,9 @@ class User implements Serializable{
 
     def getNombreAMostrar(){
         (this.firstname && this.lastname) ? (this.firstname + " " + this.lastname) : this.username
+    }
+
+    def getNombreAMostrarToUrl(){
+        StringHelper.convertStringToFriendlyUrl(this.nombreAMostrar.toLowerCase())
     }
 }

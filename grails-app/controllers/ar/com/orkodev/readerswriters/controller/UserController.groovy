@@ -72,18 +72,28 @@ class UserController extends BaseController {
         redirect action: "edit"
     }
 
-    @Secured("ROLE_US")
-    def showAuthor(User userInstance) {
-        def isFollowed = followerService.isFollowAuthor(userInstance)
+    private User bindingById(Long id){
+        id != null ? userService.findById(new User(id: id)) : null
+    }
+
+    @Secured('permitAll')
+    def show(Long id) {
+        def userInstance = bindingById(id)
+        boolean islogged = springSecurityService.isLoggedIn()
+        def isFollowed = islogged ? followerService.isFollowAuthor(userInstance) : false
         def tellingSearch = new Telling(author: userInstance)
-        def (tellingList, countResult) = tellingService.listPublished(tellingSearch, 15, 0)
+        def (tellingList, countResult) = tellingService.listTellingPublishByAuthor(tellingSearch, 15, 0)
+        if (!islogged){
+            tellingList = tellingList.subList(0,1)
+        }
         render model:[
                       userInstance: userInstance,
                       isFollowed:isFollowed,
                       tellingInstanceList: tellingList,
                       tellingInstanceCount: countResult,
+                      isLogged: islogged
                      ],
-                view:"showAuthor"
+                view: islogged ? "show_login" : "show_logout"
     }
 
 }
