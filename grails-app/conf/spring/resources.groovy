@@ -5,12 +5,10 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 beans = {
 
 
-    //cacheHelper(CacheHelper)
-
     xmlns context:"http://www.springframework.org/schema/context"
     context.'component-scan'('base-package': "ar.com.orkodev.readerswriters")
 
-    authenticationSuccessHandler(SimpleUrlAuthenticationSuccessHandler) {
+    authenticationFacebookSuccessHandler(SimpleUrlAuthenticationSuccessHandler) {
         defaultTargetUrl = '/panel/dashboard'
     }
 

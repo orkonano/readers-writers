@@ -90,7 +90,7 @@ grails.project.dependency.resolution = {
         //compile ":handlebars-asset-pipeline:1.0.0.3"
 
         //security
-        compile ':spring-security-core:2.0-RC2'
+        compile ':spring-security-core:2.0-RC3'
         compile ":cookie-session:2.0.13"
         compile ':webxml:1.4.1'
         compile "org.grails.plugins:spring-security-facebook:0.15.2-CORE2"
