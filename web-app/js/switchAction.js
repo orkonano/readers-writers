@@ -18,7 +18,7 @@ function executeAjaxAction($element,event){
             },
             success:function(data){
                 if (data.success){
-                    if (data.errors == 'undefined'){
+                    if (typeof data.errors == 'undefined'){
                         var template = $('#'+idTemplate).html();
                         var html = Mustache.render(template, null);
                         $("#id-buttons-region").html(html);
