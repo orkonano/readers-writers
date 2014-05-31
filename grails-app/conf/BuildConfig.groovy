@@ -69,10 +69,10 @@ grails.project.dependency.resolution = {
         compile ":cache-ehcache:1.0.1"
 
         // plugins needed at runtime but not for compilation
-        runtime ":hibernate:3.6.10.13" // or ":hibernate4:4.3.5.1"
+        runtime ":hibernate:3.6.10.15" // or ":hibernate4:4.3.5.1"
         runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.1"
-        runtime ":resources:1.2.7"
+        runtime ":resources:1.2.8"
         runtime ':twitter-bootstrap:3.0.3'
         // Uncomment these (or add new ones) to enable additional resources capabilities
         runtime ":zipped-resources:1.0.1"
