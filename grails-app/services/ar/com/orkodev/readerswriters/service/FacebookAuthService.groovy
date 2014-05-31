@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelper
+import ar.com.orkodev.readerswriters.cache.CacheHelperImpl
 import ar.com.orkodev.readerswriters.domain.FacebookUser
 import ar.com.orkodev.readerswriters.domain.User
 import com.the6hours.grails.springsecurity.facebook.FacebookAuthToken
@@ -19,7 +19,7 @@ class FacebookAuthService {
     def userService
     def grailsApplication
     @Autowired
-    private CacheHelper cacheHelper
+    private CacheHelperImpl cacheHelper
 
     User createAppUser(FacebookUser fUser, FacebookAuthToken token){
         Facebook facebook = new FacebookTemplate(token.accessToken.accessToken)

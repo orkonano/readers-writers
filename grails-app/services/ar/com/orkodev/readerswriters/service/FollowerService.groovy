@@ -1,23 +1,21 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
-import org.springframework.beans.factory.annotation.Autowired
+import grails.transaction.Transactional
 
 class FollowerService {
 
-    static transactional = true
 
     def springSecurityService
     def grailsApplication
     def userService
-    @Autowired
-    private CacheHelper cacheHelper
+    def cacheHelper
 
+    @Transactional
     def followAuthor(User author) {
         User currentUser = springSecurityService.getCurrentUser()
         if (author.id == currentUser.id)
@@ -37,6 +35,7 @@ class FollowerService {
                 [follower.author, follower.following] as Object[])
     }
 
+    @Transactional
     def leaveAuthor(User authorLeave){
         User currentUser = springSecurityService.getCurrentUser()
         def query = Follower.where {
@@ -61,7 +60,7 @@ class FollowerService {
         def query = Follower.where {
             author.id == authorToFind.id && following.id == followingUser.id
         }
-        query = query.property('id')
+        query = query.projections{ 'id'}
         query.find() != null
     }
 

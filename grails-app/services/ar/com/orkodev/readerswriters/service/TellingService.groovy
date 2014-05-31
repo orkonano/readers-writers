@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelper
+import ar.com.orkodev.readerswriters.cache.CacheHelperImpl
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
@@ -18,7 +18,7 @@ class TellingService extends BaseService<Telling>{
     def springSecurityService
     def grailsApplication
     @Autowired
-    private CacheHelper cacheHelper
+    private CacheHelperImpl cacheHelper
 
     def save(Telling tellingToSave) {
         tellingToSave.author = springSecurityService.getCurrentUser()

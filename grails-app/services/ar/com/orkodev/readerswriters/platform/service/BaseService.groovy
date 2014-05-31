@@ -2,10 +2,8 @@ package ar.com.orkodev.readerswriters.platform.service
 
 abstract class BaseService<T> {
 
-    protected Class<T> persistenceClass
 
     BaseService(){
-        persistenceClass = new T().getClass()
     }
 
     /**

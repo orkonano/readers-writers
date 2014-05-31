@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelper
+import ar.com.orkodev.readerswriters.cache.CacheHelperImpl
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.domain.User
@@ -17,7 +17,7 @@ class TellingLikeService{
     def grailsApplication
     def tellingService
     @Autowired
-    private CacheHelper cacheHelper
+    private CacheHelperImpl cacheHelper
 
     def like(Telling tellingToLike) {
         def currentUser = springSecurityService.getCurrentUser()
