@@ -50,6 +50,7 @@ class FollowerService {
         return erased
     }
 
+    @Transactional(readOnly = true)
     def isFollowAuthor(User authorToFind) {
         User currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.followerService.isFollowerAuthor(authorToFind, currentUser)
@@ -64,6 +65,7 @@ class FollowerService {
         query.find() != null
     }
 
+    @Transactional(readOnly = true)
     List<User> findAuthorFollowed(Integer count = null, Integer offset = 0) {
         User currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.followerService.findAuthorFollowedByUser(currentUser, count, offset)

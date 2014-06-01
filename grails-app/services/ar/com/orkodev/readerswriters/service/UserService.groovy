@@ -6,11 +6,12 @@ import ar.com.orkodev.readerswriters.domain.UserRole
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.plugin.cache.Cacheable
+import grails.transaction.Transactional
 
 class UserService extends BaseService<User>{
 
-    static transactional = true
 
+    @Transactional
     def saveUser(User userToSave) {
         userToSave.validate()
         if (userToSave.hasErrors()) {
@@ -22,6 +23,7 @@ class UserService extends BaseService<User>{
         return userToSave
     }
 
+    @Transactional
     User editUser(User userToSave) {
         userToSave.validate()
         if (userToSave.hasErrors()) {
@@ -32,6 +34,7 @@ class UserService extends BaseService<User>{
 
 
     @Cacheable('readers-writers')
+    @Transactional(readOnly = true)
     Set<Role> getRoles(User user){
         user.getAuthorities()
     }

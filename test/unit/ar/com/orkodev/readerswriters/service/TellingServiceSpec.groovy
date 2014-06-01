@@ -44,7 +44,7 @@ class TellingServiceSpec extends Specification {
         def telling1 = new Telling(title: "ddd", text: "dasdasd", description: "dddd",
                 narrativeGenre: new NarrativeGenre(id:1), tellingType: new TellingType(id: 1))
         service.save(telling1)
-        then: "Se arroja la excepcion de validacion"
+        then: "No Se arroja la excepcion de validacion"
         notThrown(ValidationException)
     }
 

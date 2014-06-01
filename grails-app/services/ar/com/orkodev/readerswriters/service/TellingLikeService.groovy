@@ -54,6 +54,7 @@ class TellingLikeService{
         deleted
     }
 
+    @Transactional(readOnly = true)
     def isLike(Telling telling){
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingLikeService.isLike(telling, currentUser)
@@ -68,6 +69,7 @@ class TellingLikeService{
         query.find()!=null
     }
 
+    @Transactional(readOnly = true)
     def findLikeTelling(Integer countLast = null, Integer offset = 0){
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingLikeService.findLikeTellingByUser(currentUser, countLast, offset)
