@@ -60,7 +60,7 @@ class FollowerService {
         def query = Follower.where {
             author.id == authorToFind.id && following.id == followingUser.id
         }
-        query = query.projections{ 'id'}
+        query = query.property('id')
         query.find() != null
     }
 
@@ -78,7 +78,7 @@ class FollowerService {
         if (count != null){
             params.max = count
         }
-        query = query.property('author.id')
+        query = query.property('id')
         userService.findByIds(query.list(params), new User())
     }
 }
