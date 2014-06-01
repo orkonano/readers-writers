@@ -1,6 +1,5 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelperImpl
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
@@ -9,7 +8,6 @@ import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.gorm.DetachedCriteria
 import grails.plugin.cache.Cacheable
-import org.springframework.beans.factory.annotation.Autowired
 
 class TellingService extends BaseService<Telling>{
 
@@ -17,8 +15,7 @@ class TellingService extends BaseService<Telling>{
 
     def springSecurityService
     def grailsApplication
-    @Autowired
-    private CacheHelperImpl cacheHelper
+    def cacheHelper
 
     def save(Telling tellingToSave) {
         tellingToSave.author = springSecurityService.getCurrentUser()
@@ -45,6 +42,7 @@ class TellingService extends BaseService<Telling>{
             tellingToErase.state = Telling.ERASED
             tellingToErase.save()
             cleanCacheInSave(tellingToErase)
+            return tellingToErase
         }
     }
 
@@ -55,6 +53,7 @@ class TellingService extends BaseService<Telling>{
             tellingToPublish.state = Telling.PUBLISHED
             tellingToPublish.save()
             cleanCacheInSave(tellingToPublish)
+            return tellingToPublish
         }
     }
 
@@ -103,9 +102,6 @@ class TellingService extends BaseService<Telling>{
             author.id == authorParams.id && state != Telling.ERASED
         }
         def params = [sort: 'dateCreated', order: "desc", offset: offset]
-//        if (count != null){
-//            params.max = count
-//        }
         loadTelling(query, params)
     }
 

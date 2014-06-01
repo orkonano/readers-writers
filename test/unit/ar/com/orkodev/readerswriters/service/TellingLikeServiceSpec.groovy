@@ -60,16 +60,20 @@ class TellingLikeServiceSpec extends Specification {
         mockForConstraintsTests User
         def springSecurityService = mockFor(SpringSecurityService)
         def springSecurityServiceUser = Mock(SpringSecurityService)
-        def author = new User(username: "author@example.com",password: "superpassword")
+        def author = new User(username: "author@example.com", password: "superpassword")
         author.springSecurityService = springSecurityServiceUser
-        author.save(flush: true,failOnError: true)
-        def currentUser = new User(username: "current@example.com",password:"superpassword")
+        author.save(flush: true, failOnError: true)
+        def currentUser = new User(username: "current@example.com", password:"superpassword")
         currentUser.springSecurityService = springSecurityServiceUser
         currentUser.save(flush: true,failOnError: true)
         springSecurityService.demandExplicit.getCurrentUser(3) { ->currentUser }
         service.springSecurityService = springSecurityService.createMock()
-        def telling = new Telling(title: "t1",author: currentUser,description: "d2",text: "text1",narrativeGenre: new NarrativeGenre(),tellingType: new TellingType()).save(flush: true,failOnError: true)
-        def telling2 = new Telling(title: "t1",author: author,description: "d2",text: "text1",narrativeGenre: new NarrativeGenre(),tellingType: new TellingType()).save(flush: true,failOnError: true)
+        def telling = new Telling(title: "t1",author: currentUser, description: "d2", text: "text1",
+                narrativeGenre: new NarrativeGenre(), tellingType: new TellingType()).save(flush: true,
+                failOnError: true)
+        def telling2 = new Telling(title: "t1", author: author, description: "d2", text: "text1",
+                narrativeGenre: new NarrativeGenre(), tellingType: new TellingType()).save(flush: true,
+                failOnError: true)
 
         when:"El telling que gusta es del mismo author que el usuario"
         service.like(telling)
