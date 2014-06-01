@@ -52,7 +52,7 @@ class FollowerController extends BaseController {
         }
         def erased =  followerService.leaveAuthor(author)
 
-        def result = [success:erased?true:false]
+        def result = [success: erased]
         render result as JSON
     }
 }
