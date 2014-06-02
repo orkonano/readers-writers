@@ -1,5 +1,6 @@
-package ar.com.orkodev.readerswriters.controller
+package ar.com.orkodev.readerswriters.controller.unit
 
+import ar.com.orkodev.readerswriters.controller.FollowerController
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException

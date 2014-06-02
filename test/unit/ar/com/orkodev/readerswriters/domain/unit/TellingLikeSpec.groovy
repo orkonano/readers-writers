@@ -1,5 +1,8 @@
-package ar.com.orkodev.readerswriters.domain
+package ar.com.orkodev.readerswriters.domain.unit
 
+import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.TellingLike
+import ar.com.orkodev.readerswriters.domain.User
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin

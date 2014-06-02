@@ -1,10 +1,11 @@
-package ar.com.orkodev.readerswriters.service
+package ar.com.orkodev.readerswriters.service.unit
 
 import ar.com.orkodev.readerswriters.cache.CacheHelperImpl
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.service.FollowerService
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor

@@ -1,5 +1,9 @@
-package ar.com.orkodev.readerswriters.domain
+package ar.com.orkodev.readerswriters.domain.unit
 
+import ar.com.orkodev.readerswriters.domain.NarrativeGenre
+import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.TellingType
+import ar.com.orkodev.readerswriters.domain.User
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

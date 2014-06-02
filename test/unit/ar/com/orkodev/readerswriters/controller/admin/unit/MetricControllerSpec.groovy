@@ -1,5 +1,6 @@
-package ar.com.orkodev.readerswriters.controller.admin
+package ar.com.orkodev.readerswriters.controller.admin.unit
 
+import ar.com.orkodev.readerswriters.controller.admin.MetricController
 import ar.com.orkodev.readerswriters.metrics.AppMetric
 import ar.com.orkodev.readerswriters.metrics.ControllerMetric
 import grails.test.mixin.TestFor

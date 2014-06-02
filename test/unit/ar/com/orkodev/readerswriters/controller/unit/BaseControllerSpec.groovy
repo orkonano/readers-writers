@@ -1,5 +1,6 @@
-package ar.com.orkodev.readerswriters.controller
+package ar.com.orkodev.readerswriters.controller.unit
 
+import ar.com.orkodev.readerswriters.controller.BaseController
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

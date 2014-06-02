@@ -1,13 +1,14 @@
-package ar.com.orkodev.readerswriters.service
+package ar.com.orkodev.readerswriters.service.unit
 
+import ar.com.orkodev.readerswriters.service.TellingTypeService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(NarrativeGenreService)
-class NarrativeGenreServiceSpec extends Specification {
+@TestFor(TellingTypeService)
+class TellingTypeServiceSpec extends Specification {
 
     def setup() {
     }
