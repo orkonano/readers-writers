@@ -19,8 +19,8 @@ class StringHelper {
         def cut = -1
         def index = 0
         for (word in listWord){
-            countChar += word.length()
-            if (countChar > MAX_CHARACTER_TO_CUT){
+            countChar += word.size()
+            if (countChar > numberOfWord){
                 cut = index
                 break
             }else{
@@ -33,7 +33,7 @@ class StringHelper {
     static  def convertStringToFriendlyUrl(String cadena){
         cadena = quitarAcentos(cadena?.toLowerCase())
         cadena = cortarStringPorEspacio(cadena)
-        cadena.replaceAll("\\s{2,}", " ").replaceAll("\\s", "-")
+        cadena.replaceAll(/\./," ").replaceAll(/\n/,'').replaceAll(/\s{2,}/, " ").replaceAll(/\s/, "-")
     }
 
 }

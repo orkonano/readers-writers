@@ -1,8 +1,6 @@
 package ar.com.orkodev.readerswriters.domain.unit
 
-import ar.com.orkodev.readerswriters.domain.Telling
-import ar.com.orkodev.readerswriters.domain.TellingLike
-import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.domain.*
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
@@ -32,8 +30,9 @@ class TellingLikeSpec extends Specification {
         def user2 = new User(username: "dd2@gg.com",password: "dd")
         user2.springSecurityService = springSecurityService
         user2.save(flush: true,failOnError: true)
-        def telling = new Telling(title: "t1",author: user2,description: "d2",text: "text1",narrativeGenre: new NarrativeGenre(),tellingType: new TellingType()).save(flush: true,failOnError: true)
-
+        def telling = new Telling(title: "t1", author: user2, description: "d2", text: "text1",
+                narrativeGenre: new NarrativeGenre(), tellingType: new TellingType())
+                .save(flush: true,failOnError: true)
         when:"Cuando no se cargan ningún dato"
         def tellingLike = new TellingLike()
         then: "La validacion falla"
