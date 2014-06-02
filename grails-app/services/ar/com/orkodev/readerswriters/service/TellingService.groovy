@@ -132,6 +132,7 @@ class TellingService extends BaseService<Telling>{
      * es conveniente ya que es trasparente al desarrollador.
      * El peligro es que se pueda borrar ya que alquien puede interpretar cmo que no se usa
      */
+    @Transactional(readOnly = true)
     def findLastTellingPublish(Integer max, Integer hour) {
         def query = Telling.where {
             state == Telling.PUBLISHED
