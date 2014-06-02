@@ -9,7 +9,10 @@ class UserController extends BaseController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def userService, springSecurityService, followerService, tellingService
+    def userService
+    def springSecurityService
+    def followerService
+    def tellingService
 
     /*def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -57,7 +60,7 @@ class UserController extends BaseController {
         def userLogin = springSecurityService.getCurrentUser()
         if (userLogin.id != userInstance.id){
             userInstance.errors
-            render model:["userInstance":userInstance,"otherError":"No se está actualizando al mismo usuario loggeado"], view:'edit'
+            render model:["userInstance":userInstance, "otherError": "No se está actualizando al mismo usuario loggeado"], view:'edit'
             return
         }
 
