@@ -1,23 +1,21 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
-import org.springframework.beans.factory.annotation.Autowired
+import grails.transaction.Transactional
 
 class FollowerService {
 
-    static transactional = true
 
     def springSecurityService
     def grailsApplication
     def userService
-    @Autowired
-    private CacheHelper cacheHelper
+    def cacheHelper
 
+    @Transactional
     def followAuthor(User author) {
         User currentUser = springSecurityService.getCurrentUser()
         if (author.id == currentUser.id)
@@ -37,6 +35,7 @@ class FollowerService {
                 [follower.author, follower.following] as Object[])
     }
 
+    @Transactional
     def leaveAuthor(User authorLeave){
         User currentUser = springSecurityService.getCurrentUser()
         def query = Follower.where {
@@ -51,6 +50,7 @@ class FollowerService {
         return erased
     }
 
+    @Transactional(readOnly = true)
     def isFollowAuthor(User authorToFind) {
         User currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.followerService.isFollowerAuthor(authorToFind, currentUser)
@@ -65,6 +65,7 @@ class FollowerService {
         query.find() != null
     }
 
+    @Transactional(readOnly = true)
     List<User> findAuthorFollowed(Integer count = null, Integer offset = 0) {
         User currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.followerService.findAuthorFollowedByUser(currentUser, count, offset)
@@ -79,7 +80,7 @@ class FollowerService {
         if (count != null){
             params.max = count
         }
-        query = query.property('author.id')
+        query = query.property('id')
         userService.findByIds(query.list(params), new User())
     }
 }

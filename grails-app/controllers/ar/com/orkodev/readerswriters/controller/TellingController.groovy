@@ -21,8 +21,8 @@ class TellingController extends BaseController {
     def index(Integer max) {
         def userLogin = springSecurityService.getCurrentUser()
         params.max = Math.min(max ?: 10, 100)
-        def (tellingList, countResult) = tellingService.listAllAuthorUserTelling(userLogin, params.max );
-        respond tellingList, model: [tellingInstanceCount: countResult]
+        def (tellingList, countResult) = tellingService.listAllAuthorUserTelling(userLogin, params.max);
+        render view: 'indesx',  model: [tellingInstanceCount: countResult, tellingList: tellingList]
     }
 
     @Secured("ROLE_US")
@@ -73,8 +73,8 @@ class TellingController extends BaseController {
         }
 
         def isLike = islogged ? tellingLikeService.isLike(tellingInstance) : false
-        render model:["tellingInstance": tellingInstance, isLike:isLike,
-                      seoDescription: StringHelper.cortarStringPorEspacio(tellingInstance.description,300)],
+        render model:["tellingInstance": tellingInstance, isLike: isLike,
+                      seoDescription: StringHelper.cortarStringPorEspacio(tellingInstance.description, 300)],
                 view: !islogged ? "read_logout" : "read_logged"
     }
 
@@ -85,7 +85,7 @@ class TellingController extends BaseController {
 
     @Secured("ROLE_US")
     def create() {
-        render  model:generarModelViewSaveAndUpdate(new Telling()), view:'create'
+        render  model: generarModelViewSaveAndUpdate(new Telling()), view:'create'
     }
 
     @Secured("ROLE_US")

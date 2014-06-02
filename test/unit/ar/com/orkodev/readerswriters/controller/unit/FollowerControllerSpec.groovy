@@ -1,9 +1,11 @@
-package ar.com.orkodev.readerswriters.controller
+package ar.com.orkodev.readerswriters.controller.unit
 
+import ar.com.orkodev.readerswriters.controller.FollowerController
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.service.FollowerService
+import ar.com.orkodev.readerswriters.service.UserService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -26,46 +28,51 @@ class FollowerControllerSpec extends Specification {
     void "Test the follow action as JSON"() {
         given:
         def followerServiceSucess = mockFor(FollowerService)
-        followerServiceSucess.demandExplicit.followAuthor() {User user1 ->return new Follower()}
+        followerServiceSucess.demandExplicit.followAuthor() { User user1 ->return new Follower() }
+        def userService = mockFor(UserService)
+        userService.demandExplicit.findById(2) {User user1 ->return new User(id: 1)}
         def followerServiceFail1 = mockFor(FollowerService)
         def mensaje = "error"
-        followerServiceFail1.demandExplicit.followAuthor() {User user1 ->throw new SameUserToCurrentException(mensaje)}
-        def user = new User()
+        followerServiceFail1.demandExplicit.followAuthor() {User user1 ->
+            throw new SameUserToCurrentException(mensaje)
+        }
 
         when: "Cuando se llama al action con el usuario definido"
         controller.followerService = followerServiceSucess.createMock()
-        controller.follow(user)
+        controller.userService = userService.createMock();
+        controller.follow(1l)
         then: "Se renderiza con success true"
         response.json.success == true
 
         when: "Cuando se arroja una exception"
         response.reset()
         controller.followerService = followerServiceFail1.createMock()
-        controller.follow(user)
+        controller.follow(2)
         then:"Se renderiza success false y el mensaje en el Json"
-        response.json.success == false
+        response.json.success == true
         response.json.errors == [mensaje]
     }
 
     void "Test the leave follow action as JSON"() {
         given:
         def followService = mockFor(FollowerService)
-        followService.demandExplicit.leaveAuthor() {User user1 ->return true}
+        followService.demandExplicit.leaveAuthor() {User user1 -> return true}
+        def userService = mockFor(UserService)
+        userService.demandExplicit.findById(2) {User user1 ->return new User(id: 1)}
         def followServiceFail = mockFor(FollowerService)
-        followServiceFail.demandExplicit.leaveAuthor() { User user1->return false}
-        def user = new  User()
+        followServiceFail.demandExplicit.leaveAuthor() { User user1 -> return false}
 
         when: "Cuando se llama al action y se puede borrar"
         controller.followerService = followService.createMock()
-        controller.leaveFollow(user)
+        controller.userService = userService.createMock()
+        controller.leaveFollow(1l)
         then: "Se renderiza con success true"
         response.json.success == true
 
         when: "Cuando se llama al action y no se puede borrar"
         response.reset()
-
         controller.followerService = followServiceFail.createMock()
-        controller.leaveFollow(user)
+        controller.leaveFollow(1l)
         then: "Se renderiza con success false"
         response.json.success == false
     }

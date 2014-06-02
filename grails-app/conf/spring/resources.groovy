@@ -1,3 +1,4 @@
+import ar.com.orkodev.readerswriters.cache.CacheHelperImpl
 import ar.com.orkodev.readerswriters.metrics.AppMetric
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 
@@ -11,6 +12,8 @@ beans = {
     authenticationFacebookSuccessHandler(SimpleUrlAuthenticationSuccessHandler) {
         defaultTargetUrl = '/panel/dashboard'
     }
+
+    cacheHelper(CacheHelperImpl)
 
     appMetric(AppMetric){
         grailsApplication = ref('grailsApplication')

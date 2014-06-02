@@ -1,5 +1,7 @@
-package ar.com.orkodev.readerswriters.domain
+package ar.com.orkodev.readerswriters.domain.unit
 
+import ar.com.orkodev.readerswriters.domain.FacebookUser
+import ar.com.orkodev.readerswriters.domain.User
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
@@ -10,7 +12,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
 @TestMixin(GrailsUnitTestMixin)
-@Mock([User,FacebookUser])
+@Mock([User, FacebookUser])
 class UserSpec extends Specification {
 
     def setup() {

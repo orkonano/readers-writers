@@ -1,10 +1,12 @@
-package ar.com.orkodev.readerswriters.controller
+package ar.com.orkodev.readerswriters.controller.unit
 
+import ar.com.orkodev.readerswriters.controller.TellingController
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingType
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.service.NarrativeGenreService
 import ar.com.orkodev.readerswriters.service.TellingLikeService
 import ar.com.orkodev.readerswriters.service.TellingService
 import grails.plugin.springsecurity.SpringSecurityService
@@ -17,8 +19,18 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
 @TestFor(TellingController)
-@Mock([Telling,NarrativeGenre,TellingType,User])
+@Mock([Telling, NarrativeGenre, TellingType, User])
 class TellingControllerSpec extends Specification {
+
+    def setup(){
+        def narrativeGenreService = mockFor(NarrativeGenreService)
+        narrativeGenreService.demandExplicit.getAll(3){ -> [new NarrativeGenre()]}
+        def tellingTypeService = mockFor(NarrativeGenreService)
+        tellingTypeService.demandExplicit.getAll(3){ -> [new TellingType()]}
+        controller.narrativeGenreService = narrativeGenreService.createMock()
+        controller.tellingTypeService = tellingTypeService.createMock()
+
+    }
 
     def populateValidParams(params) {
         assert params != null
@@ -33,7 +45,7 @@ class TellingControllerSpec extends Specification {
 
     def getCurrentUser(){
         mockForConstraintsTests(User)
-        def user = new User(username: "jose@gg.com",password: "dd")
+        def user = new User(username: "jose@gg.com", password: "dd")
         def springSecurityService = Mock(SpringSecurityService)
         user.springSecurityService = springSecurityService
         user.save(flush: true)
@@ -42,24 +54,26 @@ class TellingControllerSpec extends Specification {
     void "Test the index action returns the correct model"() {
         given:
         def springSecurityService = mockFor(SpringSecurityService)
+        def tellingService = mockFor(TellingService)
+        tellingService.demandExplicit.listAllAuthorUserTelling() {User user1, int i -> return ([new Telling(), 1])}
         def user = getCurrentUser()
         springSecurityService.demandExplicit.getCurrentUser(1..2) { ->return user}
         controller.springSecurityService = springSecurityService.createMock()
+        controller.tellingService = tellingService.createMock()
         when: "The index action is executed"
         controller.index()
         then: "The model is correct"
-        !model.tellingInstanceList
-        model.tellingInstanceCount == 0
+        model.tellingList
+        model.tellingInstanceCount == 1
     }
 
     void "Test the create action returns the correct model"() {
         when: "The create action is executed"
         controller.create()
-
         then: "The model is correctly created"
-        model.tellingInstance != null
-        model.narrativesGenre != null
-        model.tellingsType != null
+        model.tellingInstance
+        model.narrativesGenre
+        model.tellingsType
     }
 
     void "Test the save action correctly persists an instance"() {
@@ -102,15 +116,11 @@ class TellingControllerSpec extends Specification {
         given:
         def springSecurityService = mockFor(SpringSecurityService)
         def user = getCurrentUser()
-        springSecurityService.demandExplicit.getCurrentUser(2) { ->user }
+        springSecurityService.demandExplicit.getCurrentUser(2) { -> user }
         controller.springSecurityService = springSecurityService.createMock()
-
-//        when: "The show action is executed with a null domain"
-//        controller.show(null)
-//
-//        then: "A 404 error is returned"
-//        response.status == (NOT_FOUND.value() || 302)
-
+        def tellingService = mockFor(TellingService)
+        tellingService.demandExplicit.findById(){Telling t -> new Telling(id: 1, author: user)}
+        controller.tellingService = tellingService.createMock()
         when: "A domain instance is passed to the show action"
         response.reset()
         populateValidParams(params)
@@ -119,8 +129,7 @@ class TellingControllerSpec extends Specification {
 
         then: "A model is populated containing the domain instance"
         response.status == 200
-        model!=null
-
+        model
     }
 
 
@@ -130,11 +139,9 @@ class TellingControllerSpec extends Specification {
         def user = getCurrentUser()
         springSecurityService.demandExplicit.getCurrentUser(1) { ->return user }
         controller.springSecurityService = springSecurityService.createMock()
-        //        when: "The show action is executed with a null domain"
-//        controller.edit(null)
-//
-//        then: "A 404 error is returned"
-//        response.status == (NOT_FOUND.value() || 302)
+        def tellingService = mockFor(TellingService)
+        tellingService.demandExplicit.findById(){Telling t -> new Telling(id: 1, author: user)}
+        controller.tellingService = tellingService.createMock()
 
         when: "A domain instance is passed to the edit action"
         populateValidParams(params)
@@ -194,64 +201,27 @@ class TellingControllerSpec extends Specification {
         def user = getCurrentUser()
         springSecurityService.demandExplicit.getCurrentUser(1) { ->return user}
         controller.springSecurityService = springSecurityService.createMock()
-        //        when: "The show action is executed with a null domain"
-//        controller.publish(null)
-//
-//        then: "A 404 error is returned"
-//        response.status == (NOT_FOUND.value() || 302)
-
-        when: "A domain is publish"
-        response.reset()
-        populateValidParams(params)
-        def telling = new Telling(params)
-        def tellingService  = mockFor(TellingService)
+        def tellingService = mockFor(TellingService)
+        tellingService.demandExplicit.findById(){Telling t -> new Telling(id: 1, author: user)}
         tellingService.demandExplicit.publish(){Telling telling1 ->
             telling1.state = Telling.PUBLISHED
         }
         controller.tellingService = tellingService.createMock()
+        when: "A domain is publish"
+        response.reset()
+        populateValidParams(params)
+        def telling = new Telling(params)
         controller.publish(telling.id)
         then: "The instance is published"
         response.redirectedUrl == '/telling/index'
         flash.success != null
     }
 
-//    void "Test that the delete action deletes an instance if it exists"() {
-//        given:
-//        def springSecurityService = mockFor(SpringSecurityService)
-//        def user = getCurrentUser()
-//        springSecurityService.demandExplicit.getCurrentUser(1) { ->return user}
-//        controller.springSecurityService = springSecurityService.createMock()
-//        when: "The delete action is called for a null instance"
-//        request.contentType = FORM_CONTENT_TYPE
-//        controller.delete(null)
-//
-//        then: "A 404 is returned"
-//        response.status = 404
-//
-//        when: "A domain instance is created"
-//        response.reset()
-//        populateValidParams(params)
-//        def telling = new Telling(params)
-//        def tellingService  = mockFor(TellingService)
-//        tellingService.demandExplicit.delete(){Telling telling1 ->
-//            telling.state = Telling.ERASED
-//            return telling
-//        }
-//        controller.tellingService = tellingService.createMock()
-//        controller.delete(telling)
-//
-//        then: "The instance is deleted"
-//        response.redirectedUrl == '/telling/index'
-//    }
-
     void "Test that the list action"() {
         given:
         mockForConstraintsTests NarrativeGenre
         mockForConstraintsTests TellingType
-        def ng1 = new NarrativeGenre(name: "ng 1").save(flush: true, failOnError: true)
-        def ng2 = new NarrativeGenre(name: "ng 2").save(flush: true, failOnError: true)
-        def tt1 = new TellingType(name: "tt 1").save(flush: true, failOnError: true)
-        def tt2 = new TellingType(name: "tt 2").save(flush: true, failOnError: true)
+
         def tellingService  = mockFor(TellingService)
         def telling = new Telling(id: 1, title: "3")
         tellingService.demandExplicit.listPublished(){Telling telling1,Integer max, Integer offset ->
@@ -264,8 +234,8 @@ class TellingControllerSpec extends Specification {
         view == "/telling/list"
         model.tellingInstanceList == []
         model.tellingInstanceCount == 0
-        model.narrativesGenre == [ng1, ng2]
-        model.tellingsType == [tt1, tt2]
+        model.narrativesGenre
+        model.tellingsType
 
         when:"Es la primera vez que se llama y los paramestros tiene init cargado"
         response.reset()
@@ -275,8 +245,8 @@ class TellingControllerSpec extends Specification {
         view == "/telling/list"
         model.tellingInstanceList == []
         model.tellingInstanceCount == 0
-        model.narrativesGenre == [ng1, ng2]
-        model.tellingsType == [tt1, tt2]
+        model.narrativesGenre
+        model.tellingsType
 
         when: "se recibe un telling con datos"
         response.reset()
@@ -286,24 +256,44 @@ class TellingControllerSpec extends Specification {
         view == "/telling/list"
         model.tellingInstanceList == [telling]
         model.tellingInstanceCount == 1
-        model.narrativesGenre == [ng1, ng2]
-        model.tellingsType == [tt1, tt2]
+        model.narrativesGenre
+        model.tellingsType
     }
 
     void "Test that the read action returns the correct model"() {
         given:
         def tellingLikeService = mockFor(TellingLikeService)
-        tellingLikeService.demandExplicit.isLike(){Telling telling -> return true}
+        tellingLikeService.demandExplicit.isLike(2){Telling telling -> return true}
         controller.tellingLikeService = tellingLikeService.createMock()
-        when: "A domain instance is passed to the read action"
+        def springSecurityService = mockFor(SpringSecurityService)
+        springSecurityService.demandExplicit.isLoggedIn() { -> return true }
+        controller.springSecurityService = springSecurityService.createMock()
+        def tellingService = mockFor(TellingService)
+        tellingService.demandExplicit.findById(2){Telling t -> new Telling(id: 1, description: "Hola que tal")}
+        controller.tellingService = tellingService.createMock()
+        when: "A domain instance is passed to the read action y está logeado"
         params['id'] = 1
         def telling = new Telling(params)
-        controller.read(telling.id)
+        controller.read(telling.id, "Hola que tal")
         then: "A model is populated containing the domain instance"
         response.status == 200
-        model!=null
-        model.isLike == true
-        view == '/telling/read'
+        model
+        model.isLike
+        view == '/telling/read_logged'
+
+        when: "se recibe un telling con datos"
+        response.reset()
+        def springSecurityService2 = mockFor(SpringSecurityService)
+        springSecurityService2.demandExplicit.isLoggedIn() { -> return false }
+        controller.springSecurityService = springSecurityService2.createMock()
+        params['id'] = 1
+        telling = new Telling(params)
+        controller.read(telling.id, "Hola que tal")
+        then: "A model is populated containing the domain instance"
+        response.status == 200
+        model
+        !model.isLike
+        view == '/telling/read_logout'
     }
 
 

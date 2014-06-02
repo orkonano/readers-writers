@@ -1,5 +1,6 @@
-package ar.com.orkodev.readerswriters.domain
+package ar.com.orkodev.readerswriters.domain.unit
 
+import ar.com.orkodev.readerswriters.domain.TellingType
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

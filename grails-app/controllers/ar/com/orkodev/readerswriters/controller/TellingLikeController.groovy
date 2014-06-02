@@ -31,7 +31,7 @@ class TellingLikeController extends BaseController{
             return
         }
         def erased = tellingLikeService.stopLike(tellingToLike)
-        def result = [success:erased]
+        def result = [success: erased]
         render result as JSON
     }
 

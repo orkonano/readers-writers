@@ -1,6 +1,5 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.NotErasedException
@@ -9,17 +8,16 @@ import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.gorm.DetachedCriteria
 import grails.plugin.cache.Cacheable
-import org.springframework.beans.factory.annotation.Autowired
+import grails.transaction.Transactional
 
 class TellingService extends BaseService<Telling>{
 
-    static transactional = true
 
     def springSecurityService
     def grailsApplication
-    @Autowired
-    private CacheHelper cacheHelper
+    def cacheHelper
 
+    @Transactional
     def save(Telling tellingToSave) {
         tellingToSave.author = springSecurityService.getCurrentUser()
         tellingToSave.validate()
@@ -38,6 +36,7 @@ class TellingService extends BaseService<Telling>{
                                     Integer.class] as Class[], [telling.author, 5, 0] as Object[])
     }
 
+    @Transactional
     def delete(Telling tellingToErase) {
         if (!tellingToErase.isEliminable()){
             throw new NotErasedException("Debe estar en estado borrador para eliminarse")
@@ -45,9 +44,11 @@ class TellingService extends BaseService<Telling>{
             tellingToErase.state = Telling.ERASED
             tellingToErase.save()
             cleanCacheInSave(tellingToErase)
+            return tellingToErase
         }
     }
 
+    @Transactional
     def publish(Telling tellingToPublish){
         if (!tellingToPublish.isPublicable()){
             throw new NotPublishedException("Debe estar en estado borrador para publicarse")
@@ -55,9 +56,11 @@ class TellingService extends BaseService<Telling>{
             tellingToPublish.state = Telling.PUBLISHED
             tellingToPublish.save()
             cleanCacheInSave(tellingToPublish)
+            return tellingToPublish
         }
     }
 
+    @Transactional(readOnly = true)
     def listPublished(Telling tellingSearch, Integer max = 15, Integer offset = 0){
         def currentUser = springSecurityService.getCurrentUser();
         def query = Telling.where {
@@ -83,6 +86,7 @@ class TellingService extends BaseService<Telling>{
         [tellingResult, count]
     }
 
+    @Transactional(readOnly = true)
     def listTellingPublishByAuthor(Telling tellingSearch, Integer max = 15, Integer offset = 0){
         def query = Telling.where {
             state == Telling.PUBLISHED && author.id == tellingSearch.author.id
@@ -92,6 +96,7 @@ class TellingService extends BaseService<Telling>{
         [tellingResult, count]
     }
 
+    @Transactional(readOnly = true)
     List<Telling> findCurrentUserTelling(Integer count = null, Integer offset = 0) {
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingService.findTellingByAuthor(currentUser, count, offset)
@@ -103,9 +108,6 @@ class TellingService extends BaseService<Telling>{
             author.id == authorParams.id && state != Telling.ERASED
         }
         def params = [sort: 'dateCreated', order: "desc", offset: offset]
-//        if (count != null){
-//            params.max = count
-//        }
         loadTelling(query, params)
     }
 
@@ -114,6 +116,7 @@ class TellingService extends BaseService<Telling>{
         findByIds(query.list(params), new Telling());
     }
 
+    @Transactional(readOnly = true)
     def listAllAuthorUserTelling(User userLogin, Integer limit){
         def query = Telling.where {
             author == userLogin && state != Telling.ERASED
@@ -129,6 +132,7 @@ class TellingService extends BaseService<Telling>{
      * es conveniente ya que es trasparente al desarrollador.
      * El peligro es que se pueda borrar ya que alquien puede interpretar cmo que no se usa
      */
+    @Transactional(readOnly = true)
     def findLastTellingPublish(Integer max, Integer hour) {
         def query = Telling.where {
             state == Telling.PUBLISHED

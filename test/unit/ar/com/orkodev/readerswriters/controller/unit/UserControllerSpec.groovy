@@ -1,5 +1,6 @@
-package ar.com.orkodev.readerswriters.controller
+package ar.com.orkodev.readerswriters.controller.unit
 
+import ar.com.orkodev.readerswriters.controller.UserController
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.ValidationException
@@ -92,7 +93,9 @@ class UserControllerSpec extends Specification {
         def userServiceError = mockFor(UserService)
         def userServiceSuccess = mockFor(UserService)
         def springSecurityService = mockFor(SpringSecurityService)
-        springSecurityService.demand.getCurrentUser(){return new User(id:1,username: "hh@gmail.com",password: "hola")}
+        springSecurityService.demand.getCurrentUser(){ ->
+            return new User(id:1,username: "hh@gmail.com",password: "hola")
+        }
 
         when: "The update action is executed with an invalid instance"
         def user = new User()
@@ -111,9 +114,11 @@ class UserControllerSpec extends Specification {
         params['id'] = 1
         populateValidParams(params)
         user = new User(params)
-        userServiceSuccess.demand.editUser(user) { user }
+        userServiceSuccess.demand.editUser() {User user1 -> user }
         controller.userService = userServiceSuccess.createMock()
-        springSecurityService.demand.getCurrentUser(){return new User(id:1,username: "hh@gmail.com",password: "hola")}
+        springSecurityService.demand.getCurrentUser(){ ->
+            return new User(id:1,username: "hh@gmail.com",password: "hola")
+        }
         controller.springSecurityService = springSecurityService.createMock()
         controller.update(user)
 
@@ -129,20 +134,25 @@ class UserControllerSpec extends Specification {
         followServiceFail.demandExplicit.isFollowAuthor(){User user -> return false}
         def telling = new Telling(id: 1, title: "3")
         def tellingService  = mockFor(TellingService)
-        tellingService.demandExplicit.listPublished(2){Telling telling1,Integer max, Integer offset ->
+        tellingService.demandExplicit.listTellingPublishByAuthor(2){Telling telling1,Integer max, Integer offset ->
             return [[telling], 1]
         }
         def user = new User(params)
         controller.tellingService = tellingService.createMock()
-
+        def springSecurityService = mockFor(SpringSecurityService)
+        springSecurityService.demandExplicit.isLoggedIn(2) { -> return true }
+        controller.springSecurityService = springSecurityService.createMock()
+        def userService = mockFor(UserService)
+        userService.demandExplicit.findById(2){User u -> new User(id: 1)}
+        controller.userService = userService.createMock()
         when: "A domain instance is passed to the show action and is followed"
         response.reset()
         populateShowParams(params)
         controller.followerService = followService.createMock()
-        controller.show(user)
+        controller.show(1l)
         then: "A model is populated containing the domain instance"
         response.status == 200
-        model!=null
+        model
         model.isFollowed
         model.tellingInstanceList == [telling]
         model.tellingInstanceCount == 1
@@ -151,10 +161,10 @@ class UserControllerSpec extends Specification {
         response.reset()
         populateShowParams(params)
         controller.followerService = followServiceFail.createMock()
-        controller.show(user)
+        controller.show(1l)
         then: "A model is populated containing the domain instance"
         response.status == 200
-        model!=null
+        model
         !model.isFollowed
         model.tellingInstanceList == [telling]
         model.tellingInstanceCount == 1

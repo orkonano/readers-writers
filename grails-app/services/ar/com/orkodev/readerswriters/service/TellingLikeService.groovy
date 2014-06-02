@@ -1,24 +1,22 @@
 package ar.com.orkodev.readerswriters.service
 
-import ar.com.orkodev.readerswriters.cache.CacheHelper
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.plugin.cache.Cacheable
-import org.springframework.beans.factory.annotation.Autowired
+import grails.transaction.Transactional
 
 class TellingLikeService{
 
-    static transactional = true
 
     def springSecurityService
     def grailsApplication
     def tellingService
-    @Autowired
-    private CacheHelper cacheHelper
+    def cacheHelper
 
+    @Transactional
     def like(Telling tellingToLike) {
         def currentUser = springSecurityService.getCurrentUser()
         if (currentUser.id == tellingToLike.author.id) {
@@ -40,6 +38,7 @@ class TellingLikeService{
                 [tellingLike.telling, tellingLike.reader] as Object[])
     }
 
+    @Transactional
     def stopLike(Telling tellingToStopLike) {
         def currentUser = springSecurityService.getCurrentUser()
         def query = TellingLike.where {
@@ -55,6 +54,7 @@ class TellingLikeService{
         deleted
     }
 
+    @Transactional(readOnly = true)
     def isLike(Telling telling){
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingLikeService.isLike(telling, currentUser)
@@ -69,6 +69,7 @@ class TellingLikeService{
         query.find()!=null
     }
 
+    @Transactional(readOnly = true)
     def findLikeTelling(Integer countLast = null, Integer offset = 0){
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingLikeService.findLikeTellingByUser(currentUser, countLast, offset)
