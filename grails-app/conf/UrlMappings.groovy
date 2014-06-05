@@ -7,6 +7,10 @@ class UrlMappings {
             }
         }
 
+        "/authors"(resources:'author') {
+            "/followers"(resources:"follower")
+        }
+
         "/telling/read/$id/$title"{
             controller = 'telling'
             action = 'read'

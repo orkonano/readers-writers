@@ -5,14 +5,18 @@
 function executeAjaxAction($element,event){
     event.preventDefault();
     if (!$element.hasClass("ajaxRunning")){
-        var url = $element.data("url");
-        var objectId = $element.data("object-id");
-        url += "/" + objectId;
+        var url = $element.attr('href');
         var idTemplate = $element.data("template-id-next-action");
+        var method = $element.data("method");
+        var data = {};
+        if (typeof method != 'undefined'){
+            data = {"_method": method}
+        }
         $.ajax({
             type: "POST",
             url: url,
             dateType: 'JSON',
+            data: data,
             beforeSend: function(){
                 $element.addClass("ajaxRunning");
             },

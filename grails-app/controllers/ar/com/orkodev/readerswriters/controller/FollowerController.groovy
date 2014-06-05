@@ -13,15 +13,14 @@ class FollowerController extends BaseController {
     def springSecurityService
     def userService
 
-    def follow(Long id) {
-        User author = bindingById(id)
+    def save(Long authorId) {
+        User author = bindingById(authorId)
         if (author == null){
             notFound('userInstance.label','User')
             return
         }
         followerService.followAuthor(author)
-
-        def result = [success:true]
+        def result = [success: true]
         render result as JSON
     }
 
@@ -44,8 +43,8 @@ class FollowerController extends BaseController {
         id != null ? userService.findById(new User(id: id)) : null
     }
 
-    def leaveFollow(Long id) {
-        User author = bindingById(id)
+    def delete(Long authorId, Long id) {
+        User author = bindingById(authorId)
         if (author == null){
             notFound('userInstance.label','User')
             return

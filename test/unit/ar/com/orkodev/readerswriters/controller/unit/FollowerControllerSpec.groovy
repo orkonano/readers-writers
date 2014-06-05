@@ -40,14 +40,14 @@ class FollowerControllerSpec extends Specification {
         when: "Cuando se llama al action con el usuario definido"
         controller.followerService = followerServiceSucess.createMock()
         controller.userService = userService.createMock();
-        controller.follow(1l)
+        controller.save(1l)
         then: "Se renderiza con success true"
         response.json.success == true
 
         when: "Cuando se arroja una exception"
         response.reset()
         controller.followerService = followerServiceFail1.createMock()
-        controller.follow(2)
+        controller.save(2)
         then:"Se renderiza success false y el mensaje en el Json"
         response.json.success == true
         response.json.errors == [mensaje]
@@ -65,14 +65,14 @@ class FollowerControllerSpec extends Specification {
         when: "Cuando se llama al action y se puede borrar"
         controller.followerService = followService.createMock()
         controller.userService = userService.createMock()
-        controller.leaveFollow(1l)
+        controller.delete(1l)
         then: "Se renderiza con success true"
         response.json.success == true
 
         when: "Cuando se llama al action y no se puede borrar"
         response.reset()
         controller.followerService = followServiceFail.createMock()
-        controller.leaveFollow(1l)
+        controller.delete(1l)
         then: "Se renderiza con success false"
         response.json.success == false
     }
