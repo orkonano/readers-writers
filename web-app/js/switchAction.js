@@ -24,7 +24,8 @@ function executeAjaxAction($element,event){
                 if (data.success){
                     if (typeof data.errors == 'undefined'){
                         var template = $('#'+idTemplate).html();
-                        var html = Mustache.render(template, null);
+                        var view = {followerId: data.view.followerId};
+                        var html = Mustache.render(template, view);
                         $("#id-buttons-region").html(html);
                     }else{
                         alert(data.errors);

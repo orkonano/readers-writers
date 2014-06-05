@@ -41,7 +41,10 @@
 
 </div>
 <script id="template-link-leave-follow" type="text/html">
-    <g:link class="btn btn-warning btn-xs" data-object-id="${userInstance.id}" data-url="${createLink(controller: 'follower',action: 'delete')}" elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow">Dejar de seguir</g:link>
+    <g:link class="btn btn-warning btn-xs" resource="author/follower" action="delete" authorId="${userInstance.id}" id="{{followerId}}"
+            elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow" data-method="DELETE">
+        Dejar de seguir
+    </g:link>
 </script>
 <script id="template-link-follow" type="text/html">
     <g:link class="btn btn-warning btn-xs" resource="author/follower" action="save" authorId="${userInstance.id}" elementId="id-follow-link"

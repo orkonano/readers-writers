@@ -1,5 +1,6 @@
 package ar.com.orkodev.readerswriters.controller
 
+import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
@@ -19,8 +20,8 @@ class FollowerController extends BaseController {
             notFound('userInstance.label','User')
             return
         }
-        followerService.followAuthor(author)
-        def result = [success: true]
+        Follower followerSuccess =  followerService.followAuthor(author)
+        def result = [success: true, view: [followerId: followerSuccess.id]]
         render result as JSON
     }
 
