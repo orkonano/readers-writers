@@ -28,9 +28,13 @@ class FollowerControllerSpec extends Specification {
     void "Test the follow action as JSON"() {
         given:
         def followerServiceSucess = mockFor(FollowerService)
-        followerServiceSucess.demandExplicit.followAuthor() { User user1 ->return new Follower() }
+        Follower followerAuthor = new Follower(id: 1)
+        followerServiceSucess.demandExplicit.followAuthor() { User user1 ->
+            return followerAuthor
+        }
         def userService = mockFor(UserService)
-        userService.demandExplicit.findById(2) {User user1 ->return new User(id: 1)}
+        User userMock = new User(id: 1)
+        userService.demandExplicit.findById(2) { User user1 -> return userMock }
         def followerServiceFail1 = mockFor(FollowerService)
         def mensaje = "error"
         followerServiceFail1.demandExplicit.followAuthor() {User user1 ->
@@ -43,6 +47,7 @@ class FollowerControllerSpec extends Specification {
         controller.save(1l)
         then: "Se renderiza con success true"
         response.json.success == true
+        response.json.view.urlUnfollow == "/authors/"+userMock.id+"/followers/"+followerAuthor.id
 
         when: "Cuando se arroja una exception"
         response.reset()
@@ -56,24 +61,43 @@ class FollowerControllerSpec extends Specification {
     void "Test the leave follow action as JSON"() {
         given:
         def followService = mockFor(FollowerService)
-        followService.demandExplicit.leaveAuthor() {User user1 -> return true}
+        followService.demandExplicit.findById() {Follower follower2 -> new Follower(id: 1)}
+        followService.demandExplicit.leaveAuthor() {User user1, Follower follower1 -> return true}
+        controller.followerService = followService.createMock()
         def userService = mockFor(UserService)
-        userService.demandExplicit.findById(2) {User user1 ->return new User(id: 1)}
+        userService.demandExplicit.findById(3) {User user1 ->return new User(id: 1)}
+        controller.userService = userService.createMock()
+
         def followServiceFail = mockFor(FollowerService)
-        followServiceFail.demandExplicit.leaveAuthor() { User user1 -> return false}
+        followServiceFail.demandExplicit.findById() {Follower follower2 -> new Follower(id: 1)}
+        followServiceFail.demandExplicit.leaveAuthor() { User user1, Follower follower1 -> return false}
+
+        def followServiceException = mockFor(FollowerService)
+        def mensaje = "error"
+        followServiceException.demandExplicit.findById() {Follower follower2 -> new Follower(id: 1)}
+        followServiceException.demandExplicit.leaveAuthor() { User user1, Follower follower2 ->
+            throw new SameUserToCurrentException(mensaje)
+        }
 
         when: "Cuando se llama al action y se puede borrar"
-        controller.followerService = followService.createMock()
-        controller.userService = userService.createMock()
-        controller.delete(1l)
+        controller.delete(1, 1)
         then: "Se renderiza con success true"
         response.json.success == true
+        response.json.view.urlFollow == "/authors/" + 1 + "/followers"
 
         when: "Cuando se llama al action y no se puede borrar"
         response.reset()
         controller.followerService = followServiceFail.createMock()
-        controller.delete(1l)
+        controller.delete(1, 1)
         then: "Se renderiza con success false"
         response.json.success == false
+
+        when: "Cuando se llama al action y no se puede borrar"
+        response.reset()
+        controller.followerService = followServiceException.createMock()
+        controller.delete(1, 1)
+        then: "Se renderiza con success false"
+        response.json.success == true
+        response.json.errors == [mensaje]
     }
 }

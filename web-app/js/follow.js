@@ -9,7 +9,7 @@ $(function () {
     });
 
     $(document).on('click',"#id-leavefollow-link",function(e) {
-        executeAjaxAction($(this),e);
+        executeAjaxAction($(this), e);
     });
 });
 

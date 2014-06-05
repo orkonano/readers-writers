@@ -9,6 +9,7 @@ class Follower {
     static constraints = {
         author nullable: false, unique: 'following'
         following nullable: false
+        id bindable: true
     }
 
     static mapping = {

@@ -16,7 +16,7 @@
         <h1><g:fieldValue bean="${userInstance}" field="nombreAMostrar"/>
             <span id="id-buttons-region">
                 <g:if test="${isFollowed}">
-                    <g:link class="btn btn-warning btn-xs" resource="author/follower" action="delete" authorId="${userInstance.id}" id="${userInstance.id}"
+                    <g:link class="btn btn-warning btn-xs" resource="author/follower" action="delete" authorId="${userInstance.id}" id="${follower.id}"
                             elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow" data-method="DELETE">
                         Dejar de seguir
                     </g:link>
@@ -41,16 +41,14 @@
 
 </div>
 <script id="template-link-leave-follow" type="text/html">
-    <g:link class="btn btn-warning btn-xs" resource="author/follower" action="delete" authorId="${userInstance.id}" id="{{followerId}}"
-            elementId="id-leavefollow-link" data-template-id-next-action="template-link-follow" data-method="DELETE">
-        Dejar de seguir
-    </g:link>
+    <a href="{{urlUnfollow}}" class="btn btn-warning btn-xs" id="id-leavefollow-link" data-template-id-next-action="template-link-follow" data-method="DELETE">
+         Dejar de seguir
+    </a>
 </script>
 <script id="template-link-follow" type="text/html">
-    <g:link class="btn btn-warning btn-xs" resource="author/follower" action="save" authorId="${userInstance.id}" elementId="id-follow-link"
-            data-template-id-next-action="template-link-leave-follow">
-        Seguir
-    </g:link>
+    <a href="{{urlFollow}}" class="btn btn-warning btn-xs" id="id-follow-link" data-template-id-next-action="template-link-leave-follow">
+         Seguir
+    </a>
 </script>
 </body>
 </html>

@@ -2,17 +2,18 @@ package ar.com.orkodev.readerswriters.service
 
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.plugin.cache.Cacheable
 import grails.transaction.Transactional
 
-class FollowerService {
+class FollowerService extends BaseService<Follower>{
 
 
     def springSecurityService
     def grailsApplication
-    def userService
     def cacheHelper
 
     @Transactional
@@ -31,38 +32,46 @@ class FollowerService {
     private void cleanCacheInSave(Follower follower){
         cacheHelper.deleteFromCache('readers-writers', this, "findAuthorFollowedByUser", [User.class, Integer.class,
                 Integer.class] as Class[], [follower.following, 5, 0] as Object[])
-        cacheHelper.deleteFromCache('readers-writers', this, "isFollowerAuthor", [User.class, User.class] as Class[],
+        cacheHelper.deleteFromCache('readers-writers', this, "findFollowerAuthor", [User.class, User.class] as Class[],
                 [follower.author, follower.following] as Object[])
     }
 
     @Transactional
-    def leaveAuthor(User authorLeave){
+    boolean leaveAuthor(User authorLeave, Follower currentFollowers){
         User currentUser = springSecurityService.getCurrentUser()
-        def query = Follower.where {
-            author.id == authorLeave.id && following.id == currentUser.id
+        if (currentUser.id != currentFollowers.following.id){
+            throw new NotErasedException("No se puede eliminar al follower, ya que no son el mismo usuario")
         }
-        def currentFollowers = query.find()
-        def erased = false
-        if (currentFollowers)
-            erased = (currentFollowers.delete() == null)
+        def erased = (currentFollowers.delete() == null)
         if (erased)
             cleanCacheInSave(currentFollowers)
         return erased
     }
 
     @Transactional(readOnly = true)
-    def isFollowAuthor(User authorToFind) {
+    boolean isFollowAuthor(User authorToFind) {
         User currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.followerService.isFollowerAuthor(authorToFind, currentUser)
     }
 
-    @Cacheable('readers-writers')
+    @Transactional(readOnly = true)
+    Follower findFollowerAuthor(User authorToFind) {
+        User currentUser = springSecurityService.getCurrentUser()
+        grailsApplication.mainContext.followerService.findFollowerAuthor(authorToFind, currentUser)
+    }
+
     Boolean isFollowerAuthor(User authorToFind, User followingUser){
+        grailsApplication.mainContext.followerService.findFollowerAuthor(authorToFind, followingUser) != null
+    }
+
+    @Cacheable('readers-writers')
+    Follower findFollowerAuthor(User authorToFind, User followingUser){
         def query = Follower.where {
             author.id == authorToFind.id && following.id == followingUser.id
         }
         query = query.property('id')
-        query.find() != null
+        Long followers =  query.find()
+        return followers ? findById(new Follower(id: followers)) : null
     }
 
     @Transactional(readOnly = true)

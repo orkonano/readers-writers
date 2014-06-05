@@ -29,7 +29,6 @@ class TellingControllerSpec extends Specification {
         tellingTypeService.demandExplicit.getAll(3){ -> [new TellingType()]}
         controller.narrativeGenreService = narrativeGenreService.createMock()
         controller.tellingTypeService = tellingTypeService.createMock()
-
     }
 
     def populateValidParams(params) {

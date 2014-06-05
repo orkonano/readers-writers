@@ -2,7 +2,7 @@
  * Created by orko on 08/03/14.
  */
 
-function executeAjaxAction($element,event){
+function executeAjaxAction($element, event){
     event.preventDefault();
     if (!$element.hasClass("ajaxRunning")){
         var url = $element.attr('href');
@@ -24,8 +24,7 @@ function executeAjaxAction($element,event){
                 if (data.success){
                     if (typeof data.errors == 'undefined'){
                         var template = $('#'+idTemplate).html();
-                        var view = {followerId: data.view.followerId};
-                        var html = Mustache.render(template, view);
+                        var html = Mustache.render(template, data.view);
                         $("#id-buttons-region").html(html);
                     }else{
                         alert(data.errors);

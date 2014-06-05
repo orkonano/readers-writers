@@ -1,5 +1,6 @@
 package ar.com.orkodev.readerswriters.controller
 
+import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.ValidationException
@@ -83,18 +84,20 @@ class UserController extends BaseController {
     def show(Long id) {
         def userInstance = bindingById(id)
         boolean islogged = springSecurityService.isLoggedIn()
-        def isFollowed = islogged ? followerService.isFollowAuthor(userInstance) : false
-        def tellingSearch = new Telling(author: userInstance)
+        boolean isFollowed = islogged ? followerService.isFollowAuthor(userInstance) : false
+        Telling tellingSearch = new Telling(author: userInstance)
         def (tellingList, countResult) = tellingService.listTellingPublishByAuthor(tellingSearch, 15, 0)
         if (!islogged){
             tellingList = tellingList.subList(0,1)
         }
+        Follower follower = isFollowed ? followerService.findFollowerAuthor(userInstance) : null
         render model:[
                       userInstance: userInstance,
                       isFollowed:isFollowed,
                       tellingInstanceList: tellingList,
                       tellingInstanceCount: countResult,
-                      isLogged: islogged
+                      isLogged: islogged,
+                      follower: follower
                      ],
                 view: islogged ? "show_login" : "show_logout"
     }
