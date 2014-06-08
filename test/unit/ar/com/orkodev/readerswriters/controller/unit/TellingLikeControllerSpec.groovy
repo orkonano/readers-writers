@@ -29,7 +29,8 @@ class TellingLikeControllerSpec extends Specification {
     void "Test the like action as JSON"() {
         given:
         def tellingLikeServiceSucess = mockFor(TellingLikeService)
-        tellingLikeServiceSucess.demandExplicit.like() {Telling telling -> return new TellingLike()}
+        TellingLike tellingLike = new TellingLike(id: 1)
+        tellingLikeServiceSucess.demandExplicit.like() {Telling telling -> return tellingLike}
         def tellingLikeServiceFail1 = mockFor(TellingLikeService)
         def mensaje = "error"
         tellingLikeServiceFail1.demandExplicit.like() {Telling telling ->
@@ -37,17 +38,18 @@ class TellingLikeControllerSpec extends Specification {
         }
         when: "Cuando se llama al action con el usuario definido"
         controller.tellingLikeService = tellingLikeServiceSucess.createMock()
-        controller.like(1l)
+        controller.save(1l)
         then: "Se renderiza con success true"
         response.json.success == true
-
+        response.json.view
+        response.json.view.urlunlike == '/tellings/1/tellinglikes/'+tellingLike.id
         when: "Cuando se arroja una exception"
         response.reset()
         controller.tellingLikeService = tellingLikeServiceFail1.createMock()
-        controller.like(1l)
+        controller.save(1l)
         then:"Se renderiza success false y el mensaje en el Json"
         response.json.success == true
-        response.json.errors == [mensaje]
+        response.json.errors == [ mensaje ]
     }
 
     void "Test the leave follow action as JSON"() {

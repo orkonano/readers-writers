@@ -11,6 +11,10 @@ class UrlMappings {
             "/followers"(resources:"follower")
         }
 
+        "/tellings"(resources:'telling') {
+            "/tellinglikes"(resources:"like")
+        }
+
         "/telling/read/$id/$title"{
             controller = 'telling'
             action = 'read'

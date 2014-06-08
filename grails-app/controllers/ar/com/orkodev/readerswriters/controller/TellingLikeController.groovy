@@ -1,6 +1,7 @@
 package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import grails.converters.JSON
@@ -13,14 +14,23 @@ class TellingLikeController extends BaseController{
     def springSecurityService
     def tellingService
 
-    def like(Long id) {
+    def save(Long id) {
         Telling tellingToLike = bindingById(id)
         if (tellingToLike == null){
             notFound('tellingInstance.label','Telling')
             return
         }
-        tellingLikeService.like(tellingToLike)
-        def result = [success:true]
+        TellingLike tellingLike = tellingLikeService.like(tellingToLike)
+        /*
+           Acá debería resolverlo directamente el framework, yo le paso un link de un resources y debería resolverlo,
+           pero lamentablemente no funciona igual en las gsp que en el controller
+           <g:link resource="author/follower" action="delete" authorId="${userInstance.id}" id="{{followerId}}">
+                Dejar de seguir
+           </g:link>
+           String urlUnfollow = g.link(resource: "author/follower", authorId: author.id, id: followerSuccess.id)
+        */
+        String urlunlike = "/tellings/" + tellingToLike.id + "/tellinglikes/" + tellingLike.id
+        def result = [ success:true, view: [urlunlike: urlunlike] ]
         render result as JSON
     }
 

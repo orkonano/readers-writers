@@ -17,18 +17,18 @@ class TellingLikeService{
     def cacheHelper
 
     @Transactional
-    def like(Telling tellingToLike) {
-        def currentUser = springSecurityService.getCurrentUser()
+    TellingLike like(Telling tellingToLike) {
+        User currentUser = springSecurityService.getCurrentUser()
         if (currentUser.id == tellingToLike.author.id) {
             throw new SameUserToCurrentException("Al autor de la obra no le puede gustar su propia obra")
         }
-        def tellingLike = new TellingLike(reader: currentUser,telling: tellingToLike)
+        TellingLike tellingLike = new TellingLike(reader: currentUser,telling: tellingToLike)
         if (!tellingLike.validate()) {
             throw new ValidationException(errors: tellingLike.errors)
         }
         tellingLike.save()
         cleanCacheInSave(tellingLike)
-        tellingLike
+        return tellingLike
     }
 
     private void cleanCacheInSave(TellingLike tellingLike){
