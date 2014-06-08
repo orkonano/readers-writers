@@ -61,21 +61,21 @@ class FollowerControllerSpec extends Specification {
     void "Test the leave follow action as JSON"() {
         given:
         def followService = mockFor(FollowerService)
-        followService.demandExplicit.findById() {Follower follower2 -> new Follower(id: 1)}
-        followService.demandExplicit.leaveAuthor() {User user1, Follower follower1 -> return true}
+        followService.demandExplicit.findById() { Follower follower2 -> new Follower(id: 1) }
+        followService.demandExplicit.leaveAuthor() { Follower follower1 -> return true }
         controller.followerService = followService.createMock()
         def userService = mockFor(UserService)
-        userService.demandExplicit.findById(3) {User user1 ->return new User(id: 1)}
+        userService.demandExplicit.findById(3) { User user1 ->return new User(id: 1) }
         controller.userService = userService.createMock()
 
         def followServiceFail = mockFor(FollowerService)
-        followServiceFail.demandExplicit.findById() {Follower follower2 -> new Follower(id: 1)}
-        followServiceFail.demandExplicit.leaveAuthor() { User user1, Follower follower1 -> return false}
+        followServiceFail.demandExplicit.findById() { Follower follower2 -> new Follower(id: 1) }
+        followServiceFail.demandExplicit.leaveAuthor() { Follower follower1 -> return false }
 
         def followServiceException = mockFor(FollowerService)
         def mensaje = "error"
-        followServiceException.demandExplicit.findById() {Follower follower2 -> new Follower(id: 1)}
-        followServiceException.demandExplicit.leaveAuthor() { User user1, Follower follower2 ->
+        followServiceException.demandExplicit.findById() { Follower follower2 -> new Follower(id: 1) }
+        followServiceException.demandExplicit.leaveAuthor() { Follower follower2 ->
             throw new SameUserToCurrentException(mensaje)
         }
 

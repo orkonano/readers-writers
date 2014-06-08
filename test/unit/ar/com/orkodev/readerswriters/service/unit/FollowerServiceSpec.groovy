@@ -3,6 +3,7 @@ package ar.com.orkodev.readerswriters.service.unit
 import ar.com.orkodev.readerswriters.cache.CacheHelperImpl
 import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.service.FollowerService
@@ -40,18 +41,19 @@ class FollowerServiceSpec extends Specification {
         currentUser.save(flush: true,failOnError: true)
         springSecurityService.demandExplicit.getCurrentUser(2) { ->currentUser }
         service.springSecurityService = springSecurityService.createMock()
-        new Follower(following: currentUser,author: author).save(flush: true, failOnError: true)
-
+        Follower followerToDelete1 = new Follower(following: currentUser, author: author)
+                .save(flush: true, failOnError: true)
+        Follower followerToDelete2 = new Follower(following: author, author: author)
         when:"Cuando se elimina a un author de los autores seguidos y el mismo existe"
-        def erased = service.leaveAuthor(author)
+        def erased = service.leaveAuthor(followerToDelete1)
         then: "La relación se borra correctamente"
         erased
         Follower.list().isEmpty()
 
-        when: "Se quiere borrar una relación que no existe"
-        erased = service.leaveAuthor(author)
+        when: "Se quiere borrar una relación donde el seguidor no es el user logeado"
+        service.leaveAuthor(followerToDelete2)
         then: "La relación no se puede borrar"
-        !erased
+        thrown(NotErasedException)
     }
 
 

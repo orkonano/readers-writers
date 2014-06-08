@@ -71,7 +71,7 @@ class FollowerController extends BaseController {
             notFound('followerInstance.label','Follower')
             return
         }
-        boolean erased =  followerService.leaveAuthor(author, follower)
+        boolean erased =  followerService.leaveAuthor(follower)
         String urlFollow = "/authors/" + author.id + "/followers"
         def result = [success: erased, view: [urlFollow: urlFollow]]
         render result as JSON

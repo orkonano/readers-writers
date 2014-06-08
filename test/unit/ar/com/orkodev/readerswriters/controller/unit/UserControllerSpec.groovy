@@ -1,6 +1,7 @@
 package ar.com.orkodev.readerswriters.controller.unit
 
 import ar.com.orkodev.readerswriters.controller.UserController
+import ar.com.orkodev.readerswriters.domain.Follower
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.User
 import ar.com.orkodev.readerswriters.exception.ValidationException
@@ -129,21 +130,23 @@ class UserControllerSpec extends Specification {
     void "Test that the showAuthor action returns the correct model"() {
         given:
         def followService = mockFor(FollowerService)
-        followService.demandExplicit.isFollowAuthor(){User user -> return true}
+        Follower follower = new Follower(id: 1)
+        followService.demandExplicit.isFollowAuthor(){ User user -> return true }
+        followService.demandExplicit.findFollowerAuthor(){ User user -> return follower }
         def followServiceFail = mockFor(FollowerService)
-        followServiceFail.demandExplicit.isFollowAuthor(){User user -> return false}
+        followServiceFail.demandExplicit.isFollowAuthor(){ User user -> return false }
+        followService.demandExplicit.findFollowerAuthor(){ User user -> return follower }
         def telling = new Telling(id: 1, title: "3")
         def tellingService  = mockFor(TellingService)
-        tellingService.demandExplicit.listTellingPublishByAuthor(2){Telling telling1,Integer max, Integer offset ->
+        tellingService.demandExplicit.listTellingPublishByAuthor(2){ Telling telling1 ,Integer max, Integer offset ->
             return [[telling], 1]
         }
-        def user = new User(params)
         controller.tellingService = tellingService.createMock()
         def springSecurityService = mockFor(SpringSecurityService)
         springSecurityService.demandExplicit.isLoggedIn(2) { -> return true }
         controller.springSecurityService = springSecurityService.createMock()
         def userService = mockFor(UserService)
-        userService.demandExplicit.findById(2){User u -> new User(id: 1)}
+        userService.demandExplicit.findById(2){ User u -> new User(id: 1) }
         controller.userService = userService.createMock()
         when: "A domain instance is passed to the show action and is followed"
         response.reset()
@@ -156,6 +159,7 @@ class UserControllerSpec extends Specification {
         model.isFollowed
         model.tellingInstanceList == [telling]
         model.tellingInstanceCount == 1
+        model.follower.id == follower.id
 
         when: "A domain instance is passed to the show action and is not followed"
         response.reset()

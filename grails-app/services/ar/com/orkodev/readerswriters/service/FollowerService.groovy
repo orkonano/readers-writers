@@ -37,7 +37,7 @@ class FollowerService extends BaseService<Follower>{
     }
 
     @Transactional
-    boolean leaveAuthor(User authorLeave, Follower currentFollowers){
+    boolean leaveAuthor(Follower currentFollowers){
         User currentUser = springSecurityService.getCurrentUser()
         if (currentUser.id != currentFollowers.following.id){
             throw new NotErasedException("No se puede eliminar al follower, ya que no son el mismo usuario")
