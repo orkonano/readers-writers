@@ -17,10 +17,10 @@
         <h3>${tellingInstance.title}&nbsp;&nbsp;
             <span id="id-buttons-region">
                 <g:if test="${isLike}">
-                    <g:link class="btn btn-warning btn-xs" resource="telling/like" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+                    <g:link class="btn btn-warning btn-xs" resource="telling/like" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'delete')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
                 </g:if>
                 <g:else>
-                    <g:link class="btn btn-warning btn-xs" resource="telling/like" action="save" tellingId="${tellingInstance.id}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">
+                    <g:link class="btn btn-warning btn-xs" resource="telling/tellingLike" action="save" tellingId="${tellingInstance.id}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">
                         Me gusta
                     </g:link>
                 </g:else>

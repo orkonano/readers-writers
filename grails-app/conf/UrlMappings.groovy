@@ -11,8 +11,8 @@ class UrlMappings {
             "/followers"(resources:"follower")
         }
 
-        "/tellings"(resources:'telling') {
-            "/tellinglikes"(resources:"like")
+        "/tellings"(resources:"telling") {
+            "/likes"(resources:"tellingLike")
         }
 
         "/telling/read/$id/$title"{

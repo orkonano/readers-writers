@@ -3,12 +3,14 @@ package ar.com.orkodev.readerswriters.service
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.exception.NotErasedException
 import ar.com.orkodev.readerswriters.exception.SameUserToCurrentException
 import ar.com.orkodev.readerswriters.exception.ValidationException
+import ar.com.orkodev.readerswriters.platform.service.BaseService
 import grails.plugin.cache.Cacheable
 import grails.transaction.Transactional
 
-class TellingLikeService{
+class TellingLikeService extends BaseService<TellingLike>{
 
 
     def springSecurityService
@@ -39,19 +41,15 @@ class TellingLikeService{
     }
 
     @Transactional
-    def stopLike(Telling tellingToStopLike) {
+    boolean stopLike(TellingLike tellingToStopLike) {
         def currentUser = springSecurityService.getCurrentUser()
-        def query = TellingLike.where {
-            reader == currentUser && telling == tellingToStopLike
+        if (tellingToStopLike.reader.id != currentUser.id){
+            throw new NotErasedException("No se puede eliminar al like, ya que no son el mismo reader")
         }
-        def tellingLikeToDelete = query.find()
-        if (!tellingLikeToDelete){
-            return false
-        }
-        def deleted = tellingLikeToDelete.delete() == null
+        def deleted = tellingToStopLike.delete() == null
         if (deleted)
-            cleanCacheInSave(tellingLikeToDelete)
-        deleted
+            cleanCacheInSave(tellingToStopLike)
+        return deleted
     }
 
     @Transactional(readOnly = true)

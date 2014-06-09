@@ -34,6 +34,9 @@ function executeAjaxAction($element, event){
             complete:function(){
                 $element.removeClass("ajaxRunning");
             },
+            error: function(jqXHR, textStatus, errorThrown ){
+                alert(textStatus);
+            },
             statusCode: {
                 404: function() {
                     alert( "page not found" );
