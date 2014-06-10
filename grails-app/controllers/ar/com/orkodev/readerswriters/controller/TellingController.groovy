@@ -23,7 +23,7 @@ class TellingController extends BaseController {
         def userLogin = springSecurityService.getCurrentUser()
         params.max = Math.min(max ?: 10, 100)
         def (tellingList, countResult) = tellingService.listAllAuthorUserTelling(userLogin, params.max);
-        render view: 'indesx',  model: [tellingInstanceCount: countResult, tellingList: tellingList]
+        render view: 'index',  model: [tellingInstanceCount: countResult, tellingList: tellingList]
     }
 
     @Secured("ROLE_US")
