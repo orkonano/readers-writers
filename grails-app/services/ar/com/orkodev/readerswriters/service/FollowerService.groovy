@@ -15,6 +15,7 @@ class FollowerService extends BaseService<Follower>{
     def springSecurityService
     def grailsApplication
     def cacheHelper
+    def userService
 
     @Transactional
     def followAuthor(User author) {

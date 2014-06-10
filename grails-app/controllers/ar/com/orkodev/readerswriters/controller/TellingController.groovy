@@ -1,6 +1,7 @@
 package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswriters.domain.Telling
+import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.utils.StringHelper
@@ -72,9 +73,11 @@ class TellingController extends BaseController {
             return
         }
 
-        def isLike = islogged ? tellingLikeService.isLike(tellingInstance) : false
-        render model:["tellingInstance": tellingInstance, isLike: isLike,
-                      seoDescription: StringHelper.cortarStringPorEspacio(tellingInstance.description, 300)],
+        boolean isLike = islogged ? tellingLikeService.isLike(tellingInstance) : false
+        TellingLike tellingLike = isLike ? tellingLikeService.findTellingLike(tellingInstance) : null;
+        render model: [tellingInstance: tellingInstance, isLike: isLike,
+                      seoDescription: StringHelper.cortarStringPorEspacio(tellingInstance.description, 300),
+                      tellingLike: tellingLike],
                 view: !islogged ? "read_logout" : "read_logged"
     }
 

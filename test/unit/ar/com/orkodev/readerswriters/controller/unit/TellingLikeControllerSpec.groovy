@@ -29,7 +29,8 @@ class TellingLikeControllerSpec extends Specification {
     void "Test the like action as JSON"() {
         given:
         def tellingLikeServiceSucess = mockFor(TellingLikeService)
-        tellingLikeServiceSucess.demandExplicit.like() {Telling telling -> return new TellingLike()}
+        TellingLike tellingLike = new TellingLike(id: 1)
+        tellingLikeServiceSucess.demandExplicit.like() {Telling telling -> return tellingLike}
         def tellingLikeServiceFail1 = mockFor(TellingLikeService)
         def mensaje = "error"
         tellingLikeServiceFail1.demandExplicit.like() {Telling telling ->
@@ -37,35 +38,42 @@ class TellingLikeControllerSpec extends Specification {
         }
         when: "Cuando se llama al action con el usuario definido"
         controller.tellingLikeService = tellingLikeServiceSucess.createMock()
-        controller.like(1l)
+        controller.save(1l)
         then: "Se renderiza con success true"
         response.json.success == true
-
+        response.json.view
+        response.json.view.urlunlike == '/tellings/1/likes/'+tellingLike.id
         when: "Cuando se arroja una exception"
         response.reset()
         controller.tellingLikeService = tellingLikeServiceFail1.createMock()
-        controller.like(1l)
+        controller.save(1l)
         then:"Se renderiza success false y el mensaje en el Json"
         response.json.success == true
-        response.json.errors == [mensaje]
+        response.json.errors == [ mensaje ]
     }
 
     void "Test the leave follow action as JSON"() {
+        TellingLike tellingLike = new TellingLike(id: 1)
         def tellingLikeServiceSucess = mockFor(TellingLikeService)
-        tellingLikeServiceSucess.demandExplicit.stopLike() {Telling telling -> return true}
+        tellingLikeServiceSucess.demandExplicit.findById() {TellingLike like -> return tellingLike}
+        tellingLikeServiceSucess.demandExplicit.stopLike() {TellingLike telling -> return true}
         def tellingLikeServiceFail1 = mockFor(TellingLikeService)
-        tellingLikeServiceFail1.demandExplicit.stopLike() {Telling telling -> return false}
+        tellingLikeServiceFail1.demandExplicit.findById() {TellingLike like -> return tellingLike}
+        tellingLikeServiceFail1.demandExplicit.stopLike() {TellingLike telling -> return false}
+
 
         when: "Cuando se llama al action y se puede borrar"
         controller.tellingLikeService = tellingLikeServiceSucess.createMock()
-        controller.stopTolike(1l)
+        controller.delete(1, 1)
         then: "Se renderiza con success true"
         response.json.success == true
+        response.json.view
+        response.json.view.urlLike == '/tellings/1/likes'
 
         when: "Cuando se llama al action y no se puede borrar"
         response.reset()
         controller.tellingLikeService = tellingLikeServiceFail1.createMock()
-        controller.stopTolike(1l)
+        controller.delete(1, 1)
         then: "Se renderiza con success false"
         response.json.success == false
     }

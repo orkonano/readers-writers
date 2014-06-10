@@ -9,6 +9,7 @@ class TellingLike {
     static constraints = {
         telling nullable: false, unique: 'reader'
         reader nullable: false
+        id bindable: true
     }
 
     static mapping = {

@@ -17,10 +17,15 @@
         <h3>${tellingInstance.title}&nbsp;&nbsp;
             <span id="id-buttons-region">
                 <g:if test="${isLike}">
-                    <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+                    <g:link class="btn btn-warning btn-xs" resource="telling/like" action="delete" tellingId="${tellingInstance.id}" id="${tellingLike.id}
+                            elementId="id-stop-like-link" data-template-id-next-action="template-link-like">
+                        Ya no me gusta
+                    </g:link>
                 </g:if>
                 <g:else>
-                    <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
+                    <g:link class="btn btn-warning btn-xs" resource="telling/tellingLike" action="save" tellingId="${tellingInstance.id}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">
+                        Me gusta
+                    </g:link>
                 </g:else>
             </span></h3>
         <a class="btn btn-link" href="${createLink(controller: 'user', action: 'show', params: ['id': tellingInstance.author.id])}">
@@ -40,10 +45,14 @@
 </div>
 
 <script id="template-link-stop-like" type="text/html">
-    <g:link class="btn btn-warning btn-xs"  data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'stopTolike')}" elementId="id-stop-like-link" data-template-id-next-action="template-link-like">Ya no me gusta</g:link>
+     <a href="{{urlunlike}}" class="btn btn-warning btn-xs" id="id-stop-like-link" data-template-id-next-action="template-link-like" data-method="DELETE">
+         Ya no me gusta
+    </a>
 </script>
 <script id="template-link-like" type="text/html">
-    <g:link class="btn btn-warning btn-xs" data-object-id="${tellingInstance.id}" data-url="${createLink(controller: 'tellingLike',action: 'like')}" elementId="id-like-link" data-template-id-next-action="template-link-stop-like">Me gusta</g:link>
+     <a href="{{urlLike}}" class="btn btn-warning btn-xs" id="id-like-link" data-template-id-next-action="template-link-stop-like">
+         Me gusta
+    </a>
 </script>
 
 </body>
