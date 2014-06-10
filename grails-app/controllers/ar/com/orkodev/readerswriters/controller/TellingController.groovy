@@ -168,21 +168,7 @@ class TellingController extends BaseController {
         }
     }
 
-    @Secured("ROLE_US")
-    def publish(Long id) {
-        Telling tellingInstance = bindingById(id)
-        if (tellingInstance == null) {
-            notFound('tellingInstance.label','Telling')
-            return
-        }
-        if (isTellingFromUserLogin(tellingInstance)){
-            tellingService.publish(tellingInstance)
-            flash.success = "Se publicó con éxito"
-            redirect action: "index"
-        }else{
-            response.status = 403;
-        }
-    }
+
 
     def handleNotPublishedException(NotPublishedException ex){
         flash.error = ex.message

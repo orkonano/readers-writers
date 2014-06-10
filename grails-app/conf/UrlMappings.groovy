@@ -17,6 +17,10 @@ class UrlMappings {
 
         "/tellings"(resources:"telling")
 
+        "/tellings"(resources:"telling") {
+            "/publishes"(resources:"publish")
+        }
+
         "/telling/read/$id/$title"{
             controller = 'telling'
             action = 'read'

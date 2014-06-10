@@ -186,27 +186,7 @@ class TellingControllerSpec extends Specification {
     }
 
 
-    void "Test that the publish action"() {
-        given:
-        def springSecurityService = mockFor(SpringSecurityService)
-        def user = getCurrentUser()
-        springSecurityService.demandExplicit.getCurrentUser(1) { ->return user}
-        controller.springSecurityService = springSecurityService.createMock()
-        def tellingService = mockFor(TellingService)
-        tellingService.demandExplicit.findById(){Telling t -> new Telling(id: 1, author: user)}
-        tellingService.demandExplicit.publish(){Telling telling1 ->
-            telling1.state = Telling.PUBLISHED
-        }
-        controller.tellingService = tellingService.createMock()
-        when: "A domain is publish"
-        response.reset()
-        populateValidParams(params)
-        def telling = new Telling(params)
-        controller.publish(telling.id)
-        then: "The instance is published"
-        response.redirectedUrl == '/telling/index'
-        flash.success != null
-    }
+
 
     void "Test that the list action"() {
         given:
