@@ -36,7 +36,7 @@ class TellingLikeService extends BaseService<TellingLike>{
     private void cleanCacheInSave(TellingLike tellingLike){
         cacheHelper.deleteFromCache('readers-writers', this,  "findLikeTellingByUser", [User.class, Integer.class,
                 Integer.class] as Class[], [tellingLike.reader, 5, 0] as Object[])
-        cacheHelper.deleteFromCache('readers-writers', this, "isLike", [Telling.class, User.class] as Class[],
+        cacheHelper.deleteFromCache('readers-writers', this, "findTellingLike", [Telling.class, User.class] as Class[],
                 [tellingLike.telling, tellingLike.reader] as Object[])
     }
 
@@ -53,22 +53,33 @@ class TellingLikeService extends BaseService<TellingLike>{
     }
 
     @Transactional(readOnly = true)
-    def isLike(Telling telling){
-        def currentUser = springSecurityService.getCurrentUser()
+    boolean isLike(Telling telling){
+        User currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingLikeService.isLike(telling, currentUser)
     }
 
+    @Transactional(readOnly = true)
+    TellingLike findTellingLike(Telling telling){
+        User currentUser = springSecurityService.getCurrentUser()
+        return grailsApplication.mainContext.tellingLikeService.findTellingLike(telling, currentUser)
+    }
+
     @Cacheable('readers-writers')
-    Boolean isLike(Telling telling, User readerUser){
+    TellingLike findTellingLike(Telling telling, User readerUser){
         def query = TellingLike.where {
             reader == readerUser && telling == telling
         }
         query = query.property('id')
-        query.find()!=null
+        Long idTellingLike =  query.find()
+        return idTellingLike ? findById(new TellingLike(id: idTellingLike)) : null
+    }
+
+    Boolean isLike(Telling telling, User readerUser){
+        grailsApplication.mainContext.tellingLikeService.findTellingLike(telling, readerUser) != null
     }
 
     @Transactional(readOnly = true)
-    def findLikeTelling(Integer countLast = null, Integer offset = 0){
+    List<Telling> findLikeTelling(Integer countLast = null, Integer offset = 0){
         def currentUser = springSecurityService.getCurrentUser()
         grailsApplication.mainContext.tellingLikeService.findLikeTellingByUser(currentUser, countLast, offset)
     }

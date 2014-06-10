@@ -1,10 +1,7 @@
 package ar.com.orkodev.readerswriters.controller.unit
 
 import ar.com.orkodev.readerswriters.controller.TellingController
-import ar.com.orkodev.readerswriters.domain.NarrativeGenre
-import ar.com.orkodev.readerswriters.domain.Telling
-import ar.com.orkodev.readerswriters.domain.TellingType
-import ar.com.orkodev.readerswriters.domain.User
+import ar.com.orkodev.readerswriters.domain.*
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.service.NarrativeGenreService
 import ar.com.orkodev.readerswriters.service.TellingLikeService
@@ -159,11 +156,6 @@ class TellingControllerSpec extends Specification {
         def user = getCurrentUser()
         springSecurityService.demandExplicit.getCurrentUser(2) { ->return user}
         controller.springSecurityService = springSecurityService.createMock()
-        //        when: "The show action is executed with a null domain"
-//        controller.update(null)
-//
-//        then: "A 404 error is returned"
-//        response.status == (NOT_FOUND.value() || 302)
 
         when: "An invalid domain instance is passed to the update action"
         def tellingService  = mockFor(TellingService)
@@ -261,8 +253,10 @@ class TellingControllerSpec extends Specification {
 
     void "Test that the read action returns the correct model"() {
         given:
+        TellingLike tellingLike = new TellingLike(id: 1)
         def tellingLikeService = mockFor(TellingLikeService)
-        tellingLikeService.demandExplicit.isLike(2){Telling telling -> return true}
+        tellingLikeService.demandExplicit.isLike(1){Telling telling -> return true}
+        tellingLikeService.demandExplicit.findTellingLike(){Telling telling -> return tellingLike}
         controller.tellingLikeService = tellingLikeService.createMock()
         def springSecurityService = mockFor(SpringSecurityService)
         springSecurityService.demandExplicit.isLoggedIn() { -> return true }
@@ -278,6 +272,8 @@ class TellingControllerSpec extends Specification {
         response.status == 200
         model
         model.isLike
+        model.tellingLike
+        model.tellingLike.id == tellingLike.id
         view == '/telling/read_logged'
 
         when: "se recibe un telling con datos"
@@ -292,6 +288,7 @@ class TellingControllerSpec extends Specification {
         response.status == 200
         model
         !model.isLike
+        !model.tellingLike
         view == '/telling/read_logout'
     }
 
