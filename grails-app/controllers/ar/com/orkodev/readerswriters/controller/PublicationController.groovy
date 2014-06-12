@@ -1,24 +1,25 @@
 package ar.com.orkodev.readerswriters.controller
 
 import ar.com.orkodev.readerswriters.domain.Telling
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
 @Secured("ROLE_US")
-class PublishController extends BaseController {
+class PublicationController extends BaseController {
 
     def tellingService
     def springSecurityService
 
-    def save(Long id) {
-        Telling tellingInstance = tellingService.findById(new Telling(id: id))
+    def save(Long tellingId) {
+        Telling tellingInstance = tellingService.findById(new Telling(id: tellingId))
         if (tellingInstance == null) {
             notFound('tellingInstance.label','Telling')
             return
         }
         if (isTellingFromUserLogin(tellingInstance)){
             tellingService.publish(tellingInstance)
-            flash.success = "Se publicó con éxito"
-            redirect controller: 'telling', action: "index"
+            def result = [success: true, view: [mensaje: "Se publicó con éxito"]]
+            render result as JSON
         }else{
             response.status = 403;
         }

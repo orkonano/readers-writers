@@ -82,7 +82,7 @@ class FollowerControllerSpec extends Specification {
         when: "Cuando se llama al action y se puede borrar"
         controller.delete(1, 1)
         then: "Se renderiza con success true"
-        response.json.success == true
+        response.json.success
         response.json.view.urlFollow == "/authors/" + 1 + "/followers"
 
         when: "Cuando se llama al action y no se puede borrar"

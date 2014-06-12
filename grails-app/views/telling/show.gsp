@@ -6,6 +6,7 @@
 		<meta name="layout" content="main_logged">
 		<g:set var="entityName" value="${message(code: 'telling.label', default: 'Telling')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
+        <g:javascript library="publish"/>
 	</head>
 	<body>
 
@@ -39,14 +40,15 @@
                 <g:form url="[resource:tellingInstance, action:'delete']" method="DELETE">
                         <g:if test="${tellingInstance.isEditable()}">
                             <a href="${createLink(action: 'edit',params: ['id': tellingInstance.id])}"
-                               class="btn btn-primary btn-sm">Editar</a>
+                               class="btn btn-primary btn-sm" id="id-editar-boton">Editar</a>
                         </g:if>
                         <g:if test="${tellingInstance.isPublicable()}">
-                            <a href="${createLink(action: 'publish',params: ['id': tellingInstance.id])}"
-                               class="btn btn-success btn-sm">Publicar</a>
+                            <g:link class="btn btn-success btn-sm" elementId="id-publish-boton" resource="telling/publication" action="save" tellingId="${tellingInstance.id}">
+                                Publicar
+                            </g:link>
                         </g:if>
                         <g:if test="${tellingInstance.isEliminable()}">
-                            <g:actionSubmit class="btn btn-danger btn-sm" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                            <g:actionSubmit class="btn btn-danger btn-sm" action="delete" id="id-eliminar-boton" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
                         </g:if>
                 </g:form>
             </h3>

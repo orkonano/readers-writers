@@ -15,11 +15,13 @@ class UrlMappings {
             "/likes"(resources:"tellingLike")
         }
 
+        "/tellings"(resources:"telling") {
+            "/publications"(resources:"publication")
+        }
+
         "/tellings"(resources:"telling")
 
-        "/tellings"(resources:"telling") {
-            "/publishes"(resources:"publish")
-        }
+
 
         "/telling/read/$id/$title"{
             controller = 'telling'

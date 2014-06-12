@@ -1,6 +1,6 @@
 package ar.com.orkodev.readerswriters.controller.unit
 
-import ar.com.orkodev.readerswriters.controller.PublishController
+import ar.com.orkodev.readerswriters.controller.PublicationController
 import ar.com.orkodev.readerswriters.domain.NarrativeGenre
 import ar.com.orkodev.readerswriters.domain.Telling
 import ar.com.orkodev.readerswriters.domain.TellingType
@@ -14,9 +14,9 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
-@TestFor(PublishController)
+@TestFor(PublicationController)
 @Mock([Telling, User])
-class PublishControllerSpec extends Specification {
+class PublicationControllerSpec extends Specification {
 
     def setup() {
     }
@@ -50,8 +50,8 @@ class PublishControllerSpec extends Specification {
         Telling telling = new Telling(params)
         controller.save(telling.id)
         then: "The instance is published"
-        response.redirectedUrl == '/telling/index'
-        flash.success != null
+        response.json.success
+        response.json.view.mensaje
     }
 
     def populateValidParams(params) {
