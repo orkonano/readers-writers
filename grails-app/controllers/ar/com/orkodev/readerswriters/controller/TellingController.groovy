@@ -5,6 +5,7 @@ import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.utils.StringHelper
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
 
@@ -162,7 +163,8 @@ class TellingController extends BaseController {
         }
         if (isTellingFromUserLogin(tellingInstance)){
             tellingService.delete(tellingInstance)
-            redirect action: "index"
+            def result = [success: true, view: [mensaje: "Se eliminó con éxito"]]
+            render result as JSON
         }else{
             response.status = 403;
         }

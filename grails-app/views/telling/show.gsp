@@ -36,23 +36,23 @@
               ]"/>
     <div class="row">
         <div class="col-md-12">
-            <h3>${tellingInstance.title}
-                <g:form url="[resource:tellingInstance, action:'delete']" method="DELETE">
-                        <g:if test="${tellingInstance.isEditable()}">
-                            <a href="${createLink(action: 'edit',params: ['id': tellingInstance.id])}"
-                               class="btn btn-primary btn-sm" id="id-editar-boton">Editar</a>
-                        </g:if>
-                        <g:if test="${tellingInstance.isPublicable()}">
-                            <g:link class="btn btn-success btn-sm" elementId="id-publish-boton" resource="telling/publication" action="save" tellingId="${tellingInstance.id}">
-                                Publicar
-                            </g:link>
-                        </g:if>
-                        <g:if test="${tellingInstance.isEliminable()}">
-                            <g:actionSubmit class="btn btn-danger btn-sm" action="delete" id="id-eliminar-boton" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-                        </g:if>
-                </g:form>
+            <h3><span id="id-title-telling">${tellingInstance.title}</span>
+                    <g:if test="${tellingInstance.isEditable()}">
+                        <a href="${createLink(action: 'edit',params: ['id': tellingInstance.id])}"
+                           class="btn btn-primary btn-sm" id="id-editar-boton">Editar</a>
+                    </g:if>
+                    <g:if test="${tellingInstance.isPublicable()}">
+                        <g:link class="btn btn-success btn-sm" elementId="id-publish-boton" resource="telling/publication" action="save" tellingId="${tellingInstance.id}">
+                            Publicar
+                        </g:link>
+                    </g:if>
+                    <g:if test="${tellingInstance.isEliminable()}">
+                        <g:link class="btn btn-danger btn-sm" elementId="confirm-delete" data-confirm-action="delete" resource="telling" action="delete" id="${tellingInstance.id}">
+                            Eliminar
+                        </g:link>
+                    </g:if>
             </h3>
-
+            <br/>
             <span class="label label-info">${tellingInstance?.tellingType?.encodeAsHTML()}</span>&nbsp;
             <span class="label label-primary">${tellingInstance?.narrativeGenre?.encodeAsHTML()}</span>
             <br/><br/>
@@ -64,6 +64,7 @@
         </div>
     </div>
 
+    <g:render template="/shared/deleteModal"/>
 
 	</body>
 </html>

@@ -185,9 +185,6 @@ class TellingControllerSpec extends Specification {
         response.redirectedUrl == "/telling/index"
     }
 
-
-
-
     void "Test that the list action"() {
         given:
         mockForConstraintsTests NarrativeGenre
