@@ -13,7 +13,7 @@
         </sec:ifNotLoggedIn>
         <sec:ifLoggedIn>
             <a class="navbar-brand" href="${createLink(controller: 'user', action: 'edit')}">Editar Usuario</a>
-            <a class="navbar-brand" href="${createLink(controller: 'telling', action: 'index')}">Mis Narrativos</a>
+            <g:link class="navbar-brand" resource="telling" >Mis Narrativos</g:link>
             <a class="navbar-brand"
                href="${createLink(controller: 'telling', action: 'list', params: '[init:true]')}">Narrativos</a>
             <sec:ifAllGranted roles="ROLE_ADM">

@@ -11,13 +11,12 @@
         <g:set var="titleSubMenuCreate" value="${message(code: 'default.new.label',args: [entityName])}" />
         <g:render template="/layouts/submenu-nav-logged"
                   model="['submenu':[
-                          'name' : titleSubMenu,
-                          'items':[
-                                   ['controller':'telling',
-                                    'action':'create',
-                                    'name':titleSubMenuCreate]
-                                 ]
-                            ]
+                                    'name' : titleSubMenu,
+                                    'items':[['controller': 'telling',
+                                                'action': 'create',
+                                                'name': titleSubMenuCreate
+                                            ]]
+                                    ]
                           ]"/>
         <div class="row">
             <div class="col-lg-12">
@@ -32,9 +31,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${tellingInstanceList}" status="i" var="tellingInstance">
+
+                    <g:each in="${tellingList}" status="i" var="tellingInstance">
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-                            <td><g:link action="show" id="${tellingInstance.id}">${fieldValue(bean: tellingInstance, field: "title")}</g:link></td>
+                            <td><g:link resource="telling" method="GET" id="${tellingInstance.id}">${fieldValue(bean: tellingInstance, field: "title")}</g:link></td>
                             <td>${fieldValue(bean: tellingInstance, field: "description")}</td>
                             <td>${fieldValue(bean: tellingInstance, field: "narrativeGenre")}</td>
                             <td>${fieldValue(bean: tellingInstance, field: "tellingType")}</td>

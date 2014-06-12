@@ -5,6 +5,7 @@ import ar.com.orkodev.readerswriters.domain.TellingLike
 import ar.com.orkodev.readerswriters.exception.NotPublishedException
 import ar.com.orkodev.readerswriters.exception.ValidationException
 import ar.com.orkodev.readerswriters.utils.StringHelper
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
 
@@ -23,7 +24,7 @@ class TellingController extends BaseController {
         def userLogin = springSecurityService.getCurrentUser()
         params.max = Math.min(max ?: 10, 100)
         def (tellingList, countResult) = tellingService.listAllAuthorUserTelling(userLogin, params.max);
-        render view: 'indesx',  model: [tellingInstanceCount: countResult, tellingList: tellingList]
+        render view: 'index',  model: [tellingInstanceCount: countResult, tellingList: tellingList]
     }
 
     @Secured("ROLE_US")
@@ -162,27 +163,14 @@ class TellingController extends BaseController {
         }
         if (isTellingFromUserLogin(tellingInstance)){
             tellingService.delete(tellingInstance)
-            redirect action: "index"
+            def result = [success: true, view: [mensaje: "Se eliminó con éxito"]]
+            render result as JSON
         }else{
             response.status = 403;
         }
     }
 
-    @Secured("ROLE_US")
-    def publish(Long id) {
-        Telling tellingInstance = bindingById(id)
-        if (tellingInstance == null) {
-            notFound('tellingInstance.label','Telling')
-            return
-        }
-        if (isTellingFromUserLogin(tellingInstance)){
-            tellingService.publish(tellingInstance)
-            flash.success = "Se publicó con éxito"
-            redirect action: "index"
-        }else{
-            response.status = 403;
-        }
-    }
+
 
     def handleNotPublishedException(NotPublishedException ex){
         flash.error = ex.message

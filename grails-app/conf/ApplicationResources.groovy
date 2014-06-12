@@ -17,6 +17,12 @@ modules = {
         resource url:'js/like.js'
     }
 
+    publish{
+        defaultBundle 'common'
+        dependsOn 'application','mustache','switchAction'
+        resource url:'js/publish.js'
+    }
+
     dashboard{
         defaultBundle 'common'
         dependsOn 'application','mustache'
