@@ -6,7 +6,7 @@
 		<meta name="layout" content="main_logged">
 		<g:set var="entityName" value="${message(code: 'telling.label', default: 'Telling')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
-        <g:javascript library="publish"/>
+        <g:javascript library="showTelling"/>
 	</head>
 	<body>
 
@@ -64,7 +64,10 @@
         </div>
     </div>
 
-    <g:render template="/shared/deleteModal"/>
+    <div id="id-modal-confirm-delete">
 
+    </div>
+
+    <g:render template="/shared/confirmModal"/>
 	</body>
 </html>

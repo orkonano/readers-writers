@@ -148,6 +148,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
             '/':                                        ['permitAll'],
             '/j_spring_security_facebook_redirect':     ['permitAll'],
             '/index':                                   ['permitAll'],
+            '/authors**':['permitAll'],
             '/index.gsp':                               ['permitAll'],
             '/**/js/**':                                ['permitAll'],
             '/**/css/**':                               ['permitAll'],

@@ -26,7 +26,8 @@ class PanelController extends BaseController {
     }
 
     def authorsFollowed(){
-        def authorsList = followerService.findAuthorFollowed(5).collect{it ->
+        def authorsList = followerService.findAuthorFollowed(5)
+        authorsList =  authorsList.collect{it ->
             [author: [id: it.id, name: it.username]]
         }
         def result = [success:true,model:[elements:authorsList]]

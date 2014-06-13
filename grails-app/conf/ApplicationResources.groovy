@@ -17,10 +17,10 @@ modules = {
         resource url:'js/like.js'
     }
 
-    publish{
+    showTelling{
         defaultBundle 'common'
-        dependsOn 'application','mustache','switchAction'
-        resource url:'js/publish.js'
+        dependsOn 'switchAction', 'confirmModal'
+        resource url:'js/showTelling.js'
     }
 
     dashboard{
@@ -45,6 +45,12 @@ modules = {
         defaultBundle 'common'
         dependsOn 'application'
         resource url:'css/signin.css'
+    }
+
+    confirmModal{
+        defaultBundle 'common'
+        dependsOn 'application', 'mustache'
+        resource url:'js/confirmModal.plugin.js'
     }
 
     application {

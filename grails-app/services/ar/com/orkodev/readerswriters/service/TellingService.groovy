@@ -37,7 +37,7 @@ class TellingService extends BaseService<Telling>{
     }
 
     @Transactional
-    def delete(Telling tellingToErase) {
+    Telling delete(Telling tellingToErase) {
         if (!tellingToErase.isEliminable()){
             throw new NotErasedException("Debe estar en estado borrador para eliminarse")
         }else{

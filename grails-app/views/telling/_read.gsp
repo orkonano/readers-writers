@@ -17,7 +17,7 @@
         <h3>${tellingInstance.title}&nbsp;&nbsp;
             <span id="id-buttons-region">
                 <g:if test="${isLike}">
-                    <g:link class="btn btn-warning btn-xs" resource="telling/like" action="delete" tellingId="${tellingInstance.id}" id="${tellingLike.id}
+                    <g:link class="btn btn-warning btn-xs" resource="telling/tellingLike" action="delete" tellingId="${tellingInstance.id}" id="${tellingLike.id}"
                             elementId="id-stop-like-link" data-template-id-next-action="template-link-like">
                         Ya no me gusta
                     </g:link>

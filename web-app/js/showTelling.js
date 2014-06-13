@@ -20,7 +20,7 @@ $(function () {
         });
     });
 
-    $(".boton-confirm").on('click', function(e){
+    $(document).on('click', '#id-boton-delete-confirm', function(e){
         e.preventDefault();
         e.stopPropagation();
         $.rwJsonDeleteAjax({
@@ -40,11 +40,12 @@ $(function () {
 
     $('#confirm-delete').click(function(e) {
         e.preventDefault();
-        var id = $(this).data('id');
-        $('#id-modal-confirm-delete').find(".modal-header").find("h3").text("Confirmación eliminación");
         var tituloTelling = $("#id-title-telling").text();
-        $('#id-modal-confirm-delete').find(".modal-body").html("<p>¿Está seguro que desea eliminar la historia <b>'"+tituloTelling+ "'</b> ?</p>");
-        $('#id-modal-confirm-delete').modal('show');
+        $('#id-modal-confirm-delete').confirmModal({
+            title: "Confirmación de eliminación",
+            body: "<p>¿Está seguro que desea eliminar la historia <b>'"+tituloTelling+ "'</b> ?</p>",
+            'id-boton-confirm': "id-boton-delete-confirm"
+        });
     });
 
 });
