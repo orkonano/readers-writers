@@ -90,7 +90,7 @@ class FollowerService extends BaseService<Follower>{
         if (count != null){
             params.max = count
         }
-        query = query.property('id')
+        query = query.property('author.id')
         userService.findByIds(query.list(params), new User())
     }
 }

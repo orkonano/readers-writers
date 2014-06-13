@@ -5,10 +5,28 @@
 $(function () {
 
     $(document).on('click',"#id-like-link",function(e) {
-        executeAjaxAction($(this),e);
+        e.preventDefault();
+        e.stopPropagation();
+        var idTemplate = $(this).data("template-id-next-action");
+        $.rwJsonPostAjax({
+            url: $(this).attr("href"),
+            $element: $(this),
+            success: function(data){
+                successSwitch.apply(this,[data, idTemplate]);
+            }
+        });
     });
 
     $(document).on('click',"#id-stop-like-link",function(e) {
-        executeAjaxAction($(this),e);
+        e.preventDefault();
+        e.stopPropagation();
+        var idTemplate = $(this).data("template-id-next-action");
+        $.rwJsonDeleteAjax({
+            url: $(this).attr("href"),
+            $element: $(this),
+            success:  function(data){
+                successSwitch.apply(this,[data, idTemplate]);
+            }
+        });
     });
 });
