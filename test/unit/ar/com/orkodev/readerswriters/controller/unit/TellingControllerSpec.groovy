@@ -150,6 +150,24 @@ class TellingControllerSpec extends Specification {
         model.tellingsType != null
     }
 
+    void "Test that the delete action"() {
+        given:
+        def springSecurityService = mockFor(SpringSecurityService)
+        def user = getCurrentUser()
+        springSecurityService.demandExplicit.getCurrentUser(1) { ->return user }
+        controller.springSecurityService = springSecurityService.createMock()
+        def tellingService = mockFor(TellingService)
+        tellingService.demandExplicit.findById(){Telling t -> new Telling(id: 1, author: user)}
+        tellingService.demandExplicit.delete(){Telling t -> new Telling(id: 1, author: user)}
+        controller.tellingService = tellingService.createMock()
+
+        when: "A domain instance is passed to the edit action"
+        controller.delete(1l)
+        then: "A model is populated containing the domain instance"
+        response.json.success
+        response.json.view.mensaje
+    }
+
     void "Test the update action performs an update on a valid domain instance"() {
         given:
         def springSecurityService = mockFor(SpringSecurityService)
