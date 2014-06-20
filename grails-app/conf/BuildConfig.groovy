@@ -52,6 +52,7 @@ grails.project.dependency.resolution = {
 
     dependencies {
         compile "joda-time:joda-time:2.3"
+        compile 'org.gmetrics:GMetrics:0.6'
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
          runtime 'mysql:mysql-connector-java:5.1.27'
         // runtime 'org.postgresql:postgresql:9.3-1100-jdbc41'
@@ -69,6 +70,7 @@ grails.project.dependency.resolution = {
         compile ":scaffolding:2.0.3"
         compile ':cache:1.1.6'
         compile ":cache-ehcache:1.0.1"
+        compile ":gmetrics:0.3.1"
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate:3.6.10.15" // or ":hibernate4:4.3.5.1"
