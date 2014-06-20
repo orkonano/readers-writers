@@ -46,6 +46,8 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
         //security
         mavenRepo "http://repo.spring.io/milestone/"
+        //private repo
+        mavenRepo "http://repository-orkoapp.forge.cloudbees.com/snapshot/"
     }
 
     dependencies {
@@ -70,7 +72,7 @@ grails.project.dependency.resolution = {
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate:3.6.10.15" // or ":hibernate4:4.3.5.1"
-        runtime ":database-migration:1.4.0"
+        runtime ":database-migration:1.4.1-SNAPSHOT"
         runtime ":jquery:1.11.1"
         runtime ":resources:1.2.8"
         runtime ':twitter-bootstrap:3.0.3'
@@ -95,4 +97,6 @@ grails.project.dependency.resolution = {
         compile ':webxml:1.4.1'
         compile "org.grails.plugins:spring-security-facebook:0.15.2-CORE2"
     }
+
+    grails.plugin.location.'database-migration' = "/home/orko/dev/apps/grails-database-migration"
 }
