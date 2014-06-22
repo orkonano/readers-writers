@@ -108,7 +108,6 @@ class TellingSpec extends Specification {
 
         when: "el estado no es draft"
         telling.state = Telling.PUBLISHED
-        def telling1 = new Telling(state: Telling.ERASED)
         then: "No es editable"
         !telling.isEditable()
         !telling.isEditable()
