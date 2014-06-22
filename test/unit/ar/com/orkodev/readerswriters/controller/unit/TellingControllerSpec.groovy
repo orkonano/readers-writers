@@ -105,7 +105,7 @@ class TellingControllerSpec extends Specification {
         controller.tellingService = tellingService.createMock()
         controller.save(telling)
         then: "A redirect is issued to the show action"
-        response.redirectedUrl.contains("index")
+        response.redirectedUrl == '/tellings'
     }
 
     void "Test that the show action returns the correct model"() {
@@ -200,7 +200,7 @@ class TellingControllerSpec extends Specification {
         controller.update(telling)
 
         then: "A redirect is issues to the show action"
-        response.redirectedUrl.contains("index")
+        response.redirectedUrl == '/tellings'
     }
 
     void "Test that the list action"() {
